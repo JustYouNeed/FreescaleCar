@@ -22,6 +22,20 @@
 	
 Car_TypeDef Car;
 
+
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
 void Car_ParaInit(void)
 {
 	uint8_t i = 0;
@@ -59,8 +73,28 @@ void Car_ParaInit(void)
 	Car.Motor.RightEncoder = 0;
 	Car.Motor.LeftSpeed = 0;
 	Car.Motor.RightSpeed = 0;
+	
+	Car.BaseSpeed = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 12, float);
 }
 
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
+void Car_ParaStroe(void)
+{
+	drv_flash_EraseSector(CAR_PARA_FLASH_ADDR);
+	drv_flash_WriteSector(CAR_PARA_FLASH_ADDR, (const uint8_t *)&Car.BaseSpeed, 2, 0);
+}
 
 /*
 *********************************************************************************************************
@@ -77,24 +111,29 @@ void Car_ParaInit(void)
 */
 void Car_PIDCalc(void)
 {
+	int16_t pwm = 0;
+	static float LastError;
+	
+	Car.PID.Error = Car.HorizontalAE - LastError;		/*  计算当前微分量  */
+	
+	/*  计算PWM  */
+	pwm = (int16_t)((Car.HorizontalAE * 10 *  Car.PID.Kp_Straight) + (Car.PID.Sum * Car.PID.Ki_Straight) + (Car.PID.Error * Car.PID.Kd_Straight));
+	
+	/*  保存上个时刻的误差  */
+	LastError = (float)(Car.HorizontalAE * 10);
+	
+	/*  将计算出来的PID与基本速度相加  */
+	Car.Motor.LeftPwm = Car.BaseSpeed - pwm;
+	Car.Motor.RightPwm = Car.BaseSpeed + pwm;
+	
+	/*  进行限幅  */
+	if(Car.Motor.LeftPwm > 600) Car.Motor.LeftPwm = 600;
+	else if(Car.Motor.LeftPwm < -600) Car.Motor.LeftPwm = -600;
+	
+	if(Car.Motor.RightPwm > 600) Car.Motor.RightPwm = 600;
+	else if(Car.Motor.RightPwm < -600) Car.Motor.RightPwm = -600;
 }
 
-/*
-*********************************************************************************************************
-*                                          
-*
-* Description: 
-*             
-* Arguments  : 
-*
-* Reutrn     : 
-*
-* Note(s)    : 
-*********************************************************************************************************
-*/
-void Car_MotorControl(void)
-{
-}
 /*
 *********************************************************************************************************
 *                       Car_Control                   
@@ -110,9 +149,15 @@ void Car_MotorControl(void)
 */
 void Car_Control(void)
 {
+//	bsp_led_Toggle(2);
 	bsp_sensor_DataProcess();
 	Car_PIDCalc();
-	Car_MotorControl();
+	
+	
+//	if(Car.Sensor[SENSOR_ID_1].Average < 20 || Car.Sensor[SENSOR_ID_4].Average < 20)
+//		bsp_motor_Stop();
+//	else
+		bsp_motor_SetPwm(Car.Motor.LeftPwm, Car.Motor.RightPwm);
 }
 	
 	

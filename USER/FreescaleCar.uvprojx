@@ -48,10 +48,10 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Objects\</OutputDirectory>
-          <OutputName>LED</OutputName>
+          <OutputName>FreescaleCar</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
-          <CreateHexFile>1</CreateHexFile>
+          <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
           <ListingPath>.\Listings\</ListingPath>
@@ -445,14 +445,24 @@
               <FilePath>..\DRV\src\drv_spi.c</FilePath>
             </File>
             <File>
-              <FileName>drv_acmp.c</FileName>
+              <FileName>drv_wdog.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\DRV\src\drv_acmp.c</FilePath>
+              <FilePath>..\DRV\src\drv_wdog.c</FilePath>
             </File>
             <File>
               <FileName>drv_flash.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\DRV\src\drv_flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_kbi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\DRV\src\drv_kbi.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_acmp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\DRV\src\drv_acmp.c</FilePath>
             </File>
             <File>
               <FileName>drv_irq.c</FileName>
@@ -473,16 +483,6 @@
               <FileName>drv_rtc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\DRV\src\drv_rtc.c</FilePath>
-            </File>
-            <File>
-              <FileName>drv_wdog.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\DRV\src\drv_wdog.c</FilePath>
-            </File>
-            <File>
-              <FileName>drv_kbi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\DRV\src\drv_kbi.c</FilePath>
             </File>
           </Files>
         </Group>

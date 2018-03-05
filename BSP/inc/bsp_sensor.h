@@ -54,11 +54,11 @@ typedef struct
 	uint16_t Average;
 	uint16_t CalibrationMax;
 	uint16_t CalibrationMin;
+	
 	float NormalizedValue;
 	uint16_t FIFO[SENSOR_FIFO_SIZE];
 }Sensor_TypeDef;
 
-extern Sensor_TypeDef Sensor[SENSOR_COUNT];
 
 void bsp_sensor_Config(void);
 void bsp_sensor_DataProcess(void);

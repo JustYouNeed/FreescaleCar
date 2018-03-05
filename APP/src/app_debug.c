@@ -23,48 +23,29 @@
 
 
 extern Uart_Str uart_info;
+extern uint8_t TimerTaskRunMutexSignal;
 
 /*  用于暂存从上位机接收到的数据  */
 uint8_t RecBuff[512];
 /*  接收到的上位机命令  */
 uint8_t RecCommand;
 
-
 /*
 *********************************************************************************************************
-*                                          
+*                      debug_Response                    
 *
-* Description: 
+* Description: 响应上位机的命令
 *             
-* Arguments  : 
+* Arguments  : 1> funcode: 要响应的功能码
 *
-* Reutrn     : 
+* Reutrn     : None.
 *
-* Note(s)    : 
+* Note(s)    : None.
 *********************************************************************************************************
 */
-void app_debug_SendChar(uint8_t byte)
+void debug_Response(uint8_t funcode)
 {
-	drv_uart_SendData(UART0, byte);
-}
-
-
-/*
-*********************************************************************************************************
-*                                          
-*
-* Description: 
-*             
-* Arguments  : 
-*
-* Reutrn     : 
-*
-* Note(s)    : 
-*********************************************************************************************************
-*/
-void app_debug_Response(uint8_t funcode)
-{
-	uint8_t SendBuff[8];
+	uint8_t SendBuff[8] = {0};
 	uint8_t i;
 	
 	SendBuff[0] = 0XAA;//帧起始
@@ -81,54 +62,49 @@ void app_debug_Response(uint8_t funcode)
 
 /*
 *********************************************************************************************************
-*                                          
+*                      debug_DataProcess                    
 *
-* Description: 
+* Description: 处理上位机下发的参数、命令
 *             
-* Arguments  : 
+* Arguments  : None.
 *
-* Reutrn     : 
+* Reutrn     : None.
 *
-* Note(s)    : 
+* Note(s)    : 该函数可以定时调用,或者接收完一帧指令后自动调用
 *********************************************************************************************************
 */
-void app_debug_DataProcess()
+void debug_DataProcess(void)
 {	
 	if(!RecCommand) return;	/*  没有接收到指令  */
+	
 	switch(RecCommand)
 	{
-		case ADJ_COMMAND:break;
-		case REQUEST_PID: //PID参数请求命令
-		{
-			app_debug_PIDUpload();  //上传第一组PID参数
-		}break;
-		case ADJ_SENSER:break;  //调整传感器命令
-		case ADJ_PID1:app_debug_PIDDownload();	bsp_led_Toggle(1);app_debug_Response(ADJ_PID1); break; //接收第一组PID参数并回应
-		case ADJ_PID2:app_debug_Response(ADJ_PID2); break; //
-		case ADJ_PID3:app_debug_Response(ADJ_PID3); break; //
-		case ADJ_PID4:app_debug_Response(ADJ_PID4); break; //
-		case ADJ_PID5:app_debug_Response(ADJ_PID5); break; //
-		case ADJ_PID6:app_debug_Response(ADJ_PID6); break; //
-		case ADJ_OFFSET:break;                                //调整零偏命令
-		case BOOTMODE:break;                                  //进入IAP下载模式命令
+		case REQUEST_PID: debug_PIDParaReport(); break; /*  上传PID参数  */
+		case ADJ_PID1:debug_PIDDownload();debug_Response(ADJ_PID1); break; /*  接收第PID参数1  */
+		case ADJ_PID2:debug_Response(ADJ_PID2); break; /*  其他PID参数不接收  */
+		case ADJ_PID3:debug_Response(ADJ_PID3); break; 
+		case ADJ_PID4:debug_Response(ADJ_PID4); break; 
+		case ADJ_PID5:debug_Response(ADJ_PID5); break; 
+		case ADJ_PID6:debug_Response(ADJ_PID6); break; 
+		case BOOTMODE:break;               /*  进入IAP下载模式命令  */
 	}
-	RecCommand = 0;     //处理完数据后接收标志复位
+	RecCommand = 0;     /*  处理完数据后接收标志复位  */
 }
 
 /*
 *********************************************************************************************************
-*                                          
+*                             debug_Handler             
 *
-* Description: 
+* Description: 串口调试中断函数
 *             
-* Arguments  : 
+* Arguments  : None.
 *
-* Reutrn     : 
+* Reutrn     : None.
 *
-* Note(s)    : 
+* Note(s)    : None.
 *********************************************************************************************************
 */
-void app_debug_Handler(void)
+void debug_Handler(void)
 {
 	uint8_t RecvData;  //字节接收暂存
 	uint8_t i = 0;  //
@@ -145,19 +121,12 @@ void app_debug_Handler(void)
 		{
 			case 0X00:
 			{
-					if(0XAA == RecvData)	
-					{
-						RecBuff[uCnt++] = RecvData;  //帧起始判断
-					}
+					if(0XAA == RecvData) RecBuff[uCnt++] = RecvData;  //帧起始判断
 					else uCnt = 0X00;
 			}break;
 			case 0X01:
 			{
-				if(0XAF == RecvData)	
-				{
-					RecBuff[uCnt++] = RecvData;//帧起始判断
-					
-				}
+				if(0XAF == RecvData)	RecBuff[uCnt++] = RecvData;//帧起始判断
 				else uCnt = 0X00;
 			}break;
 			case 0X02:RecBuff[uCnt++] = RecvData; break;  //功能码
@@ -181,30 +150,34 @@ void app_debug_Handler(void)
 			else 
 			{
 				RecCommand = RecBuff[2];		//数据检验无误，保存功能码
-//		#if ANO_DATA_PRECESS_ON==1  //选择是否接收完一帧数据后自动处理
-//				app_debug_DataProcess();
-//		#endif
+		#if ANO_DATA_PRECESS_ON==1  //选择是否接收完一帧数据后自动处理
+				debug_DataProcess();
+		#endif
 			}
 		}
 	}
+	
+	/*  处理发送数据部分  */
 	bsp_uart_IRQHandler(&uart_info);
 }
 
 
 /*
 *********************************************************************************************************
-*                                          
+*                     debug_DataUpload                     
 *
-* Description: 
+* Description: 调试功能数据上传
 *             
-* Arguments  : 
+* Arguments  : 1> buff: 数据缓存区
+*              2> funcode: 功能码
+*							 3> len: 数据长度
 *
-* Reutrn     : 
+* Reutrn     : 1> 0: 函数执行成功
 *
-* Note(s)    : 
+* Note(s)    : None.
 *********************************************************************************************************
 */
-uint8_t app_debug_DataUpload(uint8_t *buff, uint8_t funCode, uint8_t len)
+uint8_t debug_DataUpload(uint8_t *buff, uint8_t funCode, uint8_t len)
 {
 	uint8_t SendBuff[32] = {0};
 	uint8_t i;
@@ -216,68 +189,35 @@ uint8_t app_debug_DataUpload(uint8_t *buff, uint8_t funCode, uint8_t len)
 	SendBuff[2] = funCode;  //功能码
 	SendBuff[3] = len;   //数据长度，除去起始码和功能码以及长度
 	
-	//将要发送的数据复制到发送区
-	for(i = 0; i < len; i++) SendBuff[i + 4] = buff[i];
-	//计算校验和
-	for(i = 0; i< len + 4; i++) SendBuff[len + 4] += SendBuff[i];
+	/*  将数据复制到发送区并计算校验和  */
+	for(i = 0; i < len; i++) 
+	{
+		SendBuff[i + 4] = buff[i];
+		SendBuff[len + 4] += SendBuff[i];
+	}
+	/*  计算剩余的校验  */
+	for(i = len; i< len + 4; i++) SendBuff[len + 4] += SendBuff[i];
 	
 	bsp_uart_SendDataToBuff(COM0, SendBuff, len + 5);
 	
-	return 2;
+	return 0;
 }
+
 
 /*
 *********************************************************************************************************
-*                                          
+*                         debug_PIDParaReport                 
 *
-* Description: 
+* Description: 填写PID参数并调用debug_DataUpload发送
 *             
-* Arguments  : 
+* Arguments  : None.
 *
-* Reutrn     : 
+* Reutrn     : None.
 *
-* Note(s)    : 
+* Note(s)    : None.
 *********************************************************************************************************
 */
-uint8_t app_debug_DataSend(uint8_t *buff,uint8_t funCode, uint8_t len)
-{
-	uint8_t SendBuff[32] = {0};
-	uint8_t i;
-	
-//	for(i = 0; i < 32; i++) SendBuff[i] = 0X00;
-	if(len>27)return 0;//数据长度超过限制
-	if(funCode>0xff) return 1;//功能码错误
-		
-	SendBuff[0] = 0XAA; //帧起始
-	SendBuff[1] = 0XAF; //帧起始
-	SendBuff[2] = funCode;  //功能码
-	SendBuff[3] = len;   //数据长度，除去起始码和功能码以及长度
-	
-	//将要发送的数据复制到发送区
-	for(i = 0; i < len; i++) SendBuff[i + 4] = buff[i];
-	//计算校验和
-	for(i = 0; i< len + 4; i++) SendBuff[len + 4] += SendBuff[i];
-	//循环发送数据
-//	for(i = 0; i< len + 5; i++) 
-//		app_debug_SendChar(SendBuff[i]);
-	bsp_uart_SendDataToBuff(COM0, SendBuff, len + 5);
-	return 2;
-}
-
-/*
-*********************************************************************************************************
-*                                          
-*
-* Description: 
-*             
-* Arguments  : 
-*
-* Reutrn     : 
-*
-* Note(s)    : 
-*********************************************************************************************************
-*/
-void app_debug_PIDUpload(void)
+void debug_PIDParaReport(void)
 {
 	uint8_t Buff[18] = {0};
 	short temp;
@@ -318,8 +258,84 @@ void app_debug_PIDUpload(void)
 //	Buff[16] = BYTE2(temp);
 //	Buff[17] = BYTE1(temp);
 //	
-	app_debug_DataUpload(Buff,0x10,18);
+	debug_DataUpload(Buff,0x10,18);
 }
+
+/*
+*********************************************************************************************************
+*                          debug_PIDDownload                
+*
+* Description: 接收上位机下发的PID参数
+*             
+* Arguments  : None.
+*
+* Reutrn     : None.
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
+void debug_PIDDownload(void)
+{
+	//取前后两个8位的数据合并成一个16位的数据，并强制转换成一个float型的数据
+	//转换完成后除以相应的传输因子
+	
+	Car.PID.Kp_Straight = MERGE(RecBuff[4], RecBuff[5], float) / ANO_PID_TRAN_FAC_P;
+	Car.PID.Ki_Straight = MERGE(RecBuff[6], RecBuff[7], float) / ANO_PID_TRAN_FAC_I;
+	Car.PID.Kd_Straight = MERGE(RecBuff[8], RecBuff[9], float) / ANO_PID_TRAN_FAC_D;
+	
+	Car.PID.Kp_Curved = MERGE(RecBuff[10], RecBuff[11], float) / ANO_PID_TRAN_FAC_P;
+	Car.PID.Ki_Curved = MERGE(RecBuff[12], RecBuff[13], float) / ANO_PID_TRAN_FAC_I;
+	Car.PID.Kd_Curved = MERGE(RecBuff[14], RecBuff[15], float) / ANO_PID_TRAN_FAC_D;
+	
+	Car.BaseSpeed = MERGE(RecBuff[16], RecBuff[17], int16_t);
+		
+	Car_ParaStroe();
+	pid_StorePara();	/*  将PID参数保存到Flash中  */
+}
+
+
+
+/*
+*********************************************************************************************************
+*                      debug_SensorDataReport                    
+*
+* Description: 上传传感器数据
+*             
+* Arguments  : None.
+*
+* Reutrn     : None.
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
+void debug_SensorDataReport(void)
+{
+	uint8_t Buff[18] = {0};
+	uint8_t cnt = 0;
+	
+	Buff[cnt++] = BYTE2(Car.Sensor[SENSOR_ID_1].Average);
+	Buff[cnt++] = BYTE1(Car.Sensor[SENSOR_ID_1].Average);
+	
+	Buff[cnt++] = BYTE2(Car.Sensor[SENSOR_ID_2].Average);
+	Buff[cnt++] = BYTE1(Car.Sensor[SENSOR_ID_2].Average);
+	
+	Buff[cnt++] = BYTE2(Car.Sensor[SENSOR_ID_3].Average);
+	Buff[cnt++] = BYTE1(Car.Sensor[SENSOR_ID_3].Average);
+	
+	Buff[cnt++] = BYTE2(Car.Sensor[SENSOR_ID_4].Average);
+	Buff[cnt++] = BYTE1(Car.Sensor[SENSOR_ID_4].Average);
+	
+	
+	Buff[cnt++] = BYTE2((int16_t)(Car.HorizontalAE * 1000));
+	Buff[cnt++] = BYTE1((int16_t)(Car.HorizontalAE * 1000));
+
+	Buff[cnt++] = BYTE2((int16_t)(Car.VecticalAE * 100));
+	Buff[cnt++] = BYTE1((int16_t)(Car.VecticalAE * 100));
+	
+
+	debug_DataUpload(Buff,0xf2,cnt);
+}
+
 
 /*
 *********************************************************************************************************
@@ -334,117 +350,70 @@ void app_debug_PIDUpload(void)
 * Note(s)    : 
 *********************************************************************************************************
 */
-void app_debug_PIDDownload(void)
+void debug_MotorDataReport(void)
 {
-	//取前后两个8位的数据合并成一个16位的数据，并强制转换成一个float型的数据
-	//转换完成后除以相应的传输因子
-	Car.PID.Kp_Straight = (float)((int16_t)((RecBuff[4] << 8) | (RecBuff[5]))) / ANO_PID_TRAN_FAC_P;
-	Car.PID.Ki_Straight = (float)((int16_t)(RecBuff[6] << 8) | (RecBuff[7])) / ANO_PID_TRAN_FAC_I;
-	Car.PID.Kd_Straight = (float)((int16_t)(RecBuff[8] << 8) | (RecBuff[9])) / ANO_PID_TRAN_FAC_D;
+	uint8_t SendBuff[16] = {0};
+	uint8_t cnt = 0;
 	
-	Car.PID.Kp_Curved = (float)((int16_t)((RecBuff[10] << 8) | (RecBuff[11]))) / ANO_PID_TRAN_FAC_P;
-	Car.PID.Ki_Curved = (float)((int16_t)(RecBuff[12] << 8) | (RecBuff[13])) / ANO_PID_TRAN_FAC_I;
-	Car.PID.Kd_Curved = (float)((int16_t)(RecBuff[14] << 8) | (RecBuff[15])) / ANO_PID_TRAN_FAC_D;
+	SendBuff[cnt++] = BYTE2(Car.Motor.LeftPwm);
+	SendBuff[cnt++] = BYTE1(Car.Motor.LeftPwm);
 	
-	pid_StorePara();
-//	ano_info.yaw_p = (float)((int16_t)((ano_info.RecBuff[16]<<8)|(ano_info.RecBuff[17])))/ANO_PID_TRAN_FAC_P;
-//	ano_info.yaw_i = (float)((int16_t)(ano_info.RecBuff[18]<<8)|(ano_info.RecBuff[19]))/ANO_PID_TRAN_FAC_I;
-//	ano_info.yaw_d = (float)((int16_t)(ano_info.RecBuff[20]<<8)|(ano_info.RecBuff[21]))/ANO_PID_TRAN_FAC_D;
+	SendBuff[cnt++] = BYTE2(Car.Motor.RightPwm);
+	SendBuff[cnt++] = BYTE1(Car.Motor.RightPwm);
+	
+	SendBuff[cnt++] = BYTE4(Car.Motor.LeftEncoder);
+	SendBuff[cnt++] = BYTE3(Car.Motor.LeftEncoder);
+	SendBuff[cnt++] = BYTE2(Car.Motor.LeftEncoder);
+	SendBuff[cnt++] = BYTE1(Car.Motor.LeftEncoder);
+	
+	SendBuff[cnt++] = BYTE4(Car.Motor.RightEncoder);
+	SendBuff[cnt++] = BYTE3(Car.Motor.RightEncoder);
+	SendBuff[cnt++] = BYTE2(Car.Motor.RightEncoder);
+	SendBuff[cnt++] = BYTE1(Car.Motor.RightEncoder);
+	
+	SendBuff[cnt++] = BYTE2(Car.Motor.LeftSpeed);
+	SendBuff[cnt++] = BYTE1(Car.Motor.LeftSpeed);
+	
+	SendBuff[cnt++] = BYTE2(Car.Motor.RightSpeed);
+	SendBuff[cnt++] = BYTE1(Car.Motor.RightSpeed);
+	
+	debug_DataUpload(SendBuff, 0xf1, cnt);
 }
-
-
 /*
 *********************************************************************************************************
-*                            app_debug_SensorDataReport              
+*                           debug_CarDataReport               
 *
-* Description: 向上位机报告数据
+* Description: 车子调试数据上传函数
 *             
 * Arguments  : None.
 *
 * Reutrn     : None.
 *
-* Note(s)    : None.
+* Note(s)    : 该函数应该周期性调用,以便及时收到车子的数据
 *********************************************************************************************************
 */
-
-void app_debug_SensorDataReport(void)
+void debug_CarDataReport(void)
 {
-	uint8_t Buff[18];
-	uint8_t i;
-	for(i = 0;i< 18; i++) Buff[i] = 0x00;
+	if(TimerTaskRunMutexSignal == 1) return ;
+	TimerTaskRunMutexSignal = 1;
 	
-	Buff[0] = (uint8_t)((Car.Sensor[SENSOR_ID_1].Average >> 8) & 0xff);
-	Buff[1] = (uint8_t)(Car.Sensor[SENSOR_ID_1].Average & 0xff);
+	/*  先处理收到的数据  */
+	debug_DataProcess();
 	
-	Buff[2] = (uint8_t)((Car.Sensor[SENSOR_ID_2].Average >> 8) & 0xff);
-	Buff[3] = (uint8_t)(Car.Sensor[SENSOR_ID_2].Average & 0xff);
+	/*  上传传感器数据  */
+	debug_SensorDataReport();
 	
-	Buff[4] = (uint8_t)((Car.Sensor[SENSOR_ID_3].Average >> 8) & 0xff);
-	Buff[5] = (uint8_t)(Car.Sensor[SENSOR_ID_3].Average & 0xff);
+	/*  上传电机数据  */
+	debug_MotorDataReport();
 	
-	Buff[6] = (uint8_t)((Car.Sensor[SENSOR_ID_4].Average >> 8) & 0xff);
-	Buff[7] = (uint8_t)(Car.Sensor[SENSOR_ID_4].Average & 0xff);
-	
-	Buff[8] = (uint8_t)((Car.Motor.LeftEncoder >> 8) & 0xff);
-	Buff[9] = (uint8_t)(Car.Motor.LeftEncoder & 0xff);
-	
-	Buff[10] = (uint8_t)((Car.Motor.RightEncoder >> 8) & 0xff);
-	Buff[11] = (uint8_t)(Car.Motor.RightEncoder & 0xff);
-	
-//	Car.HorizontalAE = (Car.HorizontalAE < 0) ? (-Car.HorizontalAE) : Car.HorizontalAE;
-	Buff[12] = (uint8_t)((Car.HorizontalAE) >> 8) & 0xff;
-	Buff[13] = (uint8_t)(Car.HorizontalAE) & 0xff;
-	
-//	Car.VecticalAE = (Car.VecticalAE < 0) ? (-Car.VecticalAE) : Car.VecticalAE;
-	Buff[14] = (uint8_t)(Car.VecticalAE >> 8) & 0xff;
-	Buff[15] = (uint8_t)(Car.VecticalAE & 0xff);
-//	
-//	Buff[16] = (20 >> 8) & 0xff;
-//	Buff[17] = 20 & 0xff;
-	
-	app_debug_DataUpload(Buff,0x02,18);
+	TimerTaskRunMutexSignal = 0;
 }
-	
 
-/*
-*********************************************************************************************************
-*                          app_debug_StorePara                
-*
-* Description: 将参数存储到主控上的存储芯片中
-*             
-* Arguments  : None.
-*
-* Reutrn     : None.
-*
-* Note(s)    : None.
-*********************************************************************************************************
-*/
-void app_debug_StorePara(void)
-{
-	
-}
 
 
 /*
 *********************************************************************************************************
-*                                    app_debug_ReadPara      
-*
-* Description: 从主控上的存储芯片中读取出参数
-*             
-* Arguments  : None.
-*
-* Reutrn     : None.
-*
-* Note(s)    : None.
-*********************************************************************************************************
-*/
-void app_debug_ReadPara(void)
-{
-}
-
-/*
-*********************************************************************************************************
-*                              app_debug_ShowPara            
+*                              debug_ShowPara            
 *
 * Description: 将相关参数通过OLED屏幕显示出来
 *             
@@ -455,24 +424,16 @@ void app_debug_ReadPara(void)
 * Note(s)    : None.
 *********************************************************************************************************
 */
-
-extern uint8_t TimerTaskRunMutexSignal;
-void app_debug_ShowPara(void)
+void debug_ShowPara(void)
 {
 	if(TimerTaskRunMutexSignal == 1) return ;
 	TimerTaskRunMutexSignal = 1;
 	
 	bsp_oled_Clear();
-	bsp_oled_ShowInteger(0,0,(int)(Car.PID.Kp_Straight * 100), 16);
-	bsp_oled_ShowInteger(42,0,(int)(Car.PID.Ki_Straight * 100), 16);
-	bsp_oled_ShowInteger(84,0,(int)(Car.PID.Kd_Straight * 100), 16);
+	bsp_oled_ShowInteger(0,0,(int)(Car.PID.Kp_Straight ), 16);
+	bsp_oled_ShowInteger(42,0,(int)(Car.PID.Ki_Straight ), 16);
+	bsp_oled_ShowInteger(84,0,(int)(Car.PID.Kd_Straight ), 16);
 	
-//	bsp_oled_ShowInteger(0,2,LeftEncoderCounter, 16);
-//	bsp_oled_ShowInteger(60,2,RightEncoderCounter, 16);
-//	bsp_oled_ShowInteger(0,4,LeftSpeed, 16);
-//	bsp_oled_ShowInteger(60,4,RightSpeed, 16);
-	
-//	drv_adc_GetMultiADCResult(ADC_Value);
 	bsp_oled_ShowString(0, 2, "C0:");
 	bsp_oled_ShowInteger(24,2,Car.Sensor[SENSOR_ID_1].CalibrationMax, 16);
 	
@@ -486,17 +447,11 @@ void app_debug_ShowPara(void)
 	bsp_oled_ShowInteger(90,4,Car.Sensor[SENSOR_ID_4].Average, 16);
 	
 	bsp_oled_ShowString(0, 6, "H:");
-	bsp_oled_ShowInteger(16,6,(int32_t)(Car.HorizontalAE * 1000), 16);
+	bsp_oled_ShowInteger(16,6,(int32_t)(Car.HorizontalAE * 10000), 16);
 	
-		bsp_oled_ShowString(80 - 16, 6, "V:");
-	bsp_oled_ShowInteger(80,6,(int32_t)(Car.VecticalAE * 1000), 16);
-//	bsp_oled_ShowString(0, 6, "F6:");
-//	bsp_oled_ShowInteger(24,6,ADC_Value[4], 16);
-//	
-//	bsp_oled_ShowString(66, 6, "F7:");
-//	bsp_oled_ShowInteger(90,6,ADC_Value[5], 16);
-	
-	app_debug_SensorDataReport();
+	bsp_oled_ShowString(80 - 16, 6, "V:");
+	bsp_oled_ShowInteger(80,6,(int32_t)(Car.VecticalAE), 16);
+
 	TimerTaskRunMutexSignal = 0;
 }
 

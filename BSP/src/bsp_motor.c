@@ -52,8 +52,8 @@ void bsp_motor_Config(void)
 	
 	/*  初始化电机PWM  */
 	PWM_InitStruct.PWM_Channel = DRV_PWM1_CHANNEL;
-	PWM_InitStruct.PWM_Frequency = Car.Motor.PWM_Frequency;
-	PWM_InitStruct.PWM_Pulse = Car.Motor.LeftPwm;
+	PWM_InitStruct.PWM_Frequency = 10;
+	PWM_InitStruct.PWM_Pulse = 0;
 	drv_ftm_PWMInit(&PWM_InitStruct);
 	
 	PWM_InitStruct.PWM_Channel = DRV_PWM2_CHANNEL;
@@ -65,7 +65,31 @@ void bsp_motor_Config(void)
 	PWM_InitStruct.PWM_Channel = DRV_PWM4_CHANNEL;
 	drv_ftm_PWMInit(&PWM_InitStruct);
 }
+extern uint16_t period[3];
+void ftm_pwm_duty(uint8_t ftmn, uint8_t ch, uint32_t duty)
+{
+    uint32_t cv;
+    //占空比 = (CnV-CNTIN)/(MOD-CNTIN+1)
+    switch(ftmn)
+    {
+    case 0:
+        cv = (duty * (period[ftmn] - 0 + 1)) / 1000;
+        break;
 
+    case 1:
+        cv = (duty * (period[ftmn] - 0 + 1)) / 1000;
+        break;
+
+    case 2:
+        cv = (duty * (period[ftmn] - 0 + 1)) / 1000;
+        break;
+
+    default:
+        break;
+    }
+    
+    FTM2->CONTROLS[ch].CnV = cv;      //设置占空比
+}
 /*
 *********************************************************************************************************
 *                          bsp_motor_SetPwm                
@@ -85,27 +109,30 @@ void bsp_motor_SetPwm(int16_t LeftPwm, int16_t RightPwm)
 	DRV_ENABLE();		/*  开启驱动  */
 	
 	/*  设置左边PWM  */
-	if(LeftPwm > 0)	/*  电机正转  */
-	{
-		drv_ftm_PWMSetDuty(DRV_PWM1_CHANNEL, LeftPwm);
-		drv_ftm_PWMSetDuty(DRV_PWM2_CHANNEL, 0);
-	}
-	else		/*  反转  */
-	{
-		drv_ftm_PWMSetDuty(DRV_PWM1_CHANNEL, 0);
-		drv_ftm_PWMSetDuty(DRV_PWM2_CHANNEL, -LeftPwm);
-	}
-	
-	/*  设置右边PWM  */
 	if(RightPwm > 0)	/*  电机正转  */
 	{
-		drv_ftm_PWMSetDuty(DRV_PWM3_CHANNEL, RightPwm);
-		drv_ftm_PWMSetDuty(DRV_PWM4_CHANNEL, 0);
+		drv_ftm_PWMSetDuty(DRV_PWM2_CHANNEL, RightPwm+3);
+//		ftm_pwm_duty(2, 1, 0 + 3);
+		drv_ftm_PWMSetDuty(DRV_PWM1_CHANNEL, 3);
 	}
 	else		/*  反转  */
 	{
-		drv_ftm_PWMSetDuty(DRV_PWM3_CHANNEL, 0);
-		drv_ftm_PWMSetDuty(DRV_PWM4_CHANNEL, -RightPwm);
+		drv_ftm_PWMSetDuty(DRV_PWM2_CHANNEL, 0+3);
+//		ftm_pwm_duty(2, 1, -(RightPwm + 3));
+		drv_ftm_PWMSetDuty(DRV_PWM1_CHANNEL, -(RightPwm-3));
+	}
+	
+	/*  设置左边PWM  */
+	if(LeftPwm > 0)	/*  电机正转  */
+	{
+		drv_ftm_PWMSetDuty(DRV_PWM4_CHANNEL, LeftPwm+3);
+//		
+		drv_ftm_PWMSetDuty(DRV_PWM3_CHANNEL, 0+3);
+	}
+	else		/*  反转  */
+	{
+		drv_ftm_PWMSetDuty(DRV_PWM4_CHANNEL, 0+3);
+		drv_ftm_PWMSetDuty(DRV_PWM3_CHANNEL, -(LeftPwm+3));
 	}
 }
 

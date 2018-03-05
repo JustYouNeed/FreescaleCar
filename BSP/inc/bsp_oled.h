@@ -32,28 +32,27 @@
 # define Y_WIDTH 	64	    			
 
 /*-----------------OLED¶Ë¿Ú¶¨Òå----------------*/
-# define OLED_CS_PORT		PORTC
+
 # define OLED_CS_PIN		GPIO_Pin_C7
 # define OLED_CS_Clr()  drv_gpio_WritePin(OLED_CS_PIN, GPIO_PIN_RESET)
 # define OLED_CS_Set()  drv_gpio_WritePin(OLED_CS_PIN, GPIO_PIN_SET)
 
-# define OLED_RST_PORT	PORTD
-# define OLED_RST_PIN		GPIO_Pin_D5
+# define OLED_RST_PIN		GPIO_Pin_I3
 # define OLED_RST_Clr() drv_gpio_WritePin(OLED_RST_PIN, GPIO_PIN_RESET)
 # define OLED_RST_Set() drv_gpio_WritePin(OLED_RST_PIN, GPIO_PIN_SET)
 
-# define OLED_DC_PORT		PORTD
-# define OLED_DC_PIN		GPIO_Pin_D7
+
+# define OLED_DC_PIN		GPIO_Pin_C6
 # define OLED_DC_Clr()  drv_gpio_WritePin(OLED_DC_PIN, GPIO_PIN_RESET)
 # define OLED_DC_Set()  drv_gpio_WritePin(OLED_DC_PIN, GPIO_PIN_SET)
 
-# define OLED_SCK_PORT		PORTH
-# define OLED_SCK_PIN		GPIO_Pin_H4
+
+# define OLED_SCK_PIN		GPIO_Pin_E3
 # define OLED_SCK_Clr()  drv_gpio_WritePin(OLED_SCK_PIN, GPIO_PIN_RESET)
 # define OLED_SCK_Set()  drv_gpio_WritePin(OLED_SCK_PIN, GPIO_PIN_SET)
 
-# define OLED_DIN_PORT		PORTI
-# define OLED_DIN_PIN		GPIO_Pin_I5
+
+# define OLED_DIN_PIN		GPIO_Pin_I2
 # define OLED_DIN_Clr()  drv_gpio_WritePin(OLED_DIN_PIN, GPIO_PIN_RESET)
 # define OLED_DIN_Set()  drv_gpio_WritePin(OLED_DIN_PIN, GPIO_PIN_SET)
 

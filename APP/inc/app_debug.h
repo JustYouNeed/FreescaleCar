@@ -42,10 +42,10 @@
 # define DEFAULT_YAW_KD	0
 
 
-# define app_debug_Handler	UART0_IRQHandler
+# define debug_Handler	UART0_IRQHandler
 
 
-# define ANO_DATA_PRECESS_ON	1   //	选择是否自动处理数据
+# define ANO_DATA_PRECESS_ON	0   //	选择是否自动处理数据
 
 																										//              1111 1111 1111 1111
 # define BYTE1(num)	(uint8_t)(num & 0XFF)           //取低8位                      1111
@@ -53,6 +53,7 @@
 # define BYTE3(num)	(uint8_t)((num >> 16) & 0XFF)		//高16位             1111
 # define BYTE4(num)	(uint8_t)((num >> 24) & 0XFF)   //高32位        1111 
 
+# define MERGE(num1, num2, type)	  (type)((int16_t)((num1 << 8) | num2))
 //参数调整功能码，上位机发送
 //01 ACC校准
 //02 GYRO校准
@@ -117,15 +118,15 @@
 	
 	
 	
-void app_debug_Config(void);
-void app_debug_PIDUpload(void);
-void app_debug_PIDDownload(void);
-void app_debug_SensorDataReport(void);
-void app_debug_DataProcess(void);
+void debug_PIDParaReport(void);
+void debug_PIDDownload(void);
+void debug_SensorDataReport(void);
+void debug_DataProcess(void);
+void debug_CarDataReport(void);
 	
-void app_debug_StorePara(void);
-void app_debug_ReadPara(void);
-void app_debug_ShowPara(void);
+void debug_StorePara(void);
+void debug_ReadPara(void);
+void debug_ShowPara(void);
 # endif
 
 /********************************************  END OF FILE  *******************************************/

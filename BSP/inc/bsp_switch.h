@@ -17,10 +17,10 @@
 
 # include "derivative.h"
 
-# define BIT1_PIN			GPIO_Pin_A0
-# define BIT2_PIN			GPIO_Pin_A0
-# define BIT3_PIN			GPIO_Pin_A0
-# define BIT4_PIN			GPIO_Pin_A0
+# define BIT1_PIN			GPIO_Pin_F0
+# define BIT2_PIN			GPIO_Pin_F1
+# define BIT3_PIN			GPIO_Pin_G4
+# define BIT4_PIN			GPIO_Pin_G7
 
 
 

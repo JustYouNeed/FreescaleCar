@@ -245,10 +245,9 @@ void debug_PIDParaReport(void)
 	temp = (short)(Car.PID.Kd_Curved * ANO_PID_TRAN_FAC_D);
 	Buff[10] = BYTE2(temp);
 	Buff[11] = BYTE1(temp);
-	
-//	temp = 0;
-//	Buff[12] = BYTE2(temp);
-//	Buff[13] = BYTE1(temp);
+
+	Buff[12] = BYTE2(Car.BaseSpeed);
+	Buff[13] = BYTE1(Car.BaseSpeed);
 //	
 //	temp = 0;
 //	Buff[14] = BYTE2(temp);

@@ -41,8 +41,6 @@ typedef enum
 	SENSOR_ID_2,
 	SENSOR_ID_3,
 	SENSOR_ID_4,
-	SENSOR_ID_5,
-	SENSOR_ID_6,
 	SENSOR_COUNT,
 }SENSOR_ID_EnumType;
 

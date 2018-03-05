@@ -12,7 +12,7 @@ void bsp_Config(void)
 	bsp_key_Config();				/*  独立按键初始化  */
 	bsp_switch_Config();		/*  拔码开关初始化  */
 	bsp_encoder_Config();		/*  电机编码器初始化  */
-	bsp_sensor_Config();		/*  电磁传感器初始化  */
+
 	bsp_motor_Config();			/*  电机控制初始化  */
 	ENABLE_INT();						/*  开启中断  */
 }

@@ -84,6 +84,7 @@ int main(void)
 	
 		ftm_pwm_init(2, 1, 10000, 10);
 	Car_ParaInit();
+		bsp_sensor_Config();		/*  电磁传感器初始化  */
 
 	/*  选择是否需要校准传感器  */
 	if(bsp_switch_GetValue() == 14)

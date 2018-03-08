@@ -149,11 +149,11 @@ void bsp_sensor_DataProcess(void)
 	}
 	
 	/*  计算水平差比和  */
-	Car.HorizontalAE = (float)(Car.Sensor[SENSOR_ID_1].NormalizedValue - Car.Sensor[SENSOR_ID_4].NormalizedValue) / 
-														(Car.Sensor[SENSOR_ID_1].NormalizedValue + Car.Sensor[SENSOR_ID_4].NormalizedValue);
+	Car.HorizontalAE = (float)(Car.Sensor[SENSOR_H_L].NormalizedValue - Car.Sensor[SENSOR_V_R].NormalizedValue) / 
+														(Car.Sensor[SENSOR_H_L].NormalizedValue + Car.Sensor[SENSOR_V_R].NormalizedValue);
 	/*  垂直差比和  */
-	Car.VecticalAE = ((Car.Sensor[SENSOR_ID_2].NormalizedValue - Car.Sensor[SENSOR_ID_3].NormalizedValue) / 
-													(Car.Sensor[SENSOR_ID_2].NormalizedValue + Car.Sensor[SENSOR_ID_3].NormalizedValue));
+	Car.VecticalAE = ((Car.Sensor[SENSOR_V_L].NormalizedValue - Car.Sensor[SENSOR_H_R].NormalizedValue) / 
+													(Car.Sensor[SENSOR_V_L].NormalizedValue + Car.Sensor[SENSOR_H_R].NormalizedValue));
 }
 
 /*

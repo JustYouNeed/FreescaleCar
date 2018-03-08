@@ -75,16 +75,15 @@ void ftm_pwm_init(uint8_t ftmn, uint8_t ch, uint32_t freq, uint32_t duty)
 
 void test_LedTest(void)
 {
-	bsp_led_Toggle(1);
+	bsp_led_Toggle(0);
 }
 
 int main(void)
 {	
 	bsp_Config();
 	
-		ftm_pwm_init(2, 1, 10000, 10);
+	ftm_pwm_init(2, 1, 10000, 10);
 	Car_ParaInit();
-		bsp_sensor_Config();		/*  电磁传感器初始化  */
 
 	/*  选择是否需要校准传感器  */
 	if(bsp_switch_GetValue() == 14)
@@ -97,7 +96,7 @@ int main(void)
 //	bsp_tim_CreateSoftTimer(1, 21, bsp_key_Scan, TIMER_MODE_AUTO);
 	
 	/*  LED状态指示任务,周期500ms  */
-	bsp_tim_CreateSoftTimer(2, 453, test_LedTest, TIMER_MODE_AUTO);
+//	bsp_tim_CreateSoftTimer(2, 453, test_LedTest, TIMER_MODE_AUTO);
 	
 	/*  OLED参数显示任务,周期500ms  */
 	bsp_tim_CreateSoftTimer(3, 501, debug_ShowPara, TIMER_MODE_AUTO);
@@ -106,9 +105,10 @@ int main(void)
 //	bsp_tim_CreateSoftTimer(4, 11, bsp_encoder_SpeedCalc, TIMER_MODE_AUTO);
 	
 	/*  硬件定时器任务,车子控制任务,周期20ms  */
-	bsp_tim_CreateHardTimer(1, 15, Car_Control);
+	bsp_tim_CreateHardTimer(1, 3, Car_Control);
 	
-//	bsp_motor_SetPwm(200, -200);
+	bsp_motor_SetPwm(300, 0);
+	DRV_ENABLE();
 	while(1);
 //	{
 //		key = bsp_switch_GetValue();

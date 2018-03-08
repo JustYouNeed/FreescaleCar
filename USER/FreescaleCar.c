@@ -1,13 +1,15 @@
 /**
   *******************************************************************************************************
-  * File Name: 
-  * Author: 
-  * Version: 
-  * Date: 
-  * Brief: 
+  * File Name: FreescaleCar.c
+  * Author: Vector
+  * Version: V1.0.0
+  * Date: 2018-3-3
+  * Brief: 本文件用于车子数据记录、处理、保存等，同时车子控制函数也在本文件
   *******************************************************************************************************
   * History
-  *
+  *		1.Author: Vector
+	*			Date: 2018-3-4
+	*			Mod: 建立文件
   *
   *******************************************************************************************************
   */	
@@ -25,15 +27,15 @@ Car_TypeDef Car;
 
 /*
 *********************************************************************************************************
-*                                          
+*                         Car_ParaInit                 
 *
-* Description: 
+* Description: 车子参数初始化,从芯片Flash中读取出存储的电机参数
 *             
-* Arguments  : 
+* Arguments  : None.
 *
-* Reutrn     : 
+* Reutrn     : None.
 *
-* Note(s)    : 
+* Note(s)    : None.
 *********************************************************************************************************
 */
 void Car_ParaInit(void)
@@ -74,12 +76,13 @@ void Car_ParaInit(void)
 	Car.Motor.LeftSpeed = 0;
 	Car.Motor.RightSpeed = 0;
 	
+	/*  小车基本速度  */
 	Car.BaseSpeed = drv_flash_ReadSector(CAR_PARA_FLASH_ADDR, 0, int16_t);
 }
 
 /*
 *********************************************************************************************************
-*                                          
+*                            Car_ParaStroe              
 *
 * Description: 
 *             
@@ -98,7 +101,7 @@ void Car_ParaStroe(void)
 
 /*
 *********************************************************************************************************
-*                                          
+*                                Car_PIDCalc          
 *
 * Description: 
 *             
@@ -117,12 +120,19 @@ void Car_PIDCalc(void)
 	Car.PID.Error = Car.HorizontalAE - LastError;		/*  计算当前微分量  */
 	
 	/*  计算PWM  */
-	pwm = (int16_t)((Car.HorizontalAE * 10 *  Car.PID.Kp_Straight) + (Car.PID.Sum * Car.PID.Ki_Straight) - (Car.PID.Error * Car.PID.Kd_Straight));
+	if(Car.Sensor[SENSOR_V_L].Average < 10 && Car.Sensor[SENSOR_V_R].Average < 10)	/*  直道  */
+	{
+		pwm = (int16_t)((Car.HorizontalAE * 10 *  Car.PID.Kp_Straight) + (Car.PID.Sum * Car.PID.Ki_Straight) - (Car.PID.Error * Car.PID.Kd_Straight));
+	}
+	else			/*  弯道	*/
+	{
+		pwm = (int16_t)((Car.HorizontalAE * 10 *  Car.PID.Kp_Curved) + (Car.PID.Sum * Car.PID.Ki_Curved) - (Car.PID.Error * Car.PID.Kd_Curved));
+	}
 	
 	/*  保存上个时刻的误差  */
 	LastError = (float)(Car.HorizontalAE * 10);
 	
-	if(Car.Sensor[SENSOR_ID_2].Average > 12 || Car.Sensor[SENSOR_ID_3].Average > 12)
+	if(Car.Sensor[SENSOR_V_L].Average > 12 || Car.Sensor[SENSOR_H_R].Average > 12)
 	{
 		/*  将计算出来的PID与基本速度相加  */
 		Car.Motor.LeftPwm = Car.BaseSpeed*2/3 - pwm;
@@ -158,15 +168,16 @@ void Car_PIDCalc(void)
 */
 void Car_Control(void)
 {
-//	bsp_led_Toggle(2);
+	bsp_led_Toggle(1);
 	bsp_sensor_DataProcess();
+	bsp_encoder_SpeedCalc();
 	Car_PIDCalc();
 	
 	
-//	if(Car.Sensor[SENSOR_ID_1].Average < 20 || Car.Sensor[SENSOR_ID_4].Average < 20)
+//	if(Car.Sensor[SENSOR_H_L].Average < 20 || Car.Sensor[SENSOR_V_R].Average < 20)
 //		bsp_motor_Stop();
 //	else
-		bsp_motor_SetPwm(Car.Motor.LeftPwm, Car.Motor.RightPwm);
+//		bsp_motor_SetPwm(Car.Motor.LeftPwm, Car.Motor.RightPwm);
 }
 	
 	

@@ -312,17 +312,17 @@ void debug_SensorDataReport(void)
 	uint8_t Buff[18] = {0};
 	uint8_t cnt = 0;
 	
-	Buff[cnt++] = BYTE2(Car.Sensor[SENSOR_ID_1].Average);
-	Buff[cnt++] = BYTE1(Car.Sensor[SENSOR_ID_1].Average);
+	Buff[cnt++] = BYTE2(Car.Sensor[SENSOR_H_L].Average);
+	Buff[cnt++] = BYTE1(Car.Sensor[SENSOR_H_L].Average);
 	
-	Buff[cnt++] = BYTE2(Car.Sensor[SENSOR_ID_2].Average);
-	Buff[cnt++] = BYTE1(Car.Sensor[SENSOR_ID_2].Average);
+	Buff[cnt++] = BYTE2(Car.Sensor[SENSOR_V_L].Average);
+	Buff[cnt++] = BYTE1(Car.Sensor[SENSOR_V_L].Average);
 	
-	Buff[cnt++] = BYTE2(Car.Sensor[SENSOR_ID_3].Average);
-	Buff[cnt++] = BYTE1(Car.Sensor[SENSOR_ID_3].Average);
+	Buff[cnt++] = BYTE2(Car.Sensor[SENSOR_H_R].Average);
+	Buff[cnt++] = BYTE1(Car.Sensor[SENSOR_H_R].Average);
 	
-	Buff[cnt++] = BYTE2(Car.Sensor[SENSOR_ID_4].Average);
-	Buff[cnt++] = BYTE1(Car.Sensor[SENSOR_ID_4].Average);
+	Buff[cnt++] = BYTE2(Car.Sensor[SENSOR_V_R].Average);
+	Buff[cnt++] = BYTE1(Car.Sensor[SENSOR_V_R].Average);
 	
 	
 	Buff[cnt++] = BYTE2((int16_t)(Car.HorizontalAE * 1000));
@@ -429,27 +429,34 @@ void debug_ShowPara(void)
 	TimerTaskRunMutexSignal = 1;
 	
 	bsp_oled_Clear();
-	bsp_oled_ShowInteger(0,0,(int)(Car.PID.Kp_Straight ), 16);
-	bsp_oled_ShowInteger(42,0,(int)(Car.PID.Ki_Straight ), 16);
-	bsp_oled_ShowInteger(84,0,(int)(Car.PID.Kd_Straight ), 16);
+//	bsp_oled_ShowInteger(0,0,(int)(Car.PID.Kp_Straight ), 16);
+//	bsp_oled_ShowInteger(42,0,(int)(Car.PID.Ki_Straight ), 16);
+//	bsp_oled_ShowInteger(84,0,(int)(Car.PID.Kd_Straight ), 16);
+//	
+	bsp_oled_ShowString(0, 0, "L:");
+	bsp_oled_ShowInteger(24, 0, Car.Motor.LeftEncoder, 16);
+	bsp_oled_ShowInteger(66, 0, Car.Motor.LeftSpeed, 16);
 	
-	bsp_oled_ShowString(0, 2, "C0:");
-	bsp_oled_ShowInteger(24,2,Car.Sensor[SENSOR_ID_1].CalibrationMax, 16);
-	
-	bsp_oled_ShowString(66, 2, "C3:");
-	bsp_oled_ShowInteger(90,2,Car.Sensor[SENSOR_ID_4].CalibrationMax, 16);
-	
-	bsp_oled_ShowString(0, 4, "C0:");
-	bsp_oled_ShowInteger(24,4,Car.Sensor[SENSOR_ID_1].Average, 16);
-	
-	bsp_oled_ShowString(66, 4, "C3:");
-	bsp_oled_ShowInteger(90,4,Car.Sensor[SENSOR_ID_4].Average, 16);
-	
-	bsp_oled_ShowString(0, 6, "H:");
-	bsp_oled_ShowInteger(16,6,(int32_t)(Car.HorizontalAE * 10000), 16);
-	
-	bsp_oled_ShowString(80 - 16, 6, "V:");
-	bsp_oled_ShowInteger(80,6,(int32_t)(Car.VecticalAE), 16);
+	bsp_oled_ShowString(0, 2, "R:");
+	bsp_oled_ShowInteger(24, 2, Car.Motor.RightEncoder, 16);
+	bsp_oled_ShowInteger(66, 2, Car.Motor.RightSpeed, 16);
+//	bsp_oled_ShowString(0, 2, "C0:");
+//	bsp_oled_ShowInteger(24,2,Car.Sensor[SENSOR_H_L].CalibrationMax, 16);
+//	
+//	bsp_oled_ShowString(66, 2, "C3:");
+//	bsp_oled_ShowInteger(90,2,Car.Sensor[SENSOR_V_R].CalibrationMax, 16);
+//	
+//	bsp_oled_ShowString(0, 4, "C0:");
+//	bsp_oled_ShowInteger(24,4,Car.Sensor[SENSOR_H_L].Average, 16);
+//	
+//	bsp_oled_ShowString(66, 4, "C3:");
+//	bsp_oled_ShowInteger(90,4,Car.Sensor[SENSOR_V_R].Average, 16);
+//	
+//	bsp_oled_ShowString(0, 6, "H:");
+//	bsp_oled_ShowInteger(16,6,(int32_t)(Car.HorizontalAE * 10000), 16);
+//	
+//	bsp_oled_ShowString(80 - 16, 6, "V:");
+//	bsp_oled_ShowInteger(80,6,(int32_t)(Car.VecticalAE), 16);
 
 	TimerTaskRunMutexSignal = 0;
 }

@@ -37,10 +37,10 @@
 /* 传感器ID枚举变量   */
 typedef enum
 {
-	SENSOR_ID_1 = 0x0,
-	SENSOR_ID_2,
-	SENSOR_ID_3,
-	SENSOR_ID_4,
+	SENSOR_H_L = 0x0,
+	SENSOR_V_L,
+	SENSOR_H_R,
+	SENSOR_V_R,
 	SENSOR_COUNT,
 }SENSOR_ID_EnumType;
 

@@ -78,6 +78,27 @@ void Car_ParaInit(void)
 	
 	/*  小车基本速度  */
 	Car.BaseSpeed = drv_flash_ReadSector(CAR_PARA_FLASH_ADDR, 0, int16_t);
+	
+	/*  小车初始道路为直道  */
+	Car.NowRoad = Road_Straight;
+}
+
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
+void Car_Running(void)
+{
+	bsp_led_Toggle(1);
 }
 
 /*

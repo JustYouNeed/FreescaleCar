@@ -23,6 +23,24 @@
 # include "bsp.h"
 # include "app_pid.h"
 
+/*  道路情况枚举变量  */
+typedef enum
+{
+	Road_Straight = 0x0,		/*  直道  */
+	Road_SmallCurve,				/*  小弯  */
+	Road_BigCurve,					/*  大弯  */
+	Road_Island,						/*  环岛  */
+	Road_Circle,						/*  圆环  */
+	Road_Ramp,							/*  坡道  */
+}Road_TypeDef;
+
+/*  车子丢线情况枚举变量  */
+typedef enum
+{
+	LeftLostLine = 0x0,			/*  左丢线  */
+	RightLostLine,					/*  右丢线  */
+}LoseLine_TypeDef;
+
 
 /*  车子整体参数结构体定义  */
 typedef struct
@@ -34,6 +52,8 @@ typedef struct
 	float HorizontalAE, VecticalAE;				/*  传感器水平、垂直和差比  */
 	int16_t BaseSpeed;										/*  车子基本速度  */
 	int16_t OutThreshold[SENSOR_COUNT];		/*  出线阈值  */
+	Road_TypeDef NowRoad;
+	LoseLine_TypeDef LossLine;
 }Car_TypeDef;
 
 extern Car_TypeDef Car;
@@ -41,7 +61,7 @@ extern Car_TypeDef Car;
 void Car_ParaInit(void);
 void Car_Control(void);
 void Car_ParaStroe(void);
-
+void Car_Running(void);
 # endif
 
 /********************************************  END OF FILE  *******************************************/

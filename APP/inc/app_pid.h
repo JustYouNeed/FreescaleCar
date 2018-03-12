@@ -31,6 +31,9 @@ typedef struct
 	float Kp_Curved;
 	float Ki_Curved;
 	float Kd_Curved;
+	
+	float Error;
+	int16_t Sum;
 }PID_TypeDef;
 
 extern PID_TypeDef PID;

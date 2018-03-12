@@ -19,6 +19,8 @@
 # define SENSOR_PARA_FLASH_ADDR		253
 # define SENSOR_PARA_LENGTH				60
 
+# define CAR_PARA_FLASH_ADDR			252
+
 
 void bsp_Config(void);
 

@@ -37,12 +37,10 @@
 /* 传感器ID枚举变量   */
 typedef enum
 {
-	SENSOR_ID_1 = 0x0,
-	SENSOR_ID_2,
-	SENSOR_ID_3,
-	SENSOR_ID_4,
-	SENSOR_ID_5,
-	SENSOR_ID_6,
+	SENSOR_H_L = 0x0,
+	SENSOR_V_L,
+	SENSOR_H_R,
+	SENSOR_V_R,
 	SENSOR_COUNT,
 }SENSOR_ID_EnumType;
 
@@ -54,11 +52,11 @@ typedef struct
 	uint16_t Average;
 	uint16_t CalibrationMax;
 	uint16_t CalibrationMin;
+	
 	float NormalizedValue;
 	uint16_t FIFO[SENSOR_FIFO_SIZE];
 }Sensor_TypeDef;
 
-extern Sensor_TypeDef Sensor[SENSOR_COUNT];
 
 void bsp_sensor_Config(void);
 void bsp_sensor_DataProcess(void);

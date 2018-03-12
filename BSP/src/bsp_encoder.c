@@ -43,7 +43,7 @@
 */
 static void _cbLeftEncoder(void)
 {
-	Car.Motor.LeftEncoder = (READ_DIR(LEFTENCONDER_DIR_PIN) == 1) ? (Car.Motor.LeftEncoder + 1) : (Car.Motor.LeftEncoder - 1);
+	Car.Motor.LeftEncoder ++;
 }
 
 /*
@@ -61,7 +61,7 @@ static void _cbLeftEncoder(void)
 */
 static void _cbRightEncoder(void)
 {
-	Car.Motor.RightEncoder = (READ_DIR(RIGHTENCONDER_DIR_PIN) == 1) ? (Car.Motor.RightEncoder + 1) : (Car.Motor.RightEncoder - 1);
+	Car.Motor.RightEncoder ++;
 }
 
 
@@ -121,6 +121,10 @@ void bsp_encoder_Config(void)
 extern uint8_t TimerTaskRunMutexSignal;
 void bsp_encoder_SpeedCalc(void)
 {
+<<<<<<< HEAD
+=======
+	static uint32_t LastLeftEncoder,LastRightEncoder;
+>>>>>>> origin/Mr-He
 	static uint32_t LastTime;
 	int32_t runtime;
 

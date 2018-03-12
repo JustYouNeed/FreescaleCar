@@ -33,7 +33,7 @@
 ".\objects\app_sort.o"
 ".\objects\app_filter.o"
 ".\objects\app_pid.o"
---strict --scatter ".\Objects\LED.sct"
+--strict --scatter ".\Objects\FreescaleCar.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
---list ".\Listings\LED.map" -o .\Objects\LED.axf
+--list ".\Listings\FreescaleCar.map" -o .\Objects\FreescaleCar.axf

@@ -129,7 +129,6 @@ void bsp_sensor_DataProcess(void)
 	
 	/*  用于从ADC寄存器中读取出转换结果  */
 	uint16_t ADC_Value[SENSOR_COUNT];
-	bsp_led_Toggle(2);
 	
 	/*  获取各个传感器的电压值  */
 	drv_adc_GetMultiADCResult(ADC_Value);
@@ -150,11 +149,11 @@ void bsp_sensor_DataProcess(void)
 	}
 	
 	/*  计算水平差比和  */
-	Car.HorizontalAE = (int32_t)(float)(Car.Sensor[SENSOR_ID_1].NormalizedValue - Car.Sensor[SENSOR_ID_4].NormalizedValue) / 
-														(Car.Sensor[SENSOR_ID_1].NormalizedValue + Car.Sensor[SENSOR_ID_4].NormalizedValue);
+	Car.HorizontalAE = (float)(Car.Sensor[SENSOR_H_L].NormalizedValue - Car.Sensor[SENSOR_V_R].NormalizedValue) / 
+														(Car.Sensor[SENSOR_H_L].NormalizedValue + Car.Sensor[SENSOR_V_R].NormalizedValue);
 	/*  垂直差比和  */
-	Car.VecticalAE = (int32_t)(float)(Car.Sensor[SENSOR_ID_2].NormalizedValue - Car.Sensor[SENSOR_ID_3].NormalizedValue) / 
-													(Car.Sensor[SENSOR_ID_2].NormalizedValue + Car.Sensor[SENSOR_ID_3].NormalizedValue);
+	Car.VecticalAE = ((Car.Sensor[SENSOR_V_L].NormalizedValue - Car.Sensor[SENSOR_H_R].NormalizedValue) / 
+													(Car.Sensor[SENSOR_V_L].NormalizedValue + Car.Sensor[SENSOR_H_R].NormalizedValue));
 }
 
 /*
@@ -176,6 +175,8 @@ void bsp_sensor_Calibration(void)
 	
 	uint16_t ADC_ValueTemp[SENSOR_COUNT];
 	uint16_t CalibrationValueTemp[SENSOR_COUNT * 2] = {0};
+	
+	bsp_oled_ShowString(0, 0, "Calibration...");
 	
 	/*  先假设最大最小值都为0  */
 	for(j = 0; j < SENSOR_COUNT; j++)
@@ -213,12 +214,14 @@ void bsp_sensor_Calibration(void)
 	for(j = 0; j < SENSOR_COUNT; j ++)
 	{
 		CalibrationValueTemp[j] = Car.Sensor[j].CalibrationMax;
-		CalibrationValueTemp[j + SENSOR_COUNT - 1] = Car.Sensor[j + SENSOR_COUNT - 1].CalibrationMin;
+		CalibrationValueTemp[j + SENSOR_COUNT] = Car.Sensor[j + SENSOR_COUNT].CalibrationMin;
 	}
 	
+	bsp_oled_ShowString(0, 2, "Calibration OK!");
+//	bsp_tim_DelayMs(500);
 	/*  保存标定最大值到FLASH  */
 	drv_flash_EraseSector(SENSOR_PARA_FLASH_ADDR);
-	drv_flash_WriteSector(SENSOR_PARA_FLASH_ADDR, (const uint8_t *)CalibrationValueTemp, SENSOR_COUNT * 2, 0);
+	drv_flash_WriteSector(SENSOR_PARA_FLASH_ADDR, (const uint8_t *)CalibrationValueTemp, SENSOR_COUNT * 4, 0);
 }
 
 /********************************************  END OF FILE  *******************************************/

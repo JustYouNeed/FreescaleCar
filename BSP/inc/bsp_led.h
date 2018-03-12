@@ -28,14 +28,12 @@
 # include "derivative.h"
 
 /*  定义按键开关时引脚的状态  */
-# define LED_ON				GPIO_PIN_RESET
-# define LED_OFF			GPIO_PIN_SET
+# define LED_OFF				GPIO_PIN_RESET
+# define LED_ON					GPIO_PIN_SET
 
 /*  LED灯引脚定义  */
-# define LED1_PIN			GPIO_Pin_B1
-# define LED2_PIN			GPIO_Pin_E5
-# define LED3_PIN			GPIO_Pin_D2
-# define LED4_PIN			GPIO_Pin_C5
+# define LED1_PIN			GPIO_Pin_D0
+# define LED2_PIN			GPIO_Pin_D1
 
 /*  LED ID枚举变量  */
 typedef enum
@@ -43,8 +41,6 @@ typedef enum
 	LED_ALL = 0x0,
 	LED1,
 	LED2,
-	LED3,
-	LED4,
 }LED_IDType;
 
 

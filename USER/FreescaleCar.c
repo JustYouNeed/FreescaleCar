@@ -17,7 +17,11 @@
   * History
   *		1.Author: Vector
 	*			Date: 2018-3-4
+<<<<<<< HEAD
 >>>>>>> origin/Mr-He
+=======
+>>>>>>> Mr-He
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
 	*			Mod: 建立文件
   *
   *******************************************************************************************************
@@ -46,7 +50,11 @@ Car_TypeDef Car;
 *                         Car_ParaInit                 
 *
 * Description: 车子参数初始化,从芯片Flash中读取出存储的电机参数
+<<<<<<< HEAD
 >>>>>>> origin/Mr-He
+=======
+>>>>>>> Mr-He
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
 *             
 * Arguments  : None.
 *
@@ -59,7 +67,7 @@ void Car_ParaInit(void)
 {
 	uint8_t i = 0;
 	
-	/*  初始化车子的各差比  */
+	/*  初始化车子的和差比  */
 	Car.HorizontalAE = 0;
 	Car.VecticalAE = 0;
 		
@@ -98,6 +106,9 @@ void Car_ParaInit(void)
 	
 	/*  小车初始道路为直道  */
 	Car.NowRoad = Road_Straight;
+	
+	/*  小车开始未丢线  */
+	Car.LossLine = LostLine_None;
 }
 
 /*
@@ -115,7 +126,7 @@ void Car_ParaInit(void)
 */
 void Car_Running(void)
 {
-	bsp_led_Toggle(1);
+	bsp_led_Toggle(0);
 }
 
 /*
@@ -193,6 +204,34 @@ void Car_PIDCalc(void)
 
 /*
 *********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
+void Car_RaodCalc(void)
+{
+	uint8_t LastDir = 0;
+	
+	/*  如果右边电感的归一化值大于左边的电感,说明上一个时刻是保持右转的状态  */
+	if((100 * (Car.Sensor[SENSOR_H_R].NormalizedValue - Car.Sensor[SENSOR_H_L].NormalizedValue)) >= 20) 
+		LastDir = TurnRight;
+	
+	/*  如果左边电感的归一化值大于右边的电感,说明上一个时刻是保持左转的状态  */
+	if((100 * (Car.Sensor[SENSOR_H_L].NormalizedValue - Car.Sensor[SENSOR_H_R].NormalizedValue)) >= 20)
+		LastDir = TurnLeft;
+	
+	
+}
+
+/*
+*********************************************************************************************************
 *                       Car_Control                   
 *
 * Description: 车子控制函数,解算传感器数据
@@ -214,7 +253,11 @@ void Car_Control(void)
 =======
 	bsp_led_Toggle(1);
 	bsp_sensor_DataProcess();
+<<<<<<< HEAD
 >>>>>>> origin/Mr-He
+=======
+>>>>>>> Mr-He
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
 	bsp_encoder_SpeedCalc();
 	Car_PIDCalc();
 	

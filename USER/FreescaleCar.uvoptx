@@ -73,7 +73,7 @@
         <LExpSel>0</LExpSel>
       </OPTXL>
       <OPTFL>
-        <tvExp>1</tvExp>
+        <tvExp>0</tvExp>
         <tvExpOptDlg>0</tvExpOptDlg>
         <IsCurrentTarget>1</IsCurrentTarget>
       </OPTFL>
@@ -208,7 +208,7 @@
           <Type>0</Type>
           <LineNumber>59</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>4328</Address>
+          <Address>4092</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -224,7 +224,7 @@
           <Type>0</Type>
           <LineNumber>83</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>12408</Address>
+          <Address>12336</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -234,22 +234,6 @@
           <Filename>E:\瀛︿範璧勬枡\姣旇禌\椋炴€濆崱灏旀櫤鑳借溅澶ц禌\绋嬪簭\Freescale\USER\main.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression>\\FreescaleCar\main.c\83</Expression>
-        </Bp>
-        <Bp>
-          <Number>2</Number>
-          <Type>0</Type>
-          <LineNumber>16</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>3730</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>E:\瀛︿範璧勬枡\姣旇禌\椋炴€濆崱灏旀櫤鑳借溅澶ц禌\绋嬪簭\Freescale\BSP\src\bsp.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\FreescaleCar\../BSP/src/bsp.c\16</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -411,7 +395,7 @@
 
   <Group>
     <GroupName>DRV</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -599,7 +583,7 @@
 
   <Group>
     <GroupName>BSP</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

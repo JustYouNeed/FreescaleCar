@@ -38,12 +38,15 @@ int main(void)
 	/*  创建一个硬件定时器,周期3ms,用于小车周期性控制  */
 	bsp_tim_CreateHardTimer(1, 3, Car_Control);
 =======
+<<<<<<< HEAD
 
 
 void test_LedTest(void)
 {
 	bsp_led_Toggle(0);
 }
+=======
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
 
 int main(void)
 {	
@@ -71,10 +74,15 @@ int main(void)
 	bsp_tim_CreateSoftTimer(4, 11, bsp_encoder_SpeedCalc, TIMER_MODE_AUTO);
 	
 	/*  硬件定时器任务,车子控制任务,周期20ms  */
+<<<<<<< HEAD
 	bsp_tim_CreateHardTimer(1, 6, Car_Control);
 >>>>>>> origin/Mr-He
+=======
+//	bsp_tim_CreateHardTimer(1, 6, Car_Control);
+>>>>>>> Mr-He
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
 	
-	bsp_motor_SetPwm(-300, -300);
+	bsp_motor_SetPwm(-600, -600);
 	DRV_ENABLE();
 	while(1);
 //	{

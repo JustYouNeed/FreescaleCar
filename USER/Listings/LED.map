@@ -17,7 +17,11 @@ Section Cross References
     main.o(i.main) refers to bsp_timer.o(i.bsp_tim_DelayMs) for bsp_tim_DelayMs
     main.o(i.test_LedTest) refers to bsp_led.o(i.bsp_led_Toggle) for bsp_led_Toggle
     freescalecar.o(i.Car_Control) refers to bsp_led.o(i.bsp_led_Toggle) for bsp_led_Toggle
+<<<<<<< HEAD
 >>>>>>> origin/Mr-He
+=======
+>>>>>>> Mr-He
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
     freescalecar.o(i.Car_Control) refers to bsp_sensor.o(i.bsp_sensor_DataProcess) for bsp_sensor_DataProcess
     freescalecar.o(i.Car_Control) refers to bsp_encoder.o(i.bsp_encoder_SpeedCalc) for bsp_encoder_SpeedCalc
     freescalecar.o(i.Car_Control) refers to freescalecar.o(i.Car_PIDCalc) for Car_PIDCalc
@@ -666,7 +670,11 @@ Removing Unused input sections from the image.
 =======
     Removing main.o(i.test_LedTest), (10 bytes).
     Removing main.o(.data), (8 bytes).
+<<<<<<< HEAD
 >>>>>>> origin/Mr-He
+=======
+>>>>>>> Mr-He
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
     Removing freescalecar.o(.rev16_text), (4 bytes).
     Removing freescalecar.o(.revsh_text), (4 bytes).
     Removing freescalecar.o(i.Car_Control), (36 bytes).
@@ -852,7 +860,11 @@ Removing Unused input sections from the image.
 151 unused section(s) (total 10411 bytes) removed from the image.
 =======
 184 unused section(s) (total 19570 bytes) removed from the image.
+<<<<<<< HEAD
 >>>>>>> origin/Mr-He
+=======
+>>>>>>> Mr-He
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
 
 ==============================================================================
 
@@ -868,7 +880,11 @@ Image Symbol Table
     ../clib/angel/boardlib.s                 0x00000000   Number         0  boardinit2.o ABSOLUTE
     ../clib/angel/boardlib.s                 0x00000000   Number         0  boardinit1.o ABSOLUTE
 =======
+<<<<<<< HEAD
 >>>>>>> origin/Mr-He
+=======
+>>>>>>> Mr-He
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
     ../clib/angel/boardlib.s                 0x00000000   Number         0  boardshut.o ABSOLUTE
     ../clib/angel/boardlib.s                 0x00000000   Number         0  boardinit3.o ABSOLUTE
     ../clib/angel/boardlib.s                 0x00000000   Number         0  boardinit2.o ABSOLUTE
@@ -908,7 +924,11 @@ Image Symbol Table
     ../clib/angel/scatterp.s                 0x00000000   Number         0  __scatter.o ABSOLUTE
     ../clib/angel/startup.s                  0x00000000   Number         0  __main.o ABSOLUTE
     ../clib/angel/sys.s                      0x00000000   Number         0  tempstk.o ABSOLUTE
+<<<<<<< HEAD
 >>>>>>> origin/Mr-He
+=======
+>>>>>>> Mr-He
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
     ../clib/angel/sys.s                      0x00000000   Number         0  use_no_semi.o ABSOLUTE
     ../clib/angel/sys.s                      0x00000000   Number         0  libspace.o ABSOLUTE
 <<<<<<< HEAD
@@ -927,7 +947,11 @@ Image Symbol Table
     ../clib/armsys.c                         0x00000000   Number         0  _get_argv_nomalloc.o ABSOLUTE
     ../clib/armsys.c                         0x00000000   Number         0  no_argv.o ABSOLUTE
     ../clib/armsys.c                         0x00000000   Number         0  argv_veneer.o ABSOLUTE
+<<<<<<< HEAD
 >>>>>>> origin/Mr-He
+=======
+>>>>>>> Mr-He
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
     ../clib/bigflt.c                         0x00000000   Number         0  bigflt0.o ABSOLUTE
     ../clib/btod.c                           0x00000000   Number         0  btod.o ABSOLUTE
     ../clib/division.c                       0x00000000   Number         0  rtudiv10.o ABSOLUTE
@@ -935,7 +959,11 @@ Image Symbol Table
 <<<<<<< HEAD
 =======
     ../clib/division.s                       0x00000000   Number         0  aeabi_sdiv_div0.o ABSOLUTE
+<<<<<<< HEAD
 >>>>>>> origin/Mr-He
+=======
+>>>>>>> Mr-He
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
     ../clib/division.s                       0x00000000   Number         0  aeabi_sdiv.o ABSOLUTE
     ../clib/division.s                       0x00000000   Number         0  aeabi_sdiv_div0.o ABSOLUTE
     ../clib/heapalloc.c                      0x00000000   Number         0  hrguard.o ABSOLUTE
@@ -984,7 +1012,11 @@ Image Symbol Table
     ../clib/printf.c                         0x00000000   Number         0  _printf_hex_ptr.o ABSOLUTE
     ../clib/printf.c                         0x00000000   Number         0  _printf_hex_int_ll.o ABSOLUTE
     ../clib/printf.c                         0x00000000   Number         0  _printf_hex_int.o ABSOLUTE
+<<<<<<< HEAD
 >>>>>>> origin/Mr-He
+=======
+>>>>>>> Mr-He
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
     ../clib/printf.c                         0x00000000   Number         0  _printf_hex_ll.o ABSOLUTE
     ../clib/printf.c                         0x00000000   Number         0  _printf_hex_int.o ABSOLUTE
     ../clib/printf.c                         0x00000000   Number         0  _printf_oct_int_ll.o ABSOLUTE
@@ -1027,7 +1059,11 @@ Image Symbol Table
     ../clib/printf.c                         0x00000000   Number         0  _printf_fp_infnan.o ABSOLUTE
     ../clib/printf.c                         0x00000000   Number         0  _printf_wchar.o ABSOLUTE
     ../clib/printf.c                         0x00000000   Number         0  _printf_char.o ABSOLUTE
+<<<<<<< HEAD
 >>>>>>> origin/Mr-He
+=======
+>>>>>>> Mr-He
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
     ../clib/printf_percent.s                 0x00000000   Number         0  _printf_s.o ABSOLUTE
     ../clib/printf_percent.s                 0x00000000   Number         0  _printf_llu.o ABSOLUTE
     ../clib/printf_percent.s                 0x00000000   Number         0  _printf_d.o ABSOLUTE
@@ -1092,7 +1128,11 @@ Image Symbol Table
     ../clib/signal.c                         0x00000000   Number         0  __raise.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  defsig_general.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  defsig_fpe_inner.o ABSOLUTE
+<<<<<<< HEAD
 >>>>>>> origin/Mr-He
+=======
+>>>>>>> Mr-He
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
     ../clib/signal.s                         0x00000000   Number         0  defsig.o ABSOLUTE
     ../clib/stdlib.c                         0x00000000   Number         0  exit.o ABSOLUTE
     ../clib/string.c                         0x00000000   Number         0  strcmp.o ABSOLUTE
@@ -1473,7 +1513,11 @@ Image Symbol Table
     FTMX                                     0x00001a20   Data          12  drv_ftm.o(.constdata)
     .constdata                               0x00001a2c   Section        8  drv_kbi.o(.constdata)
     KBIX                                     0x00001a2c   Data           8  drv_kbi.o(.constdata)
+<<<<<<< HEAD
 >>>>>>> origin/Mr-He
+=======
+>>>>>>> Mr-He
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
     .data                                    0x1ffff000   Section       12  system_skeaz1284.o(.data)
     .data                                    0x1ffff00c   Section        8  drv_pit.o(.data)
     PIT_Handler                              0x1ffff00c   Data           8  drv_pit.o(.data)
@@ -1540,7 +1584,11 @@ Image Symbol Table
     Heap_Mem                                 0x1ffff9b8   Data           0  startup_skeaz1284.o(HEAP)
     Stack_Mem                                0x1ffff9b8   Data         256  startup_skeaz1284.o(STACK)
     __initial_sp                             0x1ffffab8   Data           0  startup_skeaz1284.o(STACK)
+<<<<<<< HEAD
 >>>>>>> origin/Mr-He
+=======
+>>>>>>> Mr-He
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
 
     Global Symbols
 
@@ -1924,7 +1972,11 @@ Image Symbol Table
     main                                     0x00001a01   Thumb Code    18  main.o(i.main)
     Region$$Table$$Base                      0x00001a34   Number         0  anon$$obj.o(Region$$Table)
     Region$$Table$$Limit                     0x00001a54   Number         0  anon$$obj.o(Region$$Table)
+<<<<<<< HEAD
 >>>>>>> origin/Mr-He
+=======
+>>>>>>> Mr-He
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
     SystemCoreClock                          0x1ffff000   Data           4  system_skeaz1284.o(.data)
     SystemBusClock                           0x1ffff004   Data           4  system_skeaz1284.o(.data)
     SystemTimerClock                         0x1ffff008   Data           4  system_skeaz1284.o(.data)
@@ -1951,7 +2003,11 @@ Image Symbol Table
     RecBuff                                  0x1ffff754   Data         512  app_debug.o(.bss)
     __libspace_start                         0x1ffff954   Data          96  libspace.o(.bss)
     __temporary_stack_top$libspace           0x1ffff9b4   Data           0  libspace.o(.bss)
+<<<<<<< HEAD
 >>>>>>> origin/Mr-He
+=======
+>>>>>>> Mr-He
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
 
 
 
@@ -2325,7 +2381,11 @@ Memory Map of the image
     0x1ffff9b4   0x00000004   PAD
     0x1ffff9b8   0x00000000   Zero   RW          185    HEAP                startup_skeaz1284.o
     0x1ffff9b8   0x00000100   Zero   RW          184    STACK               startup_skeaz1284.o
+<<<<<<< HEAD
 >>>>>>> origin/Mr-He
+=======
+>>>>>>> Mr-He
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
 
 
 ==============================================================================
@@ -2348,7 +2408,11 @@ Image component sizes
        160         20          0          0          0       1421   bsp_encoder.o
        194         20          0          0         52       3315   bsp_key.o
        158          8          0          0          0       1075   bsp_led.o
+<<<<<<< HEAD
 >>>>>>> origin/Mr-He
+=======
+>>>>>>> Mr-He
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
        112         12          0          0          0        567   bsp_motor.o
        582          0          0          0          0       2857   bsp_oled.o
         42          0          0          0          0        512   bsp_sensor.o
@@ -2369,7 +2433,11 @@ Image component sizes
 =======
        192          6          0          0        244       1213   freescalecar.o
         18          0          0          0          0     125805   main.o
+<<<<<<< HEAD
 >>>>>>> origin/Mr-He
+=======
+>>>>>>> Mr-He
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
         80         44        192          0        256        884   startup_skeaz1284.o
        124         34          0         12          0        843   system_skeaz1284.o
 
@@ -2382,7 +2450,11 @@ Image component sizes
       5876        514        256         52       2592     183853   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         14          0          0          5          0          0   (incl. Padding)
+<<<<<<< HEAD
 >>>>>>> origin/Mr-He
+=======
+>>>>>>> Mr-He
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
 
     ----------------------------------------------------------------------
 
@@ -2449,7 +2521,11 @@ Image component sizes
     Total RO  Size (Code + RO Data)                 6740 (   6.58kB)
     Total RW  Size (RW Data + ZI Data)              2744 (   2.68kB)
     Total ROM Size (Code + RO Data + RW Data)       6792 (   6.63kB)
+<<<<<<< HEAD
 >>>>>>> origin/Mr-He
+=======
+>>>>>>> Mr-He
+>>>>>>> d476e22040494988d81fb0d65879a545a2623703
 
 ==============================================================================
 

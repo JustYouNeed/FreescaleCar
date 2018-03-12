@@ -31,14 +31,6 @@ compiling drv_pit.c...
 ..\DRV\src\drv_pit.c(54): error:  #20: identifier "SystemBusClock" is undefined
   	cnt = (SystemBusClock / 1000 ) * PIT_InitStruct->PIT_Period;
 ..\DRV\src\drv_pit.c: 0 warnings, 1 error
-compiling FreescaleCar.c...
-FreescaleCar.c(209): error:  #29: expected an expression
-  <<<<<<< HEAD
-FreescaleCar.c(214): error:  #29: expected an expression
-  =======
-FreescaleCar.c(217): error:  #29: expected an expression
-  >>>>>>> origin/Mr-He
-FreescaleCar.c: 0 warnings, 3 errors
 compiling main.c...
 main.c(16): error:  #169: expected a declaration
   <<<<<<< HEAD
@@ -46,81 +38,82 @@ main.c(39): warning:  #12-D: parsing restarts here after previous syntax error
   	bsp_tim_CreateHardTimer(1, 3, Car_Control);
 main.c(40): error:  #169: expected a declaration
   =======
-main.c(71): warning:  #12-D: parsing restarts here after previous syntax error
+main.c(74): warning:  #12-D: parsing restarts here after previous syntax error
   	bsp_tim_CreateSoftTimer(4, 11, bsp_encoder_SpeedCalc, TIMER_MODE_AUTO);
-main.c(74): error:  #79: expected a type specifier
-  	bsp_tim_CreateHardTimer(1, 6, Car_Control);
-main.c(74): error:  #79: expected a type specifier
-  	bsp_tim_CreateHardTimer(1, 6, Car_Control);
-main.c(74): error:  #757: function "Car_Control" is not a type name
-  	bsp_tim_CreateHardTimer(1, 6, Car_Control);
-main.c(74): warning:  #77-D: this declaration has no storage class or type specifier
-  	bsp_tim_CreateHardTimer(1, 6, Car_Control);
-main.c(74): error:  #147: declaration is incompatible with "int8_t bsp_tim_CreateHardTimer(uint8_t, uint32_t, _cbTimerCallBack)" (declared at line 61 of "..\BSP\inc\bsp_timer.h")
-  	bsp_tim_CreateHardTimer(1, 6, Car_Control);
-main.c(75): error:  #169: expected a declaration
-  >>>>>>> origin/Mr-He
-main.c(78): warning:  #77-D: this declaration has no storage class or type specifier
-  	
-RV_ENABLE();
-main.c(78): error:  #92: identifier-list parameters may only be used in a function definition
-  	
-RV_ENABLE();
-main.c(78): error:  #147: declaration is incompatible with "void drv_gpio_WritePin(uint8_t, GPIO_PinState)" (declared at line 250 of "..\DRV\inc\drv_gpio.h")
-  	
-RV_ENABLE();
+main.c(77): error:  #169: expected a declaration
+  <<<<<<< HEAD
 main.c(79): error:  #169: expected a declaration
+  >>>>>>> origin/Mr-He
+main.c(85): warning:  #12-D: parsing restarts here after previous syntax error
+  	bsp_motor_SetPwm(-600, -600);
+main.c(86): warning:  #77-D: this declaration has no storage class or type specifier
+  	
+RV_ENABLE();
+main.c(86): error:  #92: identifier-list parameters may only be used in a function definition
+  	
+RV_ENABLE();
+main.c(86): error:  #147: declaration is incompatible with "void drv_gpio_WritePin(uint8_t, GPIO_PinState)" (declared at line 250 of "..\DRV\inc\drv_gpio.h")
+  	
+RV_ENABLE();
+main.c(87): error:  #169: expected a declaration
   	while(1);
-main.c(86): error:  #169: expected a declaration
+main.c(94): error:  #169: expected a declaration
   }
-main.c: 4 warnings, 11 errors
-compiling drv_wdog.c...
-..\DRV\src\drv_wdog.c(51): error:  #20: identifier "SystemBusClock" is undefined
-  		case 
-DOG_ClockSource_BusClk: cnt = (SystemBusClock / 1000) * WDOG_InitStruct->WDOG_Period;break;
-..\DRV\src\drv_wdog.c: 0 warnings, 1 error
+main.c: 4 warnings, 8 errors
+compiling FreescaleCar.c...
+FreescaleCar.c(220): warning:  #550-D: variable "LastDir" was set but never used
+  	uint8_t LastDir = 0;
+FreescaleCar.c(248): error:  #29: expected an expression
+  <<<<<<< HEAD
+FreescaleCar.c(253): error:  #29: expected an expression
+  =======
+FreescaleCar.c(256): error:  #29: expected an expression
+  <<<<<<< HEAD
+FreescaleCar.c(261): warning:  #12-D: parsing restarts here after previous syntax error
+  	bsp_encoder_SpeedCalc();
+FreescaleCar.c: 2 warnings, 3 errors
+compiling drv_uart.c...
+..\DRV\src\drv_uart.c(58): error:  #20: identifier "SystemBusClock" is undefined
+  	uart_clk = SystemBusClock;
+..\DRV\src\drv_uart.c: 0 warnings, 1 error
 compiling drv_ftm.c...
 ..\DRV\src\drv_ftm.c(22): error:  #20: identifier "SystemTimerClock" is undefined
   	ftmclk = SystemTimerClock;
 ..\DRV\src\drv_ftm.c(90): error:  #20: identifier "SystemBusClock" is undefined
   	pwmclk = SystemBusClock;
 ..\DRV\src\drv_ftm.c: 0 warnings, 2 errors
-compiling drv_uart.c...
-..\DRV\src\drv_uart.c(58): error:  #20: identifier "SystemBusClock" is undefined
-  	uart_clk = SystemBusClock;
-..\DRV\src\drv_uart.c: 0 warnings, 1 error
+compiling drv_wdog.c...
+..\DRV\src\drv_wdog.c(51): error:  #20: identifier "SystemBusClock" is undefined
+  		case 
+DOG_ClockSource_BusClk: cnt = (SystemBusClock / 1000) * WDOG_InitStruct->WDOG_Period;break;
+..\DRV\src\drv_wdog.c: 0 warnings, 1 error
 compiling drv_flash.c...
 ..\DRV\src\drv_flash.c(81): error:  #20: identifier "SystemBusClock" is undefined
   	clk = (SystemBusClock / 1000000) - 1;
 ..\DRV\src\drv_flash.c: 0 warnings, 1 error
-compiling bsp.c...
-compiling bsp_led.c...
-compiling bsp_uart.c...
-..\BSP\src\bsp_uart.c(302): warning:  #550-D: variable "RecvData" was set but never used
-  	uint8_t RecvData = 0;
-..\BSP\src\bsp_uart.c(303): warning:  #550-D: variable "reg" was set but never used
-  	uint8_t reg = 0x0;
-..\BSP\src\bsp_uart.c: 2 warnings, 0 errors
-compiling bsp_key.c...
-compiling bsp_motor.c...
-compiling bsp_oled.c...
 compiling bsp_encoder.c...
-..\BSP\src\bsp_encoder.c(124): error:  #29: expected an expression
+..\BSP\src\bsp_encoder.c(126): error:  #29: expected an expression
   <<<<<<< HEAD
-..\BSP\src\bsp_encoder.c(127): error:  #29: expected an expression
-  >>>>>>> origin/Mr-He
-..\BSP\src\bsp_encoder.c(129): error:  #268: declaration may not appear after executable statement in block
+..\BSP\src\bsp_encoder.c(129): error:  #29: expected an expression
+  <<<<<<< HEAD
+..\BSP\src\bsp_encoder.c(134): warning:  #12-D: parsing restarts here after previous syntax error
+  	static uint32_t LastTime;
+..\BSP\src\bsp_encoder.c(135): error:  #268: declaration may not appear after executable statement in block
   	int32_t runtime;
-..\BSP\src\bsp_encoder.c(138): error:  #20: identifier "LastTime" is undefined
+..\BSP\src\bsp_encoder.c(144): error:  #20: identifier "LastTime" is undefined
   	runtime = bsp_tim_GetRunTime() - LastTime;
-..\BSP\src\bsp_encoder.c: 0 warnings, 4 errors
-compiling bsp_switch.c...
+..\BSP\src\bsp_encoder.c(148): error:  #29: expected an expression
+  <<<<<<< HEAD
+..\BSP\src\bsp_encoder.c(154): error:  #29: expected an expression
+  =======
+..\BSP\src\bsp_encoder.c(160): error:  #29: expected an expression
+  >>>>>>> Mr-He
+..\BSP\src\bsp_encoder.c: 1 warning, 7 errors
 compiling bsp_sensor.c...
 compiling app_debug.c...
-compiling app_filter.c...
-compiling app_sort.c...
+compiling bsp_motor.c...
 compiling app_pid.c...
-".\Objects\FreescaleCar.axf" - 24 Error(s), 6 Warning(s).
+".\Objects\FreescaleCar.axf" - 24 Error(s), 7 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
   G:\电子设计\飞卡\程序\FreescaleCar\USER\RTE
@@ -128,7 +121,7 @@ compiling app_pid.c...
 
 <h2>Collection of Component Files used:</h2>
 Target not created.
-Build Time Elapsed:  00:00:06
+Build Time Elapsed:  00:00:03
 </pre>
 </body>
 </html>

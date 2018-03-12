@@ -23,6 +23,13 @@
 # include "bsp.h"
 # include "app_pid.h"
 
+
+typedef enum
+{
+	TurnLeft = 0x0,
+	TurnRight,
+}Turn_TypeDef;
+
 /*  道路情况枚举变量  */
 typedef enum
 {
@@ -37,8 +44,9 @@ typedef enum
 /*  车子丢线情况枚举变量  */
 typedef enum
 {
-	LeftLostLine = 0x0,			/*  左丢线  */
-	RightLostLine,					/*  右丢线  */
+	LostLine_None = 0x0,		/*  未丢线  */
+	LostLine_Left,					/*  左丢线  */
+	LostLine_Right,					/*  右丢线  */
 }LoseLine_TypeDef;
 
 

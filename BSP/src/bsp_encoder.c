@@ -103,6 +103,8 @@ void bsp_encoder_Config(void)
 	drv_kbi_SetCallback(LEFTENCONDER_CHANNEL, _cbLeftEncoder);	/*  注册回调函数  */	
 
 	drv_kbi_SetCallback(RIGHTENCONDER_CHANNEL, _cbRightEncoder);	/*  注册回调函数  */
+	
+	NVIC_SetPriority(KBI0_IRQn, 0);
 }
 
 /*
@@ -135,6 +137,10 @@ void bsp_encoder_SpeedCalc(void)
 	runtime = bsp_tim_GetRunTime() - LastTime;
 	Car.Motor.LeftSpeed = (int32_t)(Car.Motor.LeftEncoder - LastLeftEncoder) / runtime;
 	Car.Motor.RightSpeed = (int32_t)(Car.Motor.RightEncoder - LastRightEncoder) / runtime;
+	
+	
+	Car.Motor.LeftEncoder = 0;
+	Car.Motor.RightEncoder = 0;
 	
 	/*  更新时刻,编码器值,为下次计算作准备  */
 	LastTime = 	bsp_tim_GetRunTime();

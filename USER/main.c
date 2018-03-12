@@ -3,7 +3,8 @@
 # include "app_debug.h"
 # include "app_pid.h"
 # include "FreescaleCar.h"
-
+# include "bsp_sensor.h"
+# include "app_debug.h"
 
 /*  各定时器任务运行时长  
 
@@ -13,40 +14,6 @@ bsp_key_Scan: 6.4us
 
 */
 
-<<<<<<< HEAD
-int main(void)
-{	
-	/*  主控基本初始化  */
-	bsp_Config();
-	
-	/*  小车参数初始化  */
-	Car_ParaInit();
-	
-	/*  如果需要校准传感器  */
-//	if(bsp_switch_GetValue() == 0xff)
-//		bsp_sensor_Calibration();
-	
-	/*  创建一个软件定时器,周期50ms,用于向上位机报告车子信息  */
-	bsp_tim_CreateSoftTimer(0, 50, app_debug_SensorDataReport, TIMER_MODE_AUTO);
-	
-	/*  创建一个软件定时器,周期20ms,用于按键扫描  */
-	bsp_tim_CreateSoftTimer(1, 20, bsp_key_Scan, TIMER_MODE_AUTO);
-	
-	/*  创建一个软件定时器,周期500ms, 用于显示车子信息  */
-	bsp_tim_CreateSoftTimer(3, 500, app_debug_ShowPara, TIMER_MODE_AUTO);
-	
-	/*  创建一个硬件定时器,周期3ms,用于小车周期性控制  */
-	bsp_tim_CreateHardTimer(1, 3, Car_Control);
-=======
-<<<<<<< HEAD
-
-
-void test_LedTest(void)
-{
-	bsp_led_Toggle(0);
-}
-=======
->>>>>>> d476e22040494988d81fb0d65879a545a2623703
 
 int main(void)
 {	
@@ -74,14 +41,9 @@ int main(void)
 	bsp_tim_CreateSoftTimer(4, 11, bsp_encoder_SpeedCalc, TIMER_MODE_AUTO);
 	
 	/*  硬件定时器任务,车子控制任务,周期20ms  */
-<<<<<<< HEAD
+//<<<<<<< HEAD
 	bsp_tim_CreateHardTimer(1, 6, Car_Control);
->>>>>>> origin/Mr-He
-=======
-//	bsp_tim_CreateHardTimer(1, 6, Car_Control);
->>>>>>> Mr-He
->>>>>>> d476e22040494988d81fb0d65879a545a2623703
-	
+
 	bsp_motor_SetPwm(-600, -600);
 	DRV_ENABLE();
 	while(1);
@@ -92,3 +54,4 @@ int main(void)
 //		bsp_tim_DelayMs(50);
 //	}
 }
+

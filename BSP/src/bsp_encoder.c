@@ -123,14 +123,14 @@ void bsp_encoder_Config(void)
 extern uint8_t TimerTaskRunMutexSignal;
 void bsp_encoder_SpeedCalc(void)
 {
-<<<<<<< HEAD
-=======
+//<<<<<<< HEAD
+//=======
 	static uint32_t LastLeftEncoder,LastRightEncoder;
-<<<<<<< HEAD
->>>>>>> origin/Mr-He
-=======
->>>>>>> Mr-He
->>>>>>> d476e22040494988d81fb0d65879a545a2623703
+//<<<<<<< HEAD
+//>>>>>>> origin/Mr-He
+//=======
+//>>>>>>> Mr-He
+//>>>>>>> d476e22040494988d81fb0d65879a545a2623703
 	static uint32_t LastTime;
 	int32_t runtime;
 
@@ -145,19 +145,19 @@ void bsp_encoder_SpeedCalc(void)
 	Car.Motor.LeftSpeed = (int32_t)(Car.Motor.LeftEncoder - 0) / runtime;
 	Car.Motor.RightSpeed = (int32_t)(Car.Motor.RightEncoder - 0) / runtime;
 	
-<<<<<<< HEAD
+//<<<<<<< HEAD
 	/*  清空编码器值  */
 	Car.Motor.LeftEncoder = 0;
 	Car.Motor.RightEncoder = 0;
 	
 	/*  更新时刻,为下次计算作准备  */
-=======
+//=======
 	
 	Car.Motor.LeftEncoder = 0;
 	Car.Motor.RightEncoder = 0;
 	
 	/*  更新时刻,编码器值,为下次计算作准备  */
->>>>>>> Mr-He
+//>>>>>>> Mr-He
 	LastTime = 	bsp_tim_GetRunTime();
 	
 	/*  程序运行完成  */

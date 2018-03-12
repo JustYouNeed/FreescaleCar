@@ -245,19 +245,16 @@ void Car_RaodCalc(void)
 */
 void Car_Control(void)
 {
-<<<<<<< HEAD
+
 	/*  处理小车传感器的数据  */
 	bsp_sensor_DataProcess();
 	
 	/*  计算小车电机速度  */
-=======
+
 	bsp_led_Toggle(1);
 	bsp_sensor_DataProcess();
-<<<<<<< HEAD
->>>>>>> origin/Mr-He
-=======
->>>>>>> Mr-He
->>>>>>> d476e22040494988d81fb0d65879a545a2623703
+
+
 	bsp_encoder_SpeedCalc();
 	Car_PIDCalc();
 	

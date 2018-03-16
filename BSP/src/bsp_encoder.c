@@ -41,10 +41,10 @@
 * Note(s)    : None.
 *********************************************************************************************************
 */
-static void _cbLeftEncoder(void)
-{
-	Car.Motor.LeftEncoder ++;
-}
+//static void _cbLeftEncoder(void)
+//{
+//	Car.Motor.LeftEncoder ++;
+//}
 
 /*
 *********************************************************************************************************
@@ -59,10 +59,10 @@ static void _cbLeftEncoder(void)
 * Note(s)    : None.
 *********************************************************************************************************
 */
-static void _cbRightEncoder(void)
-{
-	Car.Motor.RightEncoder ++;
-}
+//static void _cbRightEncoder(void)
+//{
+//	Car.Motor.RightEncoder ++;
+//}
 
 
 /*
@@ -81,30 +81,56 @@ static void _cbRightEncoder(void)
 void bsp_encoder_Config(void)
 {
 	GPIO_InitTypeDef GPIO_InitStruct;
-	KBI_InitTypeDef KBI_InitStruct;
+//	KBI_InitTypeDef KBI_InitStruct;
 	
-	/*  初始化编码器方向引脚  */
+
+//	
+//	/*  初始化编码器通道  */
+//	KBI_InitStruct.KBI_Channel = LEFTENCONDER_CHANNEL | RIGHTENCONDER_CHANNEL;
+//	KBI_InitStruct.KBI_EdgeOnlyCmd = ENABLE;
+//	KBI_InitStruct.KBI_TrigMode = KBI_TrigFalling;
+//	drv_kbi_Init(&KBI_InitStruct);
+//	
+//	drv_kbi_SetCallback(LEFTENCONDER_CHANNEL, _cbLeftEncoder);	/*  注册回调函数  */	
+
+//	drv_kbi_SetCallback(RIGHTENCONDER_CHANNEL, _cbRightEncoder);	/*  注册回调函数  */
+//	
+//	NVIC_SetPriority(KBI0_IRQn, 0);
+
+
+	SIM->SCGC |= SIM_SCGC_FTM0_MASK;
+	SIM->PINSEL &= ~SIM_PINSEL_FTM0CLKPS_MASK;
+	SIM->PINSEL |= SIM_PINSEL_FTM0CLKPS(1);
+//	FTM0->MODE |= (1 << 2);
+	
+	FTM0->SC &= ~(3);
+	FTM0->SC |= (3 << 3);
+	FTM0->CNT = 0;
+//	FTM0->MODE &= ~(1 << 2);
+	
+	SIM->SCGC |= SIM_SCGC_FTM1_MASK;
+	SIM->PINSEL &= ~SIM_PINSEL_FTM1CLKPS_MASK;
+	SIM->PINSEL |= SIM_PINSEL_FTM1CLKPS(2);
+//	FTM1->MODE |= (1 << 2);
+	FTM1->SC |= FTM_SC_PS(0);
+	FTM1->SC |= FTM_SC_CLKS(3);  
+//	FTM1->MODE &= ~(1 << 2);
+	FTM1->CNT = 0;
+	
+	
+//	drv_gpio_PullCmd(GPIO_Pin_E0, ENABLE);
+//	drv_gpio_PullCmd(GPIO_Pin_E7, ENABLE);
+	
+		/*  初始化编码器方向引脚  */
 	GPIO_InitStruct.GPIO_HDrv = DISABLE;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStruct.GPIO_Pin = LEFTENCONDER_DIR_PIN;
-	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;
 	drv_gpio_Init(&GPIO_InitStruct);
 	
 	/*  右边编码器方向引脚  */
 	GPIO_InitStruct.GPIO_Pin = RIGHTENCONDER_DIR_PIN;
 	drv_gpio_Init(&GPIO_InitStruct);
-	
-	/*  初始化编码器通道  */
-	KBI_InitStruct.KBI_Channel = LEFTENCONDER_CHANNEL | RIGHTENCONDER_CHANNEL;
-	KBI_InitStruct.KBI_EdgeOnlyCmd = ENABLE;
-	KBI_InitStruct.KBI_TrigMode = KBI_TrigFalling;
-	drv_kbi_Init(&KBI_InitStruct);
-	
-	drv_kbi_SetCallback(LEFTENCONDER_CHANNEL, _cbLeftEncoder);	/*  注册回调函数  */	
-
-	drv_kbi_SetCallback(RIGHTENCONDER_CHANNEL, _cbRightEncoder);	/*  注册回调函数  */
-	
-	NVIC_SetPriority(KBI0_IRQn, 0);
 }
 
 /*
@@ -123,31 +149,49 @@ void bsp_encoder_Config(void)
 extern uint8_t TimerTaskRunMutexSignal;
 void bsp_encoder_SpeedCalc(void)
 {
-	static uint32_t LastLeftEncoder,LastRightEncoder;
 	static uint32_t LastTime;
+	static uint16_t LastLeftEnconder, LastRightEnconder;
 	int32_t runtime;
 
 	/*  如果有其他中断函数正在执行,则直接返回  */
-	if(TimerTaskRunMutexSignal == 1) return ;
+//	if(TimerTaskRunMutexSignal == 1) return ;
+//	
+//	/*  标定定时器函数正在运行  */
+//	TimerTaskRunMutexSignal = 1;
 	
-	/*  标定定时器函数正在运行  */
-	TimerTaskRunMutexSignal = 1;
+	Car.Motor.LeftEncoder = (uint16_t)FTM0->CNT;
+	Car.Motor.RightEncoder = (uint16_t)FTM1->CNT;
+	
+	FTM0->CNT = 0;
+	FTM1->CNT = 0;
+	
+//	if(Car.Motor.LeftEncoder - LastLeftEnconder > 100 || Car.Motor.LeftEncoder - LastLeftEnconder < -100)
+//		Car.Motor.LeftEncoder = LastLeftEnconder;
+//	
+//	if(Car.Motor.RightEncoder - LastRightEnconder > 100 || Car.Motor.RightEncoder - LastRightEnconder < -100)
+//		Car.Motor.RightEncoder = LastRightEnconder;
 	
 	/*  计算速度  */
-	runtime = bsp_tim_GetRunTime() - LastTime;
-	Car.Motor.LeftSpeed = (int32_t)(Car.Motor.LeftEncoder - LastLeftEncoder) / runtime;
-	Car.Motor.RightSpeed = (int32_t)(Car.Motor.RightEncoder - LastRightEncoder) / runtime;
+//	runtime = bsp_tim_GetRunTime() - LastTime;
+	Car.Motor.LeftSpeed = (Car.Motor.LeftEncoder - 0);
+	Car.Motor.RightSpeed = (Car.Motor.RightEncoder - 0);
 	
+		if(drv_gpio_ReadPin(LEFTENCONDER_DIR_PIN) == 0) Car.Motor.LeftSpeed = -Car.Motor.LeftSpeed;
+	if(drv_gpio_ReadPin(RIGHTENCONDER_DIR_PIN) == 1) Car.Motor.RightSpeed = -Car.Motor.RightSpeed;
 	
-	Car.Motor.LeftEncoder = 0;
-	Car.Motor.RightEncoder = 0;
+	LastLeftEnconder = Car.Motor.LeftEncoder;
+	LastRightEnconder = Car.Motor.RightEncoder;
+	
+//	Car.Motor.LeftEncoder = 0;
+//	Car.Motor.RightEncoder = 0;
 	
 	/*  更新时刻,编码器值,为下次计算作准备  */
-	LastTime = 	bsp_tim_GetRunTime();
-	LastLeftEncoder = Car.Motor.LeftEncoder;
-	LastRightEncoder = Car.Motor.RightEncoder;
+//	LastTime = 	bsp_tim_GetRunTime();
+//	LastLeftEncoder = Car.Motor.LeftEncoder;
+//	LastRightEncoder = Car.Motor.RightEncoder;
 	
-	TimerTaskRunMutexSignal = 0;
+	
+//	TimerTaskRunMutexSignal = 0;
 }
 
 /********************************************  END OF FILE  *******************************************/

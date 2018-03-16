@@ -57,6 +57,10 @@ void Car_ParaInit(void)
 	Car.PID.Ki_Curved = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 16, float);
 	Car.PID.Kd_Curved = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 20, float);
 	
+	Car.PID.Velocity_Kp = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 24, float);
+	Car.PID.Velocity_Ki = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 28, float);
+	Car.PID.Velocity_Kd = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 32, float);
+	
 	/*  初始化车子的传感器参数,从Flash中读取标定值  */
 	for(i = 0; i < SENSOR_COUNT; i ++)
 	{
@@ -79,7 +83,8 @@ void Car_ParaInit(void)
 	Car.Motor.RightSpeed = 0;
 	
 	/*  小车基本速度  */
-	Car.BaseSpeed = drv_flash_ReadSector(CAR_PARA_FLASH_ADDR, 0, int16_t);
+//	Car.BaseSpeed = drv_flash_ReadSector(CAR_PARA_FLASH_ADDR, 0, int16_t);
+	Car.BaseSpeed = 30;
 	
 	/*  小车初始道路为直道  */
 	Car.NowRoad = Road_Straight;
@@ -138,7 +143,7 @@ void Car_ParaStroe(void)
 * Note(s)    : 
 *********************************************************************************************************
 */
-void Car_PIDCalc(void)
+int16_t Car_PIDCalc(void)
 {
 	int16_t pwm = 0;
 	static float LastError;
@@ -158,25 +163,26 @@ void Car_PIDCalc(void)
 	/*  保存上个时刻的误差  */
 	LastError = (float)(Car.HorizontalAE * 10);
 	
-	if(Car.Sensor[SENSOR_V_L].Average > 12 || Car.Sensor[SENSOR_H_R].Average > 12)
-	{
-		/*  将计算出来的PID与基本速度相加  */
-		Car.Motor.LeftPwm = Car.BaseSpeed*2/3 - pwm;
-		Car.Motor.RightPwm = Car.BaseSpeed*2/3 + pwm;
-	}
-	else
-	{
-		/*  将计算出来的PID与基本速度相加  */
-		Car.Motor.LeftPwm = Car.BaseSpeed - pwm;
-		Car.Motor.RightPwm = Car.BaseSpeed + pwm;
-	}
-	
-	/*  进行限幅  */
-	if(Car.Motor.LeftPwm > 600) Car.Motor.LeftPwm = 600;
-	else if(Car.Motor.LeftPwm < -600) Car.Motor.LeftPwm = -600;
-	
-	if(Car.Motor.RightPwm > 600) Car.Motor.RightPwm = 600;
-	else if(Car.Motor.RightPwm < -600) Car.Motor.RightPwm = -600;
+	return pwm;
+//	if(Car.Sensor[SENSOR_V_L].Average > 12 || Car.Sensor[SENSOR_H_R].Average > 12)
+//	{
+//		/*  将计算出来的PID与基本速度相加  */
+//		Car.Motor.LeftPwm = Car.BaseSpeed*2/3 - pwm;
+//		Car.Motor.RightPwm = Car.BaseSpeed*2/3 + pwm;
+//	}
+//	else
+//	{
+//		/*  将计算出来的PID与基本速度相加  */
+//		Car.Motor.LeftPwm = Car.BaseSpeed - pwm;
+//		Car.Motor.RightPwm = Car.BaseSpeed + pwm;
+//	}
+//	
+//	/*  进行限幅  */
+//	if(Car.Motor.LeftPwm > 600) Car.Motor.LeftPwm = 600;
+//	else if(Car.Motor.LeftPwm < -600) Car.Motor.LeftPwm = -600;
+//	
+//	if(Car.Motor.RightPwm > 600) Car.Motor.RightPwm = 600;
+//	else if(Car.Motor.RightPwm < -600) Car.Motor.RightPwm = -600;
 }
 
 /*
@@ -209,6 +215,64 @@ void Car_RaodCalc(void)
 
 /*
 *********************************************************************************************************
+*                       Car_VelocityPIDCalc                   
+*
+* Description: 小车速度环PID计算
+*             
+* Arguments  : None.
+*
+* Reutrn     : None.
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
+int16_t Car_LeftVelocityPIDCalc(int16_t LeftSpeed)
+{
+	static float Encoder, Encoder_Integral;
+	int16_t Velocity = 0;
+	int16_t Error = 0;
+	static int16_t LastError;
+	
+	Error = LeftSpeed - Car.BaseSpeed;
+	
+	Encoder *= 0.7;
+	Encoder += (Error * 0.3);
+	Encoder_Integral += Encoder;
+	
+	if(Encoder_Integral > 7200) Encoder_Integral = 7200;			//积分限幅
+	else if(Encoder_Integral < -7200) Encoder_Integral = -7200;		//
+	
+	Velocity = (int16_t)(Encoder * (-Car.PID.Velocity_Kp) + Encoder_Integral * (-Car.PID.Velocity_Ki)) + (Error - LastError)*(-Car.PID.Velocity_Kd);	//速度环PID计算	
+	LastError = Error;
+	
+	return Velocity;
+}
+
+
+int16_t Car_RightVelocityPIDCalc(int16_t RightSpeed)
+{
+	static float Encoder, Encoder_Integral;
+	int16_t Velocity = 0;
+	int16_t Error = 0;
+	static int16_t LastError;
+	
+	Error = RightSpeed - Car.BaseSpeed;
+	
+	Encoder *= 0.7;
+	Encoder += (Error * 0.3);
+	Encoder_Integral += Encoder;
+	
+	if(Encoder_Integral > 7200) Encoder_Integral = 7200;			//积分限幅
+	else if(Encoder_Integral < -7200) Encoder_Integral = -7200;		//
+	
+	Velocity = (int16_t)(Encoder * (-Car.PID.Velocity_Kp) + Encoder_Integral * (-Car.PID.Velocity_Ki)) + (Error - LastError)*(-Car.PID.Velocity_Kd);	//速度环PID计算	
+	LastError = Error;
+	
+	return Velocity;
+}
+
+/*
+*********************************************************************************************************
 *                       Car_Control                   
 *
 * Description: 车子控制函数,解算传感器数据
@@ -220,18 +284,40 @@ void Car_RaodCalc(void)
 * Note(s)    : None.
 *********************************************************************************************************
 */
+int16_t pwm = 0;
 void Car_Control(void)
 {
-	bsp_led_Toggle(1);
+	static uint8_t cnt=0;
+	int16_t TurnPwm = 0, LeftVelocityPwm = 0, RightVelocityPwm = 0;
+	
+	
 	bsp_sensor_DataProcess();
 	bsp_encoder_SpeedCalc();
-	Car_PIDCalc();
 	
 	
-//	if(Car.Sensor[SENSOR_H_L].Average < 20 || Car.Sensor[SENSOR_V_R].Average < 20)
-//		bsp_motor_Stop();
-//	else
-//		bsp_motor_SetPwm(Car.Motor.LeftPwm, Car.Motor.RightPwm);
+	cnt ++;
+	if(cnt >= 8)
+	{
+		bsp_led_Toggle(1);
+		cnt = 0;
+		LeftVelocityPwm = Car_LeftVelocityPIDCalc(Car.Motor.LeftEncoder);
+		RightVelocityPwm = Car_RightVelocityPIDCalc(Car.Motor.RightEncoder);
+		
+		Car.Motor.LeftPwm += LeftVelocityPwm;
+		Car.Motor.RightPwm += RightVelocityPwm;
+	}
+	
+	TurnPwm =	Car_PIDCalc();
+	Car.Motor.LeftPwm -= TurnPwm;
+	Car.Motor.RightPwm += TurnPwm;
+	
+	if(Car.Motor.LeftPwm >= 900) Car.Motor.LeftPwm = 900;
+	else if(Car.Motor.LeftPwm <= -900) Car.Motor.LeftPwm = -900;
+	
+		if(Car.Motor.RightPwm >= 900) Car.Motor.RightPwm = 900;
+	else if(Car.Motor.RightPwm <= -900) Car.Motor.RightPwm = -900;
+		
+	bsp_motor_SetPwm(Car.Motor.LeftPwm, Car.Motor.RightPwm);
 }
 	
 	

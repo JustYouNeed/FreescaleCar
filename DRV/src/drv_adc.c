@@ -59,7 +59,7 @@ void drv_adc_Init(ADC_InitTypeDef *ADC_InitStruct)
 	ADC->APCTL1 |= ADC_InitStruct->ADC_Channel;     /*  设置ADC采样通道  */
 	ADC->SC3 |= ADC_InitStruct->ADC_Resolution;			/*  设置ADC采样位数  */
 	ADC->SC3 |= ADC_InitStruct->ADC_Prescaler;			/*  时钟分频  */
-	ADC->SC2 |= ADC_InitStruct->ADC_ClockSource;		/*  时钟源  */
+	ADC->SC3 |= ADC_InitStruct->ADC_ClockSource;		/*  时钟源  */
 	ADC->SC2 |= ADC_InitStruct->ADC_RefSource;			/*  参考电压源  */
 	
 	if(ADC_InitStruct->ADC_ContinuousConvMode == ENABLE)	/*  如果开启了连续转换模式  */

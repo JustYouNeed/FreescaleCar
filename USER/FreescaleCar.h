@@ -62,6 +62,7 @@ typedef struct
 	int16_t OutThreshold[SENSOR_COUNT];		/*  ³öÏßãÐÖµ  */
 	Road_TypeDef NowRoad;
 	LoseLine_TypeDef LossLine;
+	int16_t MaxPWM;
 }Car_TypeDef;
 
 extern Car_TypeDef Car;

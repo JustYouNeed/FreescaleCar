@@ -150,13 +150,13 @@ int16_t Car_TurnPIDCalc(float HorizontalAE)
 	int16_t pwm = 0;
 	static float LastError;
 	
-	Car.PID.Error = HorizontalAE*10 - LastError;		/*  计算当前微分量  */
+	Car.PID.Error = HorizontalAE - LastError;		/*  计算当前微分量  */
 	
 	/*  计算PWM  */
 	pwm = (int16_t)((HorizontalAE*10 *  Car.PID.Kp_Straight) + (Car.PID.Error * Car.PID.Kd_Straight));
 	
 	/*  保存上个时刻的误差  */
-	LastError = (float)(Car.HorizontalAE * 10);
+	LastError = (float)(Car.HorizontalAE);
 	
 	return pwm;
 }
@@ -214,7 +214,7 @@ int16_t Car_LeftVelocityPIDCalc(int16_t LeftSpeed)
 	
 	/*  低通滤波,让速度平滑过渡  */
 	SpeedFilter *= 0.7;
-	SpeedFilter += (SpeedError * 0.3);
+	SpeedFilter += (SpeedError * 0.5);
 	SpeedIntegal += SpeedFilter;
 	
 	/*  积分限幅  */
@@ -257,7 +257,7 @@ int16_t Car_RightVelocityPIDCalc(int16_t RightSpeed)
 	
 	/*  低通滤波,让速度平滑过渡  */
 	SpeedFilter *= 0.7;
-	SpeedFilter += (SpeedError * 0.3);
+	SpeedFilter += (SpeedError * 0.5);
 	SpeedIntegal += SpeedFilter;
 	
 	/*  积分限幅  */
@@ -304,8 +304,12 @@ void Car_Control(void)
 		
 	/*  转向环计算  */
 	TurnPwm =	Car_TurnPIDCalc(Car.HorizontalAE);
-	Car.Motor.LeftPwm = LeftVelocityPwm+TurnPwm;
-	Car.Motor.RightPwm = RightVelocityPwm-TurnPwm;
+	
+	if((TurnLeft + LeftVelocityPwm) < 0)	Car.Motor.LeftPwm = 80;
+	else 	Car.Motor.LeftPwm = LeftVelocityPwm+TurnPwm;
+	
+	if((TurnPwm - RightVelocityPwm) < 0) Car.Motor.RightPwm = 80;
+	else Car.Motor.RightPwm = RightVelocityPwm-TurnPwm;
 	
 	/*  对PWM进行限幅  */
 	if(Car.Motor.LeftPwm >= Car.MaxPWM) Car.Motor.LeftPwm = Car.MaxPWM;

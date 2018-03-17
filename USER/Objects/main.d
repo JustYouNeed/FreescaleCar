@@ -1,4 +1,5 @@
 .\objects\main.o: main.c
+.\objects\main.o: ..\APP\inc\app_debug.h
 .\objects\main.o: ..\BSP\inc\bsp.h
 .\objects\main.o: ..\BSP\inc\bsp_led.h
 .\objects\main.o: ..\USER\derivative.h
@@ -73,7 +74,5 @@
 .\objects\main.o: ..\BSP\inc\bsp_switch.h
 .\objects\main.o: ..\USER\derivative.h
 .\objects\main.o: D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
-.\objects\main.o: ..\APP\inc\app.h
-.\objects\main.o: ..\APP\inc\app_debug.h
-.\objects\main.o: ..\APP\inc\app_pid.h
 .\objects\main.o: FreescaleCar.h
+.\objects\main.o: ..\APP\inc\app_pid.h

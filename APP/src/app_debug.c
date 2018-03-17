@@ -304,11 +304,11 @@ void debug_PIDDownload(void)
 	Car.PID.Kd_Curved = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_D;
 	cnt += 2;
 	
-	Car.PID.Velocity_Kp = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_P;
+	Car.PID.Velocity_Kp = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float)/100;
 	cnt += 2;
 	Car.PID.Velocity_Ki = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / 1000;
 	cnt += 2;
-	Car.PID.Velocity_Kd = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_D;
+	Car.PID.Velocity_Kd = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float)/100;
 	cnt += 2;
 	
 		

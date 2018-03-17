@@ -34,42 +34,6 @@
 # include "bsp_timer.h"
 # include "FreescaleCar.h"
 
-/*
-*********************************************************************************************************
-*                                 _cbLeftEncoder         
-*
-* Description: 左边编码器回调函数
-*             
-* Arguments  : None.
-*
-* Reutrn     : None.
-*
-* Note(s)    : None.
-*********************************************************************************************************
-*/
-//static void _cbLeftEncoder(void)
-//{
-//	Car.Motor.LeftEncoder ++;
-//}
-
-/*
-*********************************************************************************************************
-*                                 _cbRightEncoder         
-*
-* Description: 右边编码器回调函数
-*             
-* Arguments  : None.
-*
-* Reutrn     : None.
-*
-* Note(s)    : None.
-*********************************************************************************************************
-*/
-//static void _cbRightEncoder(void)
-//{
-//	Car.Motor.RightEncoder ++;
-//}
-
 
 /*
 *********************************************************************************************************
@@ -88,14 +52,15 @@ void bsp_encoder_Config(void)
 {
 	GPIO_InitTypeDef GPIO_InitStruct;
 
+	/*  初始化左边编码器,采用FTM0,引脚E0  */
 	SIM->SCGC |= SIM_SCGC_FTM0_MASK;
 	SIM->PINSEL &= ~SIM_PINSEL_FTM0CLKPS_MASK;
 	SIM->PINSEL |= SIM_PINSEL_FTM0CLKPS(1);
-	
 	FTM0->SC &= ~(3);
 	FTM0->SC |= (3 << 3);
 	FTM0->CNT = 0;
 	
+	/*  初始化左边编码器,采用FTM1,引脚E7  */
 	SIM->SCGC |= SIM_SCGC_FTM1_MASK;
 	SIM->PINSEL &= ~SIM_PINSEL_FTM1CLKPS_MASK;
 	SIM->PINSEL |= SIM_PINSEL_FTM1CLKPS(2);
@@ -107,7 +72,7 @@ void bsp_encoder_Config(void)
 //	drv_gpio_PullCmd(GPIO_Pin_E0, ENABLE);
 //	drv_gpio_PullCmd(GPIO_Pin_E7, ENABLE);
 	
-		/*  初始化编码器方向引脚  */
+	/*  初始化编码器方向引脚  */
 	GPIO_InitStruct.GPIO_HDrv = DISABLE;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStruct.GPIO_Pin = LEFTENCONDER_DIR_PIN;

@@ -1,7 +1,4 @@
-# include "bsp.h"
-# include "app.h"
 # include "app_debug.h"
-# include "app_pid.h"
 # include "FreescaleCar.h"
 
 
@@ -40,9 +37,8 @@ int main(void)
 //	bsp_tim_CreateSoftTimer(4, 11, bsp_encoder_SpeedCalc, TIMER_MODE_AUTO);
 	
 	/*  硬件定时器任务,车子控制任务,周期20ms  */
-	bsp_tim_CreateHardTimer(1, 5, Car_Control);
+	bsp_tim_CreateHardTimer(1, 8, Car_Control);
 	DRV_ENABLE();
-//	bsp_motor_SetPwm(160, 170);
 	
 	while(1);
 }

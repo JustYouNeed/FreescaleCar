@@ -87,25 +87,25 @@ void bsp_motor_SetPwm(int16_t LeftPwm, int16_t RightPwm)
 	/*  设置左边PWM  */
 	if(RightPwm >= 0)	/*  电机正转  */
 	{
-		drv_ftm_PWMSetDuty(DRV_PWM2_CHANNEL, RightPwm+3);
-		drv_ftm_PWMSetDuty(DRV_PWM1_CHANNEL, 3);
+		drv_ftm_PWMSetDuty(DRV_PWM1_CHANNEL, RightPwm+3);
+		drv_ftm_PWMSetDuty(DRV_PWM2_CHANNEL, 3);
 	}
 	else		/*  反转  */
 	{
-		drv_ftm_PWMSetDuty(DRV_PWM2_CHANNEL, 0+3);
-		drv_ftm_PWMSetDuty(DRV_PWM1_CHANNEL, -(RightPwm-3));
+		drv_ftm_PWMSetDuty(DRV_PWM1_CHANNEL, 0+3);
+		drv_ftm_PWMSetDuty(DRV_PWM2_CHANNEL, -(RightPwm-3));
 	}
 	
 	/*  设置左边PWM  */
 	if(LeftPwm >= 0)	/*  电机正转  */
 	{
-		drv_ftm_PWMSetDuty(DRV_PWM4_CHANNEL, LeftPwm+3);
-		drv_ftm_PWMSetDuty(DRV_PWM3_CHANNEL, 0+3);
+		drv_ftm_PWMSetDuty(DRV_PWM3_CHANNEL, LeftPwm+3);
+		drv_ftm_PWMSetDuty(DRV_PWM4_CHANNEL, 0+3);
 	}
 	else		/*  反转  */
 	{
-		drv_ftm_PWMSetDuty(DRV_PWM4_CHANNEL, 0+3);
-		drv_ftm_PWMSetDuty(DRV_PWM3_CHANNEL, -(LeftPwm-3));
+		drv_ftm_PWMSetDuty(DRV_PWM3_CHANNEL, 0+3);
+		drv_ftm_PWMSetDuty(DRV_PWM4_CHANNEL, -(LeftPwm-3));
 	}
 }
 

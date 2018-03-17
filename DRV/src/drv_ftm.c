@@ -76,15 +76,16 @@ void drv_ftm_PWMInit(PWM_InitTypeDef *PWM_InitStruct)
 
 /*
 *********************************************************************************************************
-*                                          
+*                          drv_ftm_PWMSetDuty                
 *
-* Description: 
+* Description: 设置PWM通道占空比
 *             
-* Arguments  : 
+* Arguments  : 1> PWM_Channel: PWM通道
+*							 2> duty: 占空比
 *
-* Reutrn     : 
+* Reutrn     : None.
 *
-* Note(s)    : 
+* Note(s)    : None.
 *********************************************************************************************************
 */
 void drv_ftm_PWMSetDuty(uint16_t PWM_Channel, uint16_t duty)

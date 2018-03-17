@@ -80,6 +80,10 @@ void Car_ParaInit(void)
 	Car.PID.Ki_Curved = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 16, float);
 	Car.PID.Kd_Curved = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 20, float);
 	
+	Car.PID.Velocity_Kp = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 24, float);
+	Car.PID.Velocity_Ki = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 28, float);
+	Car.PID.Velocity_Kd = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 32, float);
+	
 	/*  初始化车子的传感器参数,从Flash中读取标定值  */
 	for(i = 0; i < SENSOR_COUNT; i ++)
 	{
@@ -102,13 +106,16 @@ void Car_ParaInit(void)
 	Car.Motor.RightSpeed = 0;
 	
 	/*  小车基本速度  */
-	Car.BaseSpeed = drv_flash_ReadSector(CAR_PARA_FLASH_ADDR, 0, int16_t);
+//	Car.BaseSpeed = drv_flash_ReadSector(CAR_PARA_FLASH_ADDR, 0, int16_t);
+	Car.BaseSpeed = 100;
 	
 	/*  小车初始道路为直道  */
 	Car.NowRoad = Road_Straight;
 	
 	/*  小车开始未丢线  */
 	Car.LossLine = LostLine_None;
+	
+	Car.MaxPWM = 800;
 }
 
 /*
@@ -150,7 +157,7 @@ void Car_ParaStroe(void)
 
 /*
 *********************************************************************************************************
-*                                Car_PIDCalc          
+*                                Car_TurnPIDCalc          
 *
 * Description: 
 *             
@@ -161,45 +168,20 @@ void Car_ParaStroe(void)
 * Note(s)    : 
 *********************************************************************************************************
 */
-void Car_PIDCalc(void)
+int16_t Car_TurnPIDCalc(float HorizontalAE)
 {
 	int16_t pwm = 0;
 	static float LastError;
 	
-	Car.PID.Error = Car.HorizontalAE - LastError;		/*  计算当前微分量  */
+	Car.PID.Error = HorizontalAE - LastError;		/*  计算当前微分量  */
 	
 	/*  计算PWM  */
-	if(Car.Sensor[SENSOR_V_L].Average < 10 && Car.Sensor[SENSOR_V_R].Average < 10)	/*  直道  */
-	{
-		pwm = (int16_t)((Car.HorizontalAE * 10 *  Car.PID.Kp_Straight) + (Car.PID.Sum * Car.PID.Ki_Straight) - (Car.PID.Error * Car.PID.Kd_Straight));
-	}
-	else			/*  弯道	*/
-	{
-		pwm = (int16_t)((Car.HorizontalAE * 10 *  Car.PID.Kp_Curved) + (Car.PID.Sum * Car.PID.Ki_Curved) - (Car.PID.Error * Car.PID.Kd_Curved));
-	}
+	pwm = (int16_t)((HorizontalAE*10 *  Car.PID.Kp_Straight) + (Car.PID.Error * Car.PID.Kd_Straight));
 	
 	/*  保存上个时刻的误差  */
-	LastError = (float)(Car.HorizontalAE * 10);
+	LastError = (float)(Car.HorizontalAE);
 	
-	if(Car.Sensor[SENSOR_V_L].Average > 12 || Car.Sensor[SENSOR_H_R].Average > 12)
-	{
-		/*  将计算出来的PID与基本速度相加  */
-		Car.Motor.LeftPwm = Car.BaseSpeed*2/3 - pwm;
-		Car.Motor.RightPwm = Car.BaseSpeed*2/3 + pwm;
-	}
-	else
-	{
-		/*  将计算出来的PID与基本速度相加  */
-		Car.Motor.LeftPwm = Car.BaseSpeed - pwm;
-		Car.Motor.RightPwm = Car.BaseSpeed + pwm;
-	}
-	
-	/*  进行限幅  */
-	if(Car.Motor.LeftPwm > 600) Car.Motor.LeftPwm = 600;
-	else if(Car.Motor.LeftPwm < -600) Car.Motor.LeftPwm = -600;
-	
-	if(Car.Motor.RightPwm > 600) Car.Motor.RightPwm = 600;
-	else if(Car.Motor.RightPwm < -600) Car.Motor.RightPwm = -600;
+	return pwm;
 }
 
 /*
@@ -215,19 +197,105 @@ void Car_PIDCalc(void)
 * Note(s)    : 
 *********************************************************************************************************
 */
-void Car_RaodCalc(void)
+//void Car_RaodCalc(void)
+//{
+//	uint8_t LastDir = 0;
+//	
+//	/*  如果右边电感的归一化值大于左边的电感,说明上一个时刻是保持右转的状态  */
+//	if((100 * (Car.Sensor[SENSOR_H_R].NormalizedValue - Car.Sensor[SENSOR_H_L].NormalizedValue)) >= 20) 
+//		LastDir = TurnRight;
+//	
+//	/*  如果左边电感的归一化值大于右边的电感,说明上一个时刻是保持左转的状态  */
+//	if((100 * (Car.Sensor[SENSOR_H_L].NormalizedValue - Car.Sensor[SENSOR_H_R].NormalizedValue)) >= 20)
+//		LastDir = TurnLeft;
+//	
+//	
+//}
+
+/*
+*********************************************************************************************************
+*                       Car_LeftVelocityPIDCalc                   
+*
+* Description: 小车左轮速度环PID计算
+*             
+* Arguments  : 1> LeftSpeed: 左轮速度
+*
+* Reutrn     : 1> 计算得到的左轮PWM
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
+int16_t Car_LeftVelocityPIDCalc(int16_t LeftSpeed)
 {
-	uint8_t LastDir = 0;
+	static float SpeedFilter, SpeedIntegal;
+	int16_t Velocity = 0;
+	int16_t SpeedError = 0;
+	static int16_t PreSpeedError;
 	
-	/*  如果右边电感的归一化值大于左边的电感,说明上一个时刻是保持右转的状态  */
-	if((100 * (Car.Sensor[SENSOR_H_R].NormalizedValue - Car.Sensor[SENSOR_H_L].NormalizedValue)) >= 20) 
-		LastDir = TurnRight;
+	/*  速度偏差  */
+	SpeedError = LeftSpeed - Car.BaseSpeed;
 	
-	/*  如果左边电感的归一化值大于右边的电感,说明上一个时刻是保持左转的状态  */
-	if((100 * (Car.Sensor[SENSOR_H_L].NormalizedValue - Car.Sensor[SENSOR_H_R].NormalizedValue)) >= 20)
-		LastDir = TurnLeft;
+	/*  低通滤波,让速度平滑过渡  */
+	SpeedFilter *= 0.7;
+	SpeedFilter += (SpeedError * 0.5);
+	SpeedIntegal += SpeedFilter;
 	
+	/*  积分限幅  */
+	if(SpeedIntegal > 7200) SpeedIntegal = 7200;			//积分限幅
+	else if(SpeedIntegal < -7200) SpeedIntegal = -7200;		//
 	
+	/*  速度环PD控制,实际上Ki = 0  */
+	Velocity = (int16_t)(SpeedFilter * (-Car.PID.Velocity_Kp) +
+							SpeedIntegal * (-Car.PID.Velocity_Ki)) + 
+							(SpeedError - PreSpeedError)*(-Car.PID.Velocity_Kd);	//速度环PID计算	
+	
+	/*  保存上一时刻偏差值  */
+	PreSpeedError = SpeedError;
+	
+	return Velocity;
+}
+
+/*
+*********************************************************************************************************
+*                       Car_RightVelocityPIDCalc                   
+*
+* Description: 小车右轮速度环计算
+*             
+* Arguments  : 1> RightSpeed: 右轮速度
+*
+* Reutrn     : 1> 计算得到的PWM
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
+int16_t Car_RightVelocityPIDCalc(int16_t RightSpeed)
+{
+	static float SpeedFilter, SpeedIntegal;
+	int16_t Velocity = 0;
+	int16_t SpeedError = 0;
+	static int16_t PreSpeedError;
+	
+	/*  速度偏差  */
+	SpeedError = RightSpeed - Car.BaseSpeed;
+	
+	/*  低通滤波,让速度平滑过渡  */
+	SpeedFilter *= 0.7;
+	SpeedFilter += (SpeedError * 0.5);
+	SpeedIntegal += SpeedFilter;
+	
+	/*  积分限幅  */
+	if(SpeedIntegal > 7200) SpeedIntegal = 7200;			//积分限幅
+	else if(SpeedIntegal < -7200) SpeedIntegal = -7200;		//
+	
+	/*  速度环PD控制,实际上Ki = 0  */
+	Velocity = (int16_t)(SpeedFilter * (-Car.PID.Velocity_Kp) +
+							SpeedIntegal * (-Car.PID.Velocity_Ki)) + 
+							(SpeedError - PreSpeedError)*(-Car.PID.Velocity_Kd);	//速度环PID计算	
+	
+	/*  保存上一时刻偏差值  */
+	PreSpeedError = SpeedError;
+	
+	return Velocity;
 }
 
 /*
@@ -246,6 +314,7 @@ void Car_RaodCalc(void)
 void Car_Control(void)
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	/*  处理小车传感器的数据  */
 	bsp_sensor_DataProcess();
 	
@@ -258,14 +327,38 @@ void Car_Control(void)
 =======
 >>>>>>> Mr-He
 >>>>>>> d476e22040494988d81fb0d65879a545a2623703
+=======
+	int16_t TurnPwm = 0, LeftVelocityPwm = 0, RightVelocityPwm = 0;
+	
+	/*  进行传感器数据处理  */
+	bsp_sensor_DataProcess();
+	
+	/*  速度计算  */
+>>>>>>> Mr-He
 	bsp_encoder_SpeedCalc();
-	Car_PIDCalc();
 	
+	/*  速度环计算  */
+	LeftVelocityPwm = Car_LeftVelocityPIDCalc(Car.Motor.LeftEncoder);
+	RightVelocityPwm = Car_RightVelocityPIDCalc(Car.Motor.RightEncoder);
+		
+	/*  转向环计算  */
+	TurnPwm =	Car_TurnPIDCalc(Car.HorizontalAE);
 	
-//	if(Car.Sensor[SENSOR_H_L].Average < 20 || Car.Sensor[SENSOR_V_R].Average < 20)
-//		bsp_motor_Stop();
-//	else
-//		bsp_motor_SetPwm(Car.Motor.LeftPwm, Car.Motor.RightPwm);
+	if((TurnLeft + LeftVelocityPwm) < 0)	Car.Motor.LeftPwm = 80;
+	else 	Car.Motor.LeftPwm = LeftVelocityPwm+TurnPwm;
+	
+	if((TurnPwm - RightVelocityPwm) < 0) Car.Motor.RightPwm = 80;
+	else Car.Motor.RightPwm = RightVelocityPwm-TurnPwm;
+	
+	/*  对PWM进行限幅  */
+	if(Car.Motor.LeftPwm >= Car.MaxPWM) Car.Motor.LeftPwm = Car.MaxPWM;
+	else if(Car.Motor.LeftPwm <= -Car.MaxPWM) Car.Motor.LeftPwm = -Car.MaxPWM;
+	
+	if(Car.Motor.RightPwm >= Car.MaxPWM) Car.Motor.RightPwm = Car.MaxPWM;
+	else if(Car.Motor.RightPwm <= -Car.MaxPWM) Car.Motor.RightPwm = -Car.MaxPWM;
+	
+	/*  电机控制  */
+	bsp_motor_SetPwm(Car.Motor.LeftPwm, Car.Motor.RightPwm);
 }
 	
 	

@@ -52,7 +52,7 @@ void bsp_motor_Config(void)
 	
 	/*  初始化电机PWM  */
 	PWM_InitStruct.PWM_Channel = DRV_PWM1_CHANNEL;
-	PWM_InitStruct.PWM_Frequency = 15;
+	PWM_InitStruct.PWM_Frequency = 20;
 	PWM_InitStruct.PWM_Pulse = 0;
 	drv_ftm_PWMInit(&PWM_InitStruct);
 	
@@ -85,27 +85,27 @@ void bsp_motor_SetPwm(int16_t LeftPwm, int16_t RightPwm)
 	DRV_ENABLE();		/*  开启驱动  */
 	
 	/*  设置左边PWM  */
-	if(RightPwm > 0)	/*  电机正转  */
+	if(RightPwm >= 0)	/*  电机正转  */
 	{
-		drv_ftm_PWMSetDuty(DRV_PWM2_CHANNEL, RightPwm+3);
-		drv_ftm_PWMSetDuty(DRV_PWM1_CHANNEL, 3);
+		drv_ftm_PWMSetDuty(DRV_PWM1_CHANNEL, RightPwm+3);
+		drv_ftm_PWMSetDuty(DRV_PWM2_CHANNEL, 3);
 	}
 	else		/*  反转  */
 	{
-		drv_ftm_PWMSetDuty(DRV_PWM2_CHANNEL, 0+3);
-		drv_ftm_PWMSetDuty(DRV_PWM1_CHANNEL, -(RightPwm-3));
+		drv_ftm_PWMSetDuty(DRV_PWM1_CHANNEL, 0+3);
+		drv_ftm_PWMSetDuty(DRV_PWM2_CHANNEL, -(RightPwm-3));
 	}
 	
 	/*  设置左边PWM  */
-	if(LeftPwm > 0)	/*  电机正转  */
+	if(LeftPwm >= 0)	/*  电机正转  */
 	{
-		drv_ftm_PWMSetDuty(DRV_PWM4_CHANNEL, LeftPwm+3);
-		drv_ftm_PWMSetDuty(DRV_PWM3_CHANNEL, 0+3);
+		drv_ftm_PWMSetDuty(DRV_PWM3_CHANNEL, LeftPwm+3);
+		drv_ftm_PWMSetDuty(DRV_PWM4_CHANNEL, 0+3);
 	}
 	else		/*  反转  */
 	{
-		drv_ftm_PWMSetDuty(DRV_PWM4_CHANNEL, 0+3);
-		drv_ftm_PWMSetDuty(DRV_PWM3_CHANNEL, -(LeftPwm+3));
+		drv_ftm_PWMSetDuty(DRV_PWM3_CHANNEL, 0+3);
+		drv_ftm_PWMSetDuty(DRV_PWM4_CHANNEL, -(LeftPwm-3));
 	}
 }
 

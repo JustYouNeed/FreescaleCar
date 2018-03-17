@@ -116,7 +116,6 @@ void debug_Handler(void)
 	if(UART0->S1 & UART_S1_RDRF_MASK)  /*  接收数据寄存器满  */
 	{
 		RecvData = UART0->D;		/*  读取数据并送入接收缓存区  */
-		
 		switch(uCnt)
 		{
 			case 0X00:
@@ -246,8 +245,20 @@ void debug_PIDParaReport(void)
 	Buff[10] = BYTE2(temp);
 	Buff[11] = BYTE1(temp);
 
-	Buff[12] = BYTE2(Car.BaseSpeed);
-	Buff[13] = BYTE1(Car.BaseSpeed);
+//	Buff[12] = BYTE2(Car.BaseSpeed);
+//	Buff[13] = BYTE1(Car.BaseSpeed);
+	
+	temp = (short)(Car.PID.Velocity_Kp * ANO_PID_TRAN_FAC_P);
+	Buff[12] = BYTE2(temp);
+	Buff[13] = BYTE1(temp);
+	
+	temp = (short)(Car.PID.Velocity_Ki * ANO_PID_TRAN_FAC_I);
+	Buff[14] = BYTE2(temp);
+	Buff[15] = BYTE1(temp);
+	
+	temp = (short)(Car.PID.Velocity_Kd * ANO_PID_TRAN_FAC_D);
+	Buff[16] = BYTE2(temp);
+	Buff[17] = BYTE1(temp);
 //	
 //	temp = 0;
 //	Buff[14] = BYTE2(temp);
@@ -277,16 +288,29 @@ void debug_PIDDownload(void)
 {
 	//取前后两个8位的数据合并成一个16位的数据，并强制转换成一个float型的数据
 	//转换完成后除以相应的传输因子
+	uint8_t cnt = 4;
 	
-	Car.PID.Kp_Straight = MERGE(RecBuff[4], RecBuff[5], float) / ANO_PID_TRAN_FAC_P;
-	Car.PID.Ki_Straight = MERGE(RecBuff[6], RecBuff[7], float) / ANO_PID_TRAN_FAC_I;
-	Car.PID.Kd_Straight = MERGE(RecBuff[8], RecBuff[9], float) / ANO_PID_TRAN_FAC_D;
+	Car.PID.Kp_Straight = MERGE(RecBuff[cnt], RecBuff[cnt+1], float) / ANO_PID_TRAN_FAC_P;
+	cnt += 2;
+	Car.PID.Ki_Straight = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_I;
+	cnt += 2;
+	Car.PID.Kd_Straight = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_D;
+	cnt += 2;
 	
-	Car.PID.Kp_Curved = MERGE(RecBuff[10], RecBuff[11], float) / ANO_PID_TRAN_FAC_P;
-	Car.PID.Ki_Curved = MERGE(RecBuff[12], RecBuff[13], float) / ANO_PID_TRAN_FAC_I;
-	Car.PID.Kd_Curved = MERGE(RecBuff[14], RecBuff[15], float) / ANO_PID_TRAN_FAC_D;
+	Car.PID.Kp_Curved = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_P;
+	cnt += 2;
+	Car.PID.Ki_Curved = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_I;
+	cnt += 2;
+	Car.PID.Kd_Curved = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_D;
+	cnt += 2;
 	
-	Car.BaseSpeed = MERGE(RecBuff[16], RecBuff[17], int16_t);
+	Car.PID.Velocity_Kp = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float)/100;
+	cnt += 2;
+	Car.PID.Velocity_Ki = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / 1000;
+	cnt += 2;
+	Car.PID.Velocity_Kd = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float)/100;
+	cnt += 2;
+	
 		
 	Car_ParaStroe();
 	pid_StorePara();	/*  将PID参数保存到Flash中  */

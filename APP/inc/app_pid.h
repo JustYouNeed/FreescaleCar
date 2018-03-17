@@ -32,6 +32,7 @@ typedef struct
 	float Ki_Curved;
 	float Kd_Curved;
 	
+	float Velocity_Kp, Velocity_Ki, Velocity_Kd;	/*  ËÙ¶È»·PID  */
 	float Error;
 	int16_t Sum;
 }PID_TypeDef;

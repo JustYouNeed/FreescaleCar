@@ -53,12 +53,15 @@ static void bsp_key_GPIOInit(void)
 	GPIO_InitStructure.GPIO_HDrv = DISABLE;
 	
 	drv_gpio_Init(&GPIO_InitStructure);
+	drv_gpio_WritePin(KEY_UP_PIN, 1);
 	
 	GPIO_InitStructure.GPIO_Pin = KEY_OK_PIN;
 	drv_gpio_Init(&GPIO_InitStructure);
+	drv_gpio_WritePin(KEY_OK_PIN, 1);
 	
 	GPIO_InitStructure.GPIO_Pin = KEY_DOWN_PIN;
 	drv_gpio_Init(&GPIO_InitStructure);
+	drv_gpio_WritePin(KEY_DOWN_PIN, 1);
 }
 
 
@@ -81,7 +84,7 @@ static void bsp_key_FIFOInit(void)
 	
 	bsp_key_fifo.Read = 0;  
 	bsp_key_fifo.Write = 0;
-	
+	bsp_key_fifo.Fifo[0] = 0;
 	bsp_key_fifo.IsConfig = 1;  
 	
 	for(i = 0; i < BSP_KEY_COUNT; i++)
@@ -156,7 +159,12 @@ void bsp_key_PutKeyToFIFO(uint8_t KeyValue)
 */
 void bsp_key_ClearFIFO(void)
 {
-	bsp_key_fifo.Read = bsp_key_fifo.Write;
+	uint8_t i = 0;
+	for(i = 0; i < KEY_FIFO_SIZE; i++)
+	{
+		bsp_key_fifo.Fifo[i] = KEY_NONE;
+	}
+	bsp_key_fifo.Read = bsp_key_fifo.Write = 0;
 }
 
 /*
@@ -226,7 +234,7 @@ void bsp_key_Detect(uint8_t Id)
 	
 	pKey = &bsp_key[Id];		/*  获取相应ID的按键结构体  */
 	
-	if(pKey->IsKeyPressFunc())   /*  如果按键状态有改变  */
+	if(pKey->IsKeyPressFunc() == KEY_PRESS)   /*  如果按键状态有改变  */
 	{
 		
 		if(pKey->Count < KEY_FILTER_TIME) 	/*  软件消抖  */
@@ -302,19 +310,21 @@ void bsp_key_Scan(void)
 	uint8_t i = 0;
 	uint8_t key = 0;
 	
-	if(TimerTaskRunMutexSignal == 1) return ;
-	TimerTaskRunMutexSignal = 1;
-	
+//	if(TimerTaskRunMutexSignal == 1) return ;
+//	TimerTaskRunMutexSignal = 1;
+	drv_gpio_WritePin(KEY_UP_PIN, 1);
+	drv_gpio_WritePin(KEY_OK_PIN, 1);
+	drv_gpio_WritePin(KEY_DOWN_PIN, 1);
 	for(i = 0; i < BSP_KEY_COUNT; i++)
 	{
 		bsp_key_Detect(i);
 	}
 	
-	key = bsp_key_GetKey();
-	if(key == KEY_UP_PRESS) bsp_led_Toggle(1);
-	else if(key == KEY_OK_PRESS) bsp_led_Toggle(2);
-	else if(key == KEY_DOWN_PRESS) bsp_led_Toggle(3);
-	TimerTaskRunMutexSignal = 0;
+//	key = bsp_key_GetKey();
+//	if(key == KEY_UP_PRESS) bsp_led_Toggle(1);
+//	else if(key == KEY_OK_PRESS) bsp_led_Toggle(2);
+//	else if(key == KEY_DOWN_PRESS) bsp_led_Toggle(3);
+//	TimerTaskRunMutexSignal = 0;
 }
 
 

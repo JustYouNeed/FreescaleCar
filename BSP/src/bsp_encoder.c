@@ -97,6 +97,7 @@ void bsp_encoder_Config(void)
 * Note(s)    : 该函数应该定时调用,以提高速度计算精度,同时该函数计算出来的值只能作为参考值,不是很精确
 *********************************************************************************************************
 */
+<<<<<<< HEAD
 void bsp_encoder_SpeedCalc(void)
 {
 
@@ -132,16 +133,26 @@ void bsp_encoder_SpeedCalc(void)
 	LastTime = 	bsp_tim_GetRunTime();
 	
 	/*  程序运行完成  */
+<<<<<<< HEAD
 //	TimerTaskRunMutexSignal = 0;
 
+=======
+	TimerTaskRunMutexSignal = 0;
+=======
+=======
+void bsp_encoder_ReadCounter(void)
+>>>>>>> Mr-He
+{	
+>>>>>>> 6222d79d6b85467c792fc47192493923a283fc31
 	/*  读取FTM计数器值  */
-	Car.Motor.LeftEncoder = (uint16_t)FTM0->CNT;
-	Car.Motor.RightEncoder = (uint16_t)FTM1->CNT;
+	Car.Motor.LeftEncoder += (uint16_t)FTM0->CNT;
+	Car.Motor.RightEncoder += (uint16_t)FTM1->CNT;
 	
 	/*  清空计数器  */
 	FTM0->CNT = 0;
 	FTM1->CNT = 0;
 	
+<<<<<<< HEAD
 //	if(Car.Motor.LeftEncoder - LastLeftEnconder > 100 || Car.Motor.LeftEncoder - LastLeftEnconder < -100)
 //		Car.Motor.LeftEncoder = LastLeftEnconder;
 //	
@@ -155,7 +166,17 @@ void bsp_encoder_SpeedCalc(void)
 	/*  由方向电平来判断电机速度方向,左右两边电机由于旋转了180度,所以方向有180度相位差  */
 	if(drv_gpio_ReadPin(LEFTENCONDER_DIR_PIN) == 0) Car.Motor.LeftSpeed = -Car.Motor.LeftSpeed;
 	if(drv_gpio_ReadPin(RIGHTENCONDER_DIR_PIN) == 1) Car.Motor.RightSpeed = -Car.Motor.RightSpeed;
+<<<<<<< HEAD
 
+=======
+>>>>>>> Mr-He
+=======
+
+//	/*  由方向电平来判断电机速度方向,左右两边电机由于旋转了180度,所以方向有180度相位差  */
+//	if(drv_gpio_ReadPin(LEFTENCONDER_DIR_PIN) == 0) Car.Motor.LeftSpeed = -Car.Motor.LeftSpeed;
+//	if(drv_gpio_ReadPin(RIGHTENCONDER_DIR_PIN) == 1) Car.Motor.RightSpeed = -Car.Motor.RightSpeed;
+>>>>>>> Mr-He
+>>>>>>> 6222d79d6b85467c792fc47192493923a283fc31
 }
 
 /********************************************  END OF FILE  *******************************************/

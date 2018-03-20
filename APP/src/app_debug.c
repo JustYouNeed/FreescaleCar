@@ -373,16 +373,18 @@ void debug_SensorDataReport(void)
 * Note(s)    : 
 *********************************************************************************************************
 */
+int16_t LPWM,RPWM;
 void debug_MotorDataReport(void)
 {
 	uint8_t SendBuff[16] = {0};
 	uint8_t cnt = 0;
 	
-	SendBuff[cnt++] = BYTE2(Car.Motor.LeftPwm);
-	SendBuff[cnt++] = BYTE1(Car.Motor.LeftPwm);
 	
-	SendBuff[cnt++] = BYTE2(Car.Motor.RightPwm);
-	SendBuff[cnt++] = BYTE1(Car.Motor.RightPwm);
+	SendBuff[cnt++] = BYTE2(LPWM);
+	SendBuff[cnt++] = BYTE1(LPWM);
+	
+	SendBuff[cnt++] = BYTE2(RPWM);
+	SendBuff[cnt++] = BYTE1(RPWM);
 	
 	SendBuff[cnt++] = BYTE4(Car.Motor.LeftEncoder);
 	SendBuff[cnt++] = BYTE3(Car.Motor.LeftEncoder);
@@ -394,11 +396,15 @@ void debug_MotorDataReport(void)
 	SendBuff[cnt++] = BYTE2(Car.Motor.RightEncoder);
 	SendBuff[cnt++] = BYTE1(Car.Motor.RightEncoder);
 	
-	SendBuff[cnt++] = BYTE2(Car.Motor.LeftSpeed);
-	SendBuff[cnt++] = BYTE1(Car.Motor.LeftSpeed);
+	SendBuff[cnt++] = BYTE4((int)(Car.Motor.LeftSpeed*100));
+	SendBuff[cnt++] = BYTE3((int)(Car.Motor.LeftSpeed*100));
+	SendBuff[cnt++] = BYTE2((int)(Car.Motor.LeftSpeed*100));
+	SendBuff[cnt++] = BYTE1((int)(Car.Motor.LeftSpeed*100));
 	
-	SendBuff[cnt++] = BYTE2(Car.Motor.RightSpeed);
-	SendBuff[cnt++] = BYTE1(Car.Motor.RightSpeed);
+	SendBuff[cnt++] = BYTE4((int)(Car.Motor.RightSpeed*100));
+	SendBuff[cnt++] = BYTE3((int)(Car.Motor.RightSpeed*100));
+	SendBuff[cnt++] = BYTE2((int)(Car.Motor.RightSpeed*100));
+	SendBuff[cnt++] = BYTE1((int)(Car.Motor.RightSpeed*100));
 	
 	debug_DataUpload(SendBuff, 0xf1, cnt);
 }
@@ -452,18 +458,18 @@ void debug_ShowPara(void)
 	if(TimerTaskRunMutexSignal == 1) return ;
 	TimerTaskRunMutexSignal = 1;
 	
-	bsp_oled_Clear();
+//	bsp_oled_Clear();
 //	bsp_oled_ShowInteger(0,0,(int)(Car.PID.Kp_Straight ), 16);
 //	bsp_oled_ShowInteger(42,0,(int)(Car.PID.Ki_Straight ), 16);
 //	bsp_oled_ShowInteger(84,0,(int)(Car.PID.Kd_Straight ), 16);
 //	
-	bsp_oled_ShowString(0, 0, "L:");
-	bsp_oled_ShowInteger(24, 0, Car.Motor.LeftEncoder, 16);
-	bsp_oled_ShowInteger(66, 0, Car.Motor.LeftSpeed, 16);
-	
-	bsp_oled_ShowString(0, 2, "R:");
-	bsp_oled_ShowInteger(24, 2, Car.Motor.RightEncoder, 16);
-	bsp_oled_ShowInteger(66, 2, Car.Motor.RightSpeed, 16);
+//	bsp_oled_ShowString(0, 0, "L:");
+//	bsp_oled_ShowInteger(24, 0, Car.Motor.LeftEncoder, 16);
+//	bsp_oled_ShowInteger(66, 0, Car.Motor.LeftSpeed, 16);
+//	
+//	bsp_oled_ShowString(0, 2, "R:");
+//	bsp_oled_ShowInteger(24, 2, Car.Motor.RightEncoder, 16);
+//	bsp_oled_ShowInteger(66, 2, Car.Motor.RightSpeed, 16);
 //	bsp_oled_ShowString(0, 2, "C0:");
 //	bsp_oled_ShowInteger(24,2,Car.Sensor[SENSOR_H_L].CalibrationMax, 16);
 //	

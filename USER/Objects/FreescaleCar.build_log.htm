@@ -27,6 +27,52 @@ Project File Date:  03/19/2018
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 3 (build 300)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'FreescaleCar'
+compiling main.c...
+compiling bsp_motor.c...
+compiling FreescaleCar.c...
+FreescaleCar.c(176): warning:  #940-D: missing return statement at end of non-void function "Car_TurnPIDCalc"
+  }
+FreescaleCar.c(193): warning:  #550-D: variable "LastDir" was set but never used
+  	uint8_t LastDir = 0;
+FreescaleCar.c(347): warning:  #177-D: variable "LeftSpeedDelta" was declared but never referenced
+  	float LeftSpeedDelta = 0, RightSpeedDelta = 0;
+FreescaleCar.c(347): warning:  #177-D: variable "RightSpeedDelta" was declared but never referenced
+  	float LeftSpeedDelta = 0, RightSpeedDelta = 0;
+FreescaleCar.c(348): warning:  #177-D: variable "LeftPValue" was declared but never referenced
+  	float LeftPValue = 0, LeftIValue = 0, RightPValue = 0, RightIValue = 0;
+FreescaleCar.c(348): warning:  #177-D: variable "LeftIValue" was declared but never referenced
+  	float LeftPValue = 0, LeftIValue = 0, RightPValue = 0, RightIValue = 0;
+FreescaleCar.c(348): warning:  #177-D: variable "RightPValue" was declared but never referenced
+  	float LeftPValue = 0, LeftIValue = 0, RightPValue = 0, RightIValue = 0;
+FreescaleCar.c(348): warning:  #177-D: variable "RightIValue" was declared but never referenced
+  	float LeftPValue = 0, LeftIValue = 0, RightPValue = 0, RightIValue = 0;
+FreescaleCar.c(420): warning:  #177-D: variable "pwm" was declared but never referenced
+  	int16_t pwm = 0;
+FreescaleCar.c(41): warning:  #177-D: variable "g_LeftSpeedControlIntegral" was declared but never referenced
+  static float g_LeftSpeedControlIntegral = 0;
+FreescaleCar.c(45): warning:  #177-D: variable "g_RightSpeedControlIntegral" was declared but never referenced
+  static float g_RightSpeedControlIntegral = 0;
+FreescaleCar.c: 11 warnings, 0 errors
+compiling bsp_encoder.c...
+compiling bsp_sensor.c...
+compiling app_debug.c...
+..\APP\src\app_debug.c(410): warning: C4488E: write to variable 'SendBuff' with offset out of bounds
+}
+..\APP\src\app_debug.c(410): warning: C4488E: write to variable 'SendBuff' with offset out of bounds
+}
+..\APP\src\app_debug.c(410): warning: C4488E: write to variable 'SendBuff' with offset out of bounds
+}
+..\APP\src\app_debug.c(410): warning: C4488E: write to variable 'SendBuff' with offset out of bounds
+}
+..\APP\src\app_debug.c: 4 warnings, 0 errors
+compiling app_pid.c...
+compiling menu.c...
+..\GUI_APP\src\menu.c(371): warning:  #1-D: last line of file ends without a newline
+  }
+..\GUI_APP\src\menu.c(19): warning:  #177-D: variable "DirctionPIDAdjMenu" was declared but never referenced
+  static MenuItem_Typedef DirctionPIDAdjMenu[4];
+..\GUI_APP\src\menu.c: 2 warnings, 0 errors
+compiling display.c...
 compiling pid_set.c...
 ..\GUI_APP\src\pid_set.c(92): warning:  #188-D: enumerated type mixed with another type
   	drv_gpio_WritePin(
@@ -39,14 +85,14 @@ EY_OK_PIN, 1);
 linking...
 Program Size: Code=9636 RO-data=10140 RW-data=284 ZI-data=4180  
 FromELF: creating hex file...
-".\Objects\FreescaleCar.axf" - 0 Error(s), 3 Warning(s).
+".\Objects\FreescaleCar.axf" - 0 Error(s), 20 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
   E:\学习资料\比赛\飞思卡尔智能车大赛\程序\Freescale\USER\RTE
   D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:01
+Build Time Elapsed:  00:00:04
 </pre>
 </body>
 </html>

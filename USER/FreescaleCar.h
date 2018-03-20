@@ -30,6 +30,8 @@
 /*  速度控制周期,50ms  */
 # define SPEED_CONTROL_PERIOD	20	
 
+# define DIRCTION_CONTROL_PERIOD	10
+
 /*  车轮周长,单位 米  */
 # define WHEEL_GIRTH				0.2
 

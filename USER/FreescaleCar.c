@@ -49,6 +49,8 @@ static int16_t g_RightSpeedControlOut;
 static int16_t g_DirctionControlOut =0 ;
 static int16_t g_DirctionControlCounter = 0;
 static int16_t g_DirctionControlPeriod = 0;
+static int16_t g_DirctionControlOutNew = 0;
+static int16_t g_DirciotnControlOutOld = 0;
 /*
 *********************************************************************************************************
 *                         Car_ParaInit                 
@@ -170,18 +172,7 @@ void Car_ParaStroe(void)
 */
 int16_t Car_TurnPIDCalc(float HorizontalAE)
 {
-	int16_t pwm = 0;
-	static float LastError;
-	
-	Car.PID.Error = HorizontalAE - LastError;		/*  计算当前微分量  */
-	
-	/*  计算PWM  */
-	pwm = (int16_t)((HorizontalAE*10 *  Car.PID.Kp_Straight) + (Car.PID.Error * Car.PID.Kd_Straight));
-	
-	/*  保存上个时刻的误差  */
-	LastError = (float)(Car.HorizontalAE);
-	
-	return pwm;
+
 }
 
 /*
@@ -411,15 +402,53 @@ void Car_SpeedControlOutput(void)
 }
 
 
-
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
 void Car_DirctionControl(void)
 {
+	int16_t pwm = 0;
+	static float LastError;
 	
+	Car.PID.Error = Car.HorizontalAE - LastError;		/*  计算当前微分量  */
+	
+	g_DirctionControlPeriod = g_DirctionControlOutNew;
+	/*  计算PWM  */
+	g_DirctionControlOutNew = (int16_t)((Car.HorizontalAE*10 *  Car.PID.Kp_Straight) + (Car.PID.Error * Car.PID.Kd_Straight));
+	
+	/*  保存上个时刻的误差  */
+	LastError = (float)(Car.HorizontalAE);
 }
 
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
 void Car_DirctionControlOutput(void)
 {
+	int16_t DirctionOutput = 0;
 	
+	DirctionOutput = g_DirctionControlOutNew - g_DirctionControlPeriod;
+	g_DirctionControlOut = DirctionOutput * (g_DirctionControlOut + 1)/DIRCTION_CONTROL_PERIOD + g_DirciotnControlOutOld;
 }
 
 /*

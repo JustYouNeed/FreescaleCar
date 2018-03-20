@@ -53,15 +53,15 @@ static void bsp_key_GPIOInit(void)
 	GPIO_InitStructure.GPIO_HDrv = DISABLE;
 	
 	drv_gpio_Init(&GPIO_InitStructure);
-	drv_gpio_WritePin(KEY_UP_PIN, 1);
+	drv_gpio_WritePin(KEY_UP_PIN, GPIO_PIN_SET);
 	
 	GPIO_InitStructure.GPIO_Pin = KEY_OK_PIN;
 	drv_gpio_Init(&GPIO_InitStructure);
-	drv_gpio_WritePin(KEY_OK_PIN, 1);
+	drv_gpio_WritePin(KEY_OK_PIN, GPIO_PIN_SET);
 	
 	GPIO_InitStructure.GPIO_Pin = KEY_DOWN_PIN;
 	drv_gpio_Init(&GPIO_InitStructure);
-	drv_gpio_WritePin(KEY_DOWN_PIN, 1);
+	drv_gpio_WritePin(KEY_DOWN_PIN, GPIO_PIN_SET);
 }
 
 
@@ -312,9 +312,9 @@ void bsp_key_Scan(void)
 	
 //	if(TimerTaskRunMutexSignal == 1) return ;
 //	TimerTaskRunMutexSignal = 1;
-	drv_gpio_WritePin(KEY_UP_PIN, 1);
-	drv_gpio_WritePin(KEY_OK_PIN, 1);
-	drv_gpio_WritePin(KEY_DOWN_PIN, 1);
+	drv_gpio_WritePin(KEY_UP_PIN, GPIO_PIN_SET);
+	drv_gpio_WritePin(KEY_OK_PIN, GPIO_PIN_SET);
+	drv_gpio_WritePin(KEY_DOWN_PIN, GPIO_PIN_SET);
 	for(i = 0; i < BSP_KEY_COUNT; i++)
 	{
 		bsp_key_Detect(i);

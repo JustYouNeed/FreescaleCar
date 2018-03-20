@@ -376,7 +376,7 @@ void debug_SensorDataReport(void)
 int16_t LPWM,RPWM;
 void debug_MotorDataReport(void)
 {
-	uint8_t SendBuff[16] = {0};
+	uint8_t SendBuff[32] = {0};
 	uint8_t cnt = 0;
 	
 	

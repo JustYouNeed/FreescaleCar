@@ -157,23 +157,6 @@ void Car_ParaStroe(void)
 //	drv_flash_WriteSector(CAR_PARA_FLASH_ADDR, (const uint8_t *)&Car.TargetSpeed, 2, 0);
 }
 
-/*
-*********************************************************************************************************
-*                                Car_TurnPIDCalc          
-*
-* Description: 
-*             
-* Arguments  : 
-*
-* Reutrn     : 
-*
-* Note(s)    : 
-*********************************************************************************************************
-*/
-int16_t Car_TurnPIDCalc(float HorizontalAE)
-{
-
-}
 
 /*
 *********************************************************************************************************
@@ -344,8 +327,62 @@ int16_t Car_RightVelocityPIDCalc(int16_t RightSpeed)
 */
 void Car_SpeedControl(void)
 {
+	static uint16_t LossLineCnt = 0;
+	float omega = 0, RotateSpeed = 0;
+	uint8_t TurnDirction = Straight;
 	float LeftSpeedDelta = 0, RightSpeedDelta = 0;
 	float LeftPValue = 0, LeftIValue = 0, RightPValue = 0, RightIValue = 0;
+	float CurveRadius = 0;
+	
+	/*  如果左边电感的值大于三边,说明方向需要左转  */
+	if(Car.Sensor[SENSOR_H_L].Average - Car.Sensor[SENSOR_H_R].Average >= 20)
+		TurnDirction = TurnLeft;
+	else if(Car.Sensor[SENSOR_H_R].Average - Car.Sensor[SENSOR_H_L].Average >= 20)	/*  右转  */
+		TurnDirction = TurnRight;
+	else 			/*  直道  */
+		TurnDirction = Straight;
+	
+	if(Car.HorizontalAE > 10 || Car.HorizontalAE < -10)
+	{
+		LossLineCnt ++;
+		
+		/*  丢线计数器很小,说明离中心近,走直道方式  */
+		if(LossLineCnt < 10)
+		{
+			CurveRadius = STRAIGHT;
+		}
+		else if(LossLineCnt < 30)
+		{
+			CurveRadius = SMALL_CURVE_R;
+		}
+		else 
+		{
+			CurveRadius = BIG_CURVE_R;
+		}
+	}
+	else	LossLineCnt = 0;
+	
+	/*  计算小车转弯整体角速度  */
+	omega = Car.CarSpeed / CurveRadius;
+	/*  计算两轮电机差速 W1 = 2w(R + L/2)d, W2 = 2w(R - L/2)d, 差速为2wLd */
+	RotateSpeed = 2 * omega * WHEEL_LEN * WHEEL_D;
+	
+	/*  如果是左转弯,则外侧电机加速,内侧电机减速  */
+	if(TurnDirction == TurnLeft)
+	{
+		Car.LeftTargetSpeed = Car.TargetSpeed - RotateSpeed/2;
+		Car.RightTargetSpeed = Car.TargetSpeed + RotateSpeed/2;
+	}
+	else if(TurnDirction == TurnRight)	/*  右转则相反  */
+	{
+		Car.LeftTargetSpeed = Car.TargetSpeed + RotateSpeed/2;
+		Car.RightTargetSpeed = Car.TargetSpeed - RotateSpeed/2;
+	}
+	else 		/*  直道  */
+	{
+		Car.RightTargetSpeed = Car.TargetSpeed;
+		Car.LeftTargetSpeed = Car.TargetSpeed;
+	}
 	
 	/*  左边电机速度环计算  */
 	Car.Motor.LeftSpeed = (float)(Car.Motor.LeftEncoder * CAR_SPED_CONSTANT);
@@ -404,7 +441,7 @@ void Car_SpeedControlOutput(void)
 
 /*
 *********************************************************************************************************
-*                                          
+*                       Car_DirctionControl                   
 *
 * Description: 
 *             
@@ -432,15 +469,15 @@ void Car_DirctionControl(void)
 
 /*
 *********************************************************************************************************
-*                                          
+*                      Car_DirctionControlOutput                    
 *
-* Description: 
+* Description: 方向环控制输出
 *             
-* Arguments  : 
+* Arguments  : None.
 *
-* Reutrn     : 
+* Reutrn     : None.
 *
-* Note(s)    : 
+* Note(s)    : None.
 *********************************************************************************************************
 */
 void Car_DirctionControlOutput(void)
@@ -494,7 +531,6 @@ void Car_MotorOutput(void)
 * Note(s)    : None.
 *********************************************************************************************************
 */
-
 void Car_Control(void)
 {
 	static uint16_t CarControlCunter = 0;
@@ -502,17 +538,25 @@ void Car_Control(void)
 	volatile int16_t TurnPwm = 0, LeftVelocityPwm = 0, RightVelocityPwm = 0;
 	
 	bsp_led_Toggle(2);
+	
+	/*  控制计数器  */
 	CarControlCunter++;
 	
-	/*    */
+	/*  速度控制输出  */
 	g_SpeedControlPeriod++;
 	Car_SpeedControlOutput();
 	
+	/*  方向控制输出  */
 	g_DirctionControlPeriod++;
 	Car_DirctionControlOutput();
+	
+	/*  控制状态机  */
 	switch(CarControlCunter)
 	{
+		/*  每5ms读取一次编码器  */
 		case 1: bsp_encoder_ReadCounter();break;
+		
+		/*  每20ms进行一次速度控制  */
 		case 2:
 		{
 			bsp_led_Toggle(1);
@@ -523,7 +567,9 @@ void Car_Control(void)
 				g_SpeedControlPeriod = 0;
 				Car_SpeedControl();
 			}
-		}
+		}break;/*  end of case 2  */
+		
+		/*  每10ms进行一次方向控制  */
 		case 3:
 		{
 			g_DirctionControlCounter++;
@@ -532,14 +578,17 @@ void Car_Control(void)
 				g_DirctionControlCounter = 0;
 				Car_DirctionControl();
 			}
-		}break;
+		}break;/*  end of case 3  */
+		/*  每5ms进行一次传感器数据处理  */
 		case 4:bsp_sensor_DataProcess();break;
+		
+		/*  每5ms进行一次电机输出  */
 		case 5:
 		{
 			Car_MotorOutput();
 			CarControlCunter=0;
 		}break;
-		default:break;
+		default:CarControlCunter = 0;break;
 	}
 }
 	

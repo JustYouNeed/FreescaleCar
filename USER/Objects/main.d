@@ -83,3 +83,14 @@
 >>>>>>> Mr-He
 .\objects\main.o: FreescaleCar.h
 .\objects\main.o: ..\APP\inc\app_pid.h
+.\objects\main.o: ..\GUI_DRV\interface\button.h
+.\objects\main.o: ..\GUI_DRV\interface\gui_config.h
+.\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\main.o: ..\GUI_DRV\interface\gui_menu.h
+.\objects\main.o: ..\GUI_DRV\interface\messagebox.h
+.\objects\main.o: ..\GUI_APP\inc\gui_setting.h
+.\objects\main.o: ..\GUI_DRV\interface\scrollbar.h
+.\objects\main.o: ..\GUI_DRV\interface\lcmdrv.h
+.\objects\main.o: ..\GUI_APP\inc\menu.h
+.\objects\main.o: ..\GUI_APP\inc\display.h
+.\objects\main.o: ..\GUI_APP\inc\pid_set.h

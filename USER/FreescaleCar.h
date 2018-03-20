@@ -24,6 +24,23 @@
 # include "app_pid.h"
 
 
+/*  编码器每圈输出脉冲数  */
+# define ENCONDER_LINES			512
+
+/*  速度控制周期,50ms  */
+# define SPEED_CONTROL_PERIOD	20	
+
+# define DIRCTION_CONTROL_PERIOD	10
+
+/*  车轮周长,单位 米  */
+# define WHEEL_GIRTH				0.2
+
+/*  速度转换比例因子,计算完成后速度单位为 m/s  */
+# define CAR_SPED_CONSTANT	(1000.0/SPEED_CONTROL_PERIOD/ENCONDER_LINES)*WHEEL_GIRTH
+
+/*  小车走走道时的目标速度  */
+# define STRAIGHT_SPEED		2
+
 typedef enum
 {
 	TurnLeft = 0x0,
@@ -56,12 +73,13 @@ typedef struct
 	PID_TypeDef PID;											/*  PID参数  */
 	Sensor_TypeDef Sensor[SENSOR_COUNT];	/*  传感器  */
 	Motor_TypeDef Motor;									/*  电机  */
+	LoseLine_TypeDef LossLine;
+	Road_TypeDef NowRoad;
+	
 	
 	float HorizontalAE, VecticalAE;				/*  传感器水平、垂直和差比  */
-	int16_t BaseSpeed;										/*  车子基本速度  */
+	float CarSpeed, LeftTargetSpeed, RightTargetSpeed;
 	int16_t OutThreshold[SENSOR_COUNT];		/*  出线阈值  */
-	Road_TypeDef NowRoad;
-	LoseLine_TypeDef LossLine;
 	int16_t MaxPWM;
 }Car_TypeDef;
 

@@ -40,14 +40,14 @@ typedef struct
 {
 	int16_t PWM_Frequency;	/*  电机PWM频率  */
 	
-	int16_t LeftPwm;				/*  左边电机PWM  */
-	int16_t RightPwm;				/*  右边电机PWM  */
+	volatile int16_t LeftPwm;				/*  左边电机PWM  */
+	volatile int16_t RightPwm;				/*  右边电机PWM  */
 	
 	uint16_t LeftEncoder;		/*  左边电机编码器  */
 	uint16_t RightEncoder;		/*  右边电机编码器  */
 	
-	int16_t LeftSpeed;			/*  左边电机转速  */
-	int16_t RightSpeed;			/*  右边电机转速  */
+	volatile float LeftSpeed;			/*  左边电机转速  */
+	volatile float RightSpeed;			/*  右边电机转速  */
 }Motor_TypeDef;
 
 

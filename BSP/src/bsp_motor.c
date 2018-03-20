@@ -82,7 +82,7 @@ void bsp_motor_Config(void)
 */
 void bsp_motor_SetPwm(int16_t LeftPwm, int16_t RightPwm)
 {
-	DRV_ENABLE();		/*  开启驱动  */
+//	DRV_ENABLE();		/*  开启驱动  */
 	
 	/*  设置左边PWM  */
 	if(RightPwm >= 0)	/*  电机正转  */

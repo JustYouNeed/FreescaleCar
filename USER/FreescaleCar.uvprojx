@@ -51,7 +51,7 @@
           <OutputName>FreescaleCar</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
-          <CreateHexFile>0</CreateHexFile>
+          <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
           <ListingPath>.\Listings\</ListingPath>
@@ -310,7 +310,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>0</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -322,7 +322,7 @@
             <wLevel>2</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>0</uC99>
+            <uC99>1</uC99>
             <useXO>0</useXO>
             <v6Lang>1</v6Lang>
             <v6LangP>1</v6LangP>
@@ -335,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\USER;..\CORE;..\BSP\inc;..\DRV\inc;..\APP\inc</IncludePath>
+              <IncludePath>..\USER;..\CORE;..\BSP\inc;..\DRV\inc;..\APP\inc;..\GUI_DRV\interface;..\GUI_APP\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -568,6 +568,81 @@
               <FileName>app_pid.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\APP\src\app_pid.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>GUI_DRV</GroupName>
+          <Files>
+            <File>
+              <FileName>button.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GUI_DRV\src\button.c</FilePath>
+            </File>
+            <File>
+              <FileName>font.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GUI_DRV\src\font.c</FilePath>
+            </File>
+            <File>
+              <FileName>gui_basic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GUI_DRV\src\gui_basic.c</FilePath>
+            </File>
+            <File>
+              <FileName>gui_menu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GUI_DRV\src\gui_menu.c</FilePath>
+            </File>
+            <File>
+              <FileName>lcmdrv.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GUI_DRV\src\lcmdrv.c</FilePath>
+            </File>
+            <File>
+              <FileName>messagebox.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GUI_DRV\src\messagebox.c</FilePath>
+            </File>
+            <File>
+              <FileName>scrollbar.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GUI_DRV\src\scrollbar.c</FilePath>
+            </File>
+            <File>
+              <FileName>text.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GUI_DRV\src\text.c</FilePath>
+            </File>
+            <File>
+              <FileName>windows.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GUI_DRV\src\windows.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>GUI_APP</GroupName>
+          <Files>
+            <File>
+              <FileName>menu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GUI_APP\src\menu.c</FilePath>
+            </File>
+            <File>
+              <FileName>display.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GUI_APP\src\display.c</FilePath>
+            </File>
+            <File>
+              <FileName>main_ui.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GUI_APP\src\main_ui.c</FilePath>
+            </File>
+            <File>
+              <FileName>pid_set.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GUI_APP\src\pid_set.c</FilePath>
             </File>
           </Files>
         </Group>

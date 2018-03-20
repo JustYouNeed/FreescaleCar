@@ -45,8 +45,7 @@
 .\objects\bsp_oled.o: ..\DRV\inc\drv_kbi.h
 .\objects\bsp_oled.o: ..\USER\derivative.h
 .\objects\bsp_oled.o: D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
-.\objects\bsp_oled.o: ..\BSP\inc\oledfont.h
+.\objects\bsp_oled.o: ..\GUI_DRV\interface\font.h
 .\objects\bsp_oled.o: ..\BSP\inc\bsp_timer.h
 .\objects\bsp_oled.o: ..\USER\derivative.h
 .\objects\bsp_oled.o: D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
-.\objects\bsp_oled.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h

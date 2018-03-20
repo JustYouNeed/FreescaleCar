@@ -31,21 +31,21 @@
 # include "derivative.h"
 
 /*  按键引脚声明  */
-# define KEY_UP_PIN				GPIO_Pin_A0
-# define KEY_DOWN_PIN			GPIO_Pin_A1
-# define KEY_OK_PIN				GPIO_Pin_A2
+# define KEY_UP_PIN				GPIO_Pin_D3
+# define KEY_DOWN_PIN			GPIO_Pin_E4
+# define KEY_OK_PIN				GPIO_Pin_D4
 
 /*  按键数量  */
 # define BSP_KEY_COUNT		3
 
 /*  长按时间定义  */
-# define KEY_LONG_TIME		220
-# define KEY_FILTER_TIME	1
+# define KEY_LONG_TIME		4000
+# define KEY_FILTER_TIME	5
 
 /*  按键FIFO深度  */
 # define KEY_FIFO_SIZE		10
-# define KEY_PRESS				1
-# define KEY_UNPRESS			0
+# define KEY_PRESS				0
+# define KEY_UNPRESS			1
 
 /*  按键ID枚举变量  */
 typedef enum{

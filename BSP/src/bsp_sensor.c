@@ -176,7 +176,7 @@ void bsp_sensor_Calibration(void)
 	uint16_t ADC_ValueTemp[SENSOR_COUNT];
 	uint16_t CalibrationValueTemp[SENSOR_COUNT * 2] = {0};
 	
-	bsp_oled_ShowString(0, 0, (uint8_t *)"Calibration...");
+	oled_showString(0, 0, (uint8_t *)"Calibration...", 8, 16);
 	
 	/*  先假设最大最小值都为0  */
 	for(j = 0; j < SENSOR_COUNT; j++)
@@ -217,7 +217,7 @@ void bsp_sensor_Calibration(void)
 		CalibrationValueTemp[j + SENSOR_COUNT] = Car.Sensor[j + SENSOR_COUNT].CalibrationMin;
 	}
 	
-	bsp_oled_ShowString(0, 2, (uint8_t *)"Calibration OK!");
+	oled_showString(0, 2, (uint8_t *)"Calibration OK!", 8 ,16);
 //	bsp_tim_DelayMs(500);
 	/*  保存标定最大值到FLASH  */
 	drv_flash_EraseSector(SENSOR_PARA_FLASH_ADDR);

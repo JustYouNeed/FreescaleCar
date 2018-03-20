@@ -32,7 +32,7 @@
 # define SENSOR_5				ADC_Channel_F6
 # define SENSOR_6				ADC_Channel_F7
 
-# define SENSOR_FIFO_SIZE		10
+# define SENSOR_FIFO_SIZE		4
 
 /* 传感器ID枚举变量   */
 typedef enum
@@ -53,7 +53,7 @@ typedef struct
 	uint16_t CalibrationMax;
 	uint16_t CalibrationMin;
 	
-	float NormalizedValue;
+	volatile float NormalizedValue;
 	uint16_t FIFO[SENSOR_FIFO_SIZE];
 }Sensor_TypeDef;
 

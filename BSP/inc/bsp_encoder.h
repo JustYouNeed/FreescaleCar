@@ -4,6 +4,7 @@
 # include "derivative.h"
 
 
+
 # define LEFTENCONDER_CHANNEL		KBI_Channel_B3
 # define LEFTENCONDER_DIR_PIN		GPIO_Pin_B2
 
@@ -14,6 +15,6 @@
 
 void bsp_encoder_Config(void);
 
-void bsp_encoder_SpeedCalc(void);
+void bsp_encoder_ReadCounter(void);
 
 # endif

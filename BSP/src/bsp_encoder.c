@@ -98,24 +98,18 @@ void bsp_encoder_Config(void)
 *********************************************************************************************************
 */
 void bsp_encoder_SpeedCalc(void)
-<<<<<<< HEAD
 {
-//<<<<<<< HEAD
-//=======
+
 	static uint32_t LastLeftEncoder,LastRightEncoder;
-//<<<<<<< HEAD
-//>>>>>>> origin/Mr-He
-//=======
-//>>>>>>> Mr-He
-//>>>>>>> d476e22040494988d81fb0d65879a545a2623703
+
 	static uint32_t LastTime;
 	int32_t runtime;
 
-	/*  如果有其他中断函数正在执行,则直接返回  */
-	if(TimerTaskRunMutexSignal == 1) return ;
-	
-	/*  标定定时器函数正在运行  */
-	TimerTaskRunMutexSignal = 1;
+//	/*  如果有其他中断函数正在执行,则直接返回  */
+//	if(TimerTaskRunMutexSignal == 1) return ;
+//	
+//	/*  标定定时器函数正在运行  */
+//	TimerTaskRunMutexSignal = 1;
 	
 	/*  计算速度  */
 	runtime = bsp_tim_GetRunTime() - LastTime;
@@ -128,19 +122,18 @@ void bsp_encoder_SpeedCalc(void)
 	Car.Motor.RightEncoder = 0;
 	
 	/*  更新时刻,为下次计算作准备  */
-//=======
+
 	
 	Car.Motor.LeftEncoder = 0;
 	Car.Motor.RightEncoder = 0;
 	
 	/*  更新时刻,编码器值,为下次计算作准备  */
-//>>>>>>> Mr-He
+
 	LastTime = 	bsp_tim_GetRunTime();
 	
 	/*  程序运行完成  */
-	TimerTaskRunMutexSignal = 0;
-=======
-{	
+//	TimerTaskRunMutexSignal = 0;
+
 	/*  读取FTM计数器值  */
 	Car.Motor.LeftEncoder = (uint16_t)FTM0->CNT;
 	Car.Motor.RightEncoder = (uint16_t)FTM1->CNT;
@@ -162,7 +155,7 @@ void bsp_encoder_SpeedCalc(void)
 	/*  由方向电平来判断电机速度方向,左右两边电机由于旋转了180度,所以方向有180度相位差  */
 	if(drv_gpio_ReadPin(LEFTENCONDER_DIR_PIN) == 0) Car.Motor.LeftSpeed = -Car.Motor.LeftSpeed;
 	if(drv_gpio_ReadPin(RIGHTENCONDER_DIR_PIN) == 1) Car.Motor.RightSpeed = -Car.Motor.RightSpeed;
->>>>>>> Mr-He
+
 }
 
 /********************************************  END OF FILE  *******************************************/

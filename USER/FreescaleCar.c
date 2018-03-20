@@ -313,12 +313,7 @@ int16_t Car_RightVelocityPIDCalc(int16_t RightSpeed)
 */
 void Car_Control(void)
 {
-<<<<<<< HEAD
-
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 270b57686bfc76f2a7a146d06ec08edb3e0535f5
+	int16_t TurnPwm = 0, LeftVelocityPwm = 0, RightVelocityPwm = 0;
 	/*  处理小车传感器的数据  */
 	bsp_sensor_DataProcess();
 	
@@ -326,24 +321,13 @@ void Car_Control(void)
 
 	bsp_led_Toggle(1);
 	bsp_sensor_DataProcess();
-<<<<<<< HEAD
 
-
-=======
-<<<<<<< HEAD
->>>>>>> origin/Mr-He
-=======
->>>>>>> Mr-He
->>>>>>> d476e22040494988d81fb0d65879a545a2623703
-=======
-	int16_t TurnPwm = 0, LeftVelocityPwm = 0, RightVelocityPwm = 0;
+	
 	
 	/*  进行传感器数据处理  */
 	bsp_sensor_DataProcess();
 	
 	/*  速度计算  */
->>>>>>> Mr-He
->>>>>>> 270b57686bfc76f2a7a146d06ec08edb3e0535f5
 	bsp_encoder_SpeedCalc();
 	
 	/*  速度环计算  */

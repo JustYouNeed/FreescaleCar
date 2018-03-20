@@ -21,127 +21,28 @@ Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V2.0.18.0
 Dialog DLL:      TARMCM1.DLL V1.10.0.0
  
 <h2>Project:</h2>
-<<<<<<< HEAD
 G:\电子设计\飞卡\程序\FreescaleCar\USER\FreescaleCar.uvprojx
-=======
-E:\学习资料\比赛\飞思卡尔智能车大赛\程序\Freescale\USER\FreescaleCar.uvprojx
->>>>>>> Mr-He
-Project File Date:  03/12/2018
+Project File Date:  03/20/2018
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 3 (build 300)', folder: 'D:\KEIL5\ARM\ARMCC\Bin'
-<<<<<<< HEAD
-Rebuild target 'FreescaleCar'
-assembling startup_SKEAZ1284.s...
-=======
 Build target 'FreescaleCar'
-<<<<<<< HEAD
-compiling drv_pit.c...
-..\DRV\src\drv_pit.c(54): error:  #20: identifier "SystemBusClock" is undefined
-  	cnt = (SystemBusClock / 1000 ) * PIT_InitStruct->PIT_Period;
-..\DRV\src\drv_pit.c: 0 warnings, 1 error
-compiling main.c...
-main.c(16): error:  #169: expected a declaration
-  <<<<<<< HEAD
-main.c(39): warning:  #12-D: parsing restarts here after previous syntax error
-  	bsp_tim_CreateHardTimer(1, 3, Car_Control);
-main.c(40): error:  #169: expected a declaration
-  =======
-main.c(74): warning:  #12-D: parsing restarts here after previous syntax error
-  	bsp_tim_CreateSoftTimer(4, 11, bsp_encoder_SpeedCalc, TIMER_MODE_AUTO);
-main.c(77): error:  #169: expected a declaration
-  <<<<<<< HEAD
-main.c(79): error:  #169: expected a declaration
-  >>>>>>> origin/Mr-He
-main.c(85): warning:  #12-D: parsing restarts here after previous syntax error
-  	bsp_motor_SetPwm(-600, -600);
-main.c(86): warning:  #77-D: this declaration has no storage class or type specifier
-  	
-RV_ENABLE();
-main.c(86): error:  #92: identifier-list parameters may only be used in a function definition
-  	
-RV_ENABLE();
-main.c(86): error:  #147: declaration is incompatible with "void drv_gpio_WritePin(uint8_t, GPIO_PinState)" (declared at line 250 of "..\DRV\inc\drv_gpio.h")
-  	
-RV_ENABLE();
-main.c(87): error:  #169: expected a declaration
-  	while(1);
-main.c(94): error:  #169: expected a declaration
-  }
-main.c: 4 warnings, 8 errors
->>>>>>> 270b57686bfc76f2a7a146d06ec08edb3e0535f5
-compiling FreescaleCar.c...
-FreescaleCar.c(220): warning:  #550-D: variable "LastDir" was set but never used
-  	uint8_t LastDir = 0;
-FreescaleCar.c: 1 warning, 0 errors
-compiling system_SKEAZ1284.c...
-compiling main.c...
-compiling drv_pit.c...
-compiling drv_uart.c...
-compiling drv_gpio.c...
-compiling drv_ftm.c...
-compiling drv_rcc.c...
-compiling drv_adc.c...
-compiling drv_flash.c...
-compiling drv_wdog.c...
-compiling drv_spi.c...
-compiling drv_acmp.c...
-compiling drv_irq.c...
-compiling drv_power.c...
-compiling drv_pwt.c...
-compiling drv_kbi.c...
-compiling drv_rtc.c...
-compiling bsp_led.c...
-compiling bsp.c...
-compiling bsp_uart.c...
-..\BSP\src\bsp_uart.c(302): warning:  #550-D: variable "RecvData" was set but never used
-  	uint8_t RecvData = 0;
-..\BSP\src\bsp_uart.c(303): warning:  #550-D: variable "reg" was set but never used
-  	uint8_t reg = 0x0;
-..\BSP\src\bsp_uart.c: 2 warnings, 0 errors
-compiling bsp_key.c...
-compiling bsp_timer.c...
-compiling bsp_oled.c...
-compiling bsp_flash.c...
-compiling bsp_motor.c...
 compiling bsp_encoder.c...
-..\BSP\src\bsp_encoder.c(128): warning:  #177-D: variable "LastLeftEncoder" was declared but never referenced
+..\BSP\src\bsp_encoder.c(103): warning:  #177-D: variable "LastLeftEncoder" was declared but never referenced
   	static uint32_t LastLeftEncoder,LastRightEncoder;
-..\BSP\src\bsp_encoder.c(128): warning:  #177-D: variable "LastRightEncoder" was declared but never referenced
+..\BSP\src\bsp_encoder.c(103): warning:  #177-D: variable "LastRightEncoder" was declared but never referenced
   	static uint32_t LastLeftEncoder,LastRightEncoder;
 ..\BSP\src\bsp_encoder.c: 2 warnings, 0 errors
-compiling bsp_switch.c...
-compiling bsp_sensor.c...
-compiling app_debug.c...
-compiling app_sort.c...
-compiling app_filter.c...
-compiling app_pid.c...
-<<<<<<< HEAD
 linking...
-Program Size: Code=12820 RO-data=2488 RW-data=3520 ZI-data=2648  
-".\Objects\FreescaleCar.axf" - 0 Error(s), 5 Warning(s).
-=======
-".\Objects\FreescaleCar.axf" - 24 Error(s), 7 Warning(s).
-=======
-".\Objects\FreescaleCar.axf" - 0 Error(s), 0 Warning(s).
->>>>>>> Mr-He
->>>>>>> 270b57686bfc76f2a7a146d06ec08edb3e0535f5
+Program Size: Code=14576 RO-data=2480 RW-data=3544 ZI-data=2656  
+".\Objects\FreescaleCar.axf" - 0 Error(s), 2 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
   G:\电子设计\飞卡\程序\FreescaleCar\USER\RTE
   D:\KEIL5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include
 
 <h2>Collection of Component Files used:</h2>
-<<<<<<< HEAD
-Build Time Elapsed:  00:00:11
-=======
-<<<<<<< HEAD
-Target not created.
 Build Time Elapsed:  00:00:03
-=======
-Build Time Elapsed:  00:00:00
->>>>>>> Mr-He
->>>>>>> 270b57686bfc76f2a7a146d06ec08edb3e0535f5
 </pre>
 </body>
 </html>

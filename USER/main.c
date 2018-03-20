@@ -38,18 +38,11 @@ int main(void)
 //	bsp_tim_CreateSoftTimer(4, 11, bsp_encoder_SpeedCalc, TIMER_MODE_AUTO);
 	
 	/*  硬件定时器任务,车子控制任务,周期20ms  */
-<<<<<<< HEAD
-//<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 270b57686bfc76f2a7a146d06ec08edb3e0535f5
+
 	bsp_tim_CreateHardTimer(1, 6, Car_Control);
 
 	bsp_motor_SetPwm(-600, -600);
-=======
 	bsp_tim_CreateHardTimer(1, 8, Car_Control);
->>>>>>> Mr-He
 	DRV_ENABLE();
 	
 	while(1);

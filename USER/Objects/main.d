@@ -76,6 +76,9 @@
 .\objects\main.o: D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
 .\objects\main.o: FreescaleCar.h
 .\objects\main.o: ..\APP\inc\app_pid.h
+.\objects\main.o: ..\BSP\inc\bsp_mpu.h
+.\objects\main.o: ..\MPU\inc\inv_mpu.h
+.\objects\main.o: ..\MPU\inc\inv_mpu_dmp_motion_driver.h
 .\objects\main.o: ..\GUI_DRV\interface\button.h
 .\objects\main.o: ..\GUI_DRV\interface\gui_config.h
 .\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
@@ -87,3 +90,4 @@
 .\objects\main.o: ..\GUI_APP\inc\menu.h
 .\objects\main.o: ..\GUI_APP\inc\display.h
 .\objects\main.o: ..\GUI_APP\inc\pid_set.h
+.\objects\main.o: ..\GUI_DRV\interface\font.h

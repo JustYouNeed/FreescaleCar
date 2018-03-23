@@ -29,6 +29,8 @@
 ".\objects\bsp_encoder.o"
 ".\objects\bsp_sensor.o"
 ".\objects\bsp_switch.o"
+".\objects\bsp_mpu.o"
+".\objects\bsp_i2c.o"
 ".\objects\app_debug.o"
 ".\objects\app_sort.o"
 ".\objects\app_filter.o"
@@ -46,6 +48,9 @@
 ".\objects\display.o"
 ".\objects\main_ui.o"
 ".\objects\pid_set.o"
+".\objects\para_show.o"
+".\objects\inv_mpu.o"
+".\objects\inv_mpu_dmp_motion_driver.o"
 --strict --scatter ".\Objects\FreescaleCar.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

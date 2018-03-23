@@ -87,32 +87,6 @@ void GUI_ScrollbarDelete(Scrollbar_Typedef *scbx)
 
 }
 
-Scrollbar_Typedef Scrollbar=
-{
-118,
-0,
-10,
-63,
-	
-9,
-3,
-9,
-0
-};
-
-//²âÊÔ¹ö¶¯Ìõº¯Êý
-void test_scrollbar(void){
-
-	GUI_ScrollbarDraw(&Scrollbar);
-	GUI_Refresh();								//Ë¢ÐÂÆÁÄ»
-	bsp_tim_DelayMs(2000);
-	Scrollbar.topitem = 1;
-	GUI_Scrollbar_SetPos(&Scrollbar);
-	GUI_Refresh();								//Ë¢ÐÂÆÁÄ»
-	bsp_tim_DelayMs(2000);
-//	GUI_ScrollbarDraw(&Scrollbar);
-	
-}
 
 
 

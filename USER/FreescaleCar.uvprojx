@@ -335,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\USER;..\CORE;..\BSP\inc;..\DRV\inc;..\APP\inc;..\GUI_DRV\interface;..\GUI_APP\inc</IncludePath>
+              <IncludePath>..\USER;..\CORE;..\BSP\inc;..\DRV\inc;..\APP\inc;..\GUI_DRV\interface;..\GUI_APP\inc;..\MPU\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -544,6 +544,16 @@
               <FileType>1</FileType>
               <FilePath>..\BSP\src\bsp_switch.c</FilePath>
             </File>
+            <File>
+              <FileName>bsp_mpu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\bsp_mpu.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\bsp_i2c.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -643,6 +653,26 @@
               <FileName>pid_set.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\GUI_APP\src\pid_set.c</FilePath>
+            </File>
+            <File>
+              <FileName>para_show.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GUI_APP\src\para_show.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>MPU</GroupName>
+          <Files>
+            <File>
+              <FileName>inv_mpu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\MPU\src\inv_mpu.c</FilePath>
+            </File>
+            <File>
+              <FileName>inv_mpu_dmp_motion_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\MPU\src\inv_mpu_dmp_motion_driver.c</FilePath>
             </File>
           </Files>
         </Group>

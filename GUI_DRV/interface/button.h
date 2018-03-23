@@ -13,7 +13,6 @@ typedef struct{
 }Button_Typedef;
 
 
-void test_Button(void);
 void GUI_Button_Selected(Button_Typedef *btn,uint8_t state);
 void GUI_DrawButton(Button_Typedef *btn);
 void GUI_ButtonDelete(Button_Typedef *btn);

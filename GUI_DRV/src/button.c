@@ -4,7 +4,7 @@
 #include "bsp_timer.h"
 #include "text.h"
 
-#define BUTTON_RADIUS  8
+#define BUTTON_RADIUS  6
 
 //得到字符串的长度（字符为6*12）
 static uint16_t getBtnStringlen(uint8_t *str)
@@ -91,31 +91,6 @@ void GUI_ButtonDelete(Button_Typedef *btn)
 	GUI_RectangleFill(btn->x, btn->y, btn->x+btn->width-1,  btn->y +btn->height-1, 0);
 }
 
-Button_Typedef button={
-10,
-40,
-40,
-14,
-"OK",
-1
-};
-
-//测试按钮
-void test_Button(void)
-{
-	GUI_DrawButton(&button);
-	button.title = "set";
-	button.x = 60;
-	GUI_DrawButton(&button);
-	GUI_Refresh();								//刷新屏幕
-	
-	bsp_tim_DelayMs(2000);
-
-	GUI_Button_Selected(&button,0);
-	GUI_Refresh();								//刷新屏幕
-	bsp_tim_DelayMs(2000);	
-	GUI_ButtonDelete(&button);
-}
 
 
 

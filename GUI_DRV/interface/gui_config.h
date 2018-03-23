@@ -61,11 +61,11 @@ extern TCOLOR	back_color;
 
 
 /* 有宽度的直线函数 */
-#define   GUI_LineWith_EN		0
+#define   GUI_LineWith_EN		1
 /* 画圆函数 */
 #define   GUI_CircleX_EN		1
 /* 椭圆函数 */
-#define   GUI_EllipseX_EN		0
+#define   GUI_EllipseX_EN		1
 /* 填充函数 */
 #define   GUI_FloodFill_EN		1
 /* 向上及向下节点个数(填充函数) */
@@ -74,7 +74,7 @@ extern TCOLOR	back_color;
 /* 圆弧函数 */
 #define   GUI_ArcX_EN			1
 /* 扇形函数 */
-#define   GUI_Pieslice_EN		0
+#define   GUI_Pieslice_EN		1
 
 
 

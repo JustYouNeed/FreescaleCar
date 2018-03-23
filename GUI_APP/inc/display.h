@@ -20,9 +20,12 @@ enum ui_e
 	TRIM_UI,
 	MENU_UI,
 	DEBUG_UI,
-	JOYSTICK_CALIB_UI,
-	MATCH_UI,
-	RESET_UI,
+	SET_S_KP_UI,
+	SET_S_KI_UI,
+	SET_S_KD_UI,
+	SET_D_KP_UI,
+	SET_D_KI_UI,
+	SET_D_KD_UI,
 };
 
 void setShow_ui(enum ui_e ui);

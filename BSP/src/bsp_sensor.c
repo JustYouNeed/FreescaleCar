@@ -49,12 +49,12 @@ void bsp_sensor_Config(void)
 {
 	ADC_InitTypeDef ADC_InitStruct;
 	
-	ADC_InitStruct.ADC_Channel = SENSOR_1 | SENSOR_2 | SENSOR_3 | SENSOR_4 | SENSOR_5 | SENSOR_6;
-	ADC_InitStruct.ADC_ChannelCount = 6;
+	ADC_InitStruct.ADC_Channel = SENSOR_1 | SENSOR_2 | SENSOR_3 | SENSOR_4;
+	ADC_InitStruct.ADC_ChannelCount = 1;
 	ADC_InitStruct.ADC_ClockSource = ADC_ClockSource_BusClock;
 	ADC_InitStruct.ADC_ContinuousConvMode = ENABLE;
-	ADC_InitStruct.ADC_IRQCmd = ENABLE;
-	ADC_InitStruct.ADC_Prescaler = ADC_Prescaler_Div2;
+	ADC_InitStruct.ADC_IRQCmd = DISABLE;
+	ADC_InitStruct.ADC_Prescaler = ADC_Prescaler_Div4;
 	ADC_InitStruct.ADC_RefSource = ADC_RefSource_VDD;
 	ADC_InitStruct.ADC_ScanConvMode = DISABLE;
 	drv_adc_Init(&ADC_InitStruct);
@@ -136,7 +136,14 @@ void bsp_sensor_DataProcess(void)
 	/*  循环处理每一个传感器的值  */
 	for(; cnt < SENSOR_COUNT; cnt ++)
 	{
-		Car.Sensor[cnt].FIFO[Car.Sensor[cnt].Write++] = ADC_Value[cnt];		/*  写入FIFO  */
+//		Car.Sensor[cnt].FIFO[Car.Sensor[cnt].Write++] = ADC_Value[cnt];		/*  写入FIFO  */
+		switch(cnt)
+		{
+			case SENSOR_H_L: Car.Sensor[SENSOR_H_L].FIFO[Car.Sensor[SENSOR_H_L].Write++] = drv_adc_ConvOnce(SENSOR_1, ADC_Resolution_8b);break;
+			case SENSOR_V_L: Car.Sensor[SENSOR_V_L].FIFO[Car.Sensor[SENSOR_V_L].Write++] = drv_adc_ConvOnce(SENSOR_2, ADC_Resolution_8b);break;
+			case SENSOR_H_R: Car.Sensor[SENSOR_H_R].FIFO[Car.Sensor[SENSOR_H_R].Write++] = drv_adc_ConvOnce(SENSOR_3, ADC_Resolution_8b);break;
+			case SENSOR_V_R: Car.Sensor[SENSOR_V_R].FIFO[Car.Sensor[SENSOR_V_R].Write++] = drv_adc_ConvOnce(SENSOR_4, ADC_Resolution_8b);break;
+		}
 		
 		if(Car.Sensor[cnt].Write >= SENSOR_FIFO_SIZE) Car.Sensor[cnt].Write = 0;	/*  环形队列  */
 		

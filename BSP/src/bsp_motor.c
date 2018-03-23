@@ -52,7 +52,7 @@ void bsp_motor_Config(void)
 	
 	/*  初始化电机PWM  */
 	PWM_InitStruct.PWM_Channel = DRV_PWM1_CHANNEL;
-	PWM_InitStruct.PWM_Frequency = 20;
+	PWM_InitStruct.PWM_Frequency = 15;
 	PWM_InitStruct.PWM_Pulse = 0;
 	drv_ftm_PWMInit(&PWM_InitStruct);
 	
@@ -82,7 +82,7 @@ void bsp_motor_Config(void)
 */
 void bsp_motor_SetPwm(int16_t LeftPwm, int16_t RightPwm)
 {
-//	DRV_ENABLE();		/*  开启驱动  */
+	DRV_ENABLE();		/*  开启驱动  */
 	
 	/*  设置左边PWM  */
 	if(RightPwm >= 0)	/*  电机正转  */

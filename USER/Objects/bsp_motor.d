@@ -75,3 +75,6 @@
 .\objects\bsp_motor.o: ..\USER\derivative.h
 .\objects\bsp_motor.o: D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
 .\objects\bsp_motor.o: ..\APP\inc\app_pid.h
+.\objects\bsp_motor.o: ..\BSP\inc\bsp_mpu.h
+.\objects\bsp_motor.o: ..\MPU\inc\inv_mpu.h
+.\objects\bsp_motor.o: ..\MPU\inc\inv_mpu_dmp_motion_driver.h

@@ -55,7 +55,5 @@ extern uint8_t  GUI_WindowsDelete(WINDOWS *win);
 ****************************************************************************/
 extern  void  GUI_WindowsClr(WINDOWS *win);
 
-//²âÊÔ´°Ìåº¯Êý
-void test_window(void);
 
 #endif

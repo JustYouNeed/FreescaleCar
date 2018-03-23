@@ -135,9 +135,21 @@ void Car_ParaInit(void)
 */
 void Car_Running(void)
 {
-	bsp_led_Toggle(0);
+	bsp_led_Toggle(2);
 }
 
+
+void Car_Stop(void)
+{
+	DRV_DISABLE();
+	bsp_tim_DeleteHardTimer(1);
+//	bsp_tim_DeleteSoftTimer(2);
+}
+
+void Car_Start(void)
+{
+	bsp_tim_CreateHardTimer(1, 1, Car_Control);
+}
 /*
 *********************************************************************************************************
 *                            Car_ParaStroe              
@@ -537,7 +549,6 @@ void Car_Control(void)
 	
 	volatile int16_t TurnPwm = 0, LeftVelocityPwm = 0, RightVelocityPwm = 0;
 	
-	bsp_led_Toggle(2);
 	
 	/*  控制计数器  */
 	CarControlCunter++;
@@ -559,7 +570,6 @@ void Car_Control(void)
 		/*  每20ms进行一次速度控制  */
 		case 2:
 		{
-			bsp_led_Toggle(1);
 			g_SpeedControlCounter++;
 			if(g_SpeedControlCounter >= 4)
 			{

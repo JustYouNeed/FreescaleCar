@@ -1,6 +1,8 @@
 #include "display.h"
+# include "main_ui.h"
 #include "menu.h"
-
+# include "pid_set.h"
+# include "para_show.h"
 /********************************************************************************	 
  * 本程序只供学习使用，未经作者许可，不得用于其它任何用途
  * ALIENTEK MiniFly_Remotor
@@ -15,39 +17,40 @@
 ********************************************************************************/
 
 static enum ui_e show_ui = MAIN_UI;
-
+extern uint8_t isMainUIChange;
+uint8_t key = KEY_NONE;
 /*设置显示界面*/
 void setShow_ui(enum ui_e ui)
 {
 	show_ui = ui;
+	if(ui == MAIN_UI) isMainUIChange = true;
 	GUI_ClearSCR();
 }
 
 /*显示任务*/
 void displayTask(void)
-{
-	while(1)
+{	
+	key = bsp_key_GetKey();
+	if(key !=KEY_NONE  && show_ui == MAIN_UI) 
 	{
-		switch(show_ui)
-		{
-			case MAIN_UI:
-				break;
-			case TRIM_UI:
-				break;
-			case MENU_UI:
-				break;
-			case DEBUG_UI:
-				break;
-			case JOYSTICK_CALIB_UI:
-				break;
-			case MATCH_UI:
-				break;
-			case RESET_UI:
-				break;
-			default:break;
-		}
-		GUI_Refresh();
+		setShow_ui(MENU_UI);
+		key = KEY_NONE;
 	}
+	switch(show_ui)
+	{
+		case DEBUG_UI: Para_Show_UI(); break;
+		case MAIN_UI:	main_ui(); break;
+		case MENU_UI:	Menu_Run();	break;
+		case SET_S_KP_UI:	SpeedKp_Set(); break;
+		case SET_S_KI_UI:	SpeedKi_Set(); break;
+		case SET_S_KD_UI:	SpeedKd_Set(); break;
+		case SET_D_KP_UI: DirctionKp_Set(); break;
+		case SET_D_KI_UI: DirctionKi_Set(); break;
+		case SET_D_KD_UI: DirctionKd_Set(); break;
+		default:break;
+	}
+	
+	GUI_Refresh();
 }
 
 /*界面显示初始化*/

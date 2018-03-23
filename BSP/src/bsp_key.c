@@ -310,8 +310,6 @@ void bsp_key_Scan(void)
 	uint8_t i = 0;
 	uint8_t key = 0;
 	
-//	if(TimerTaskRunMutexSignal == 1) return ;
-//	TimerTaskRunMutexSignal = 1;
 	drv_gpio_WritePin(KEY_UP_PIN, GPIO_PIN_SET);
 	drv_gpio_WritePin(KEY_OK_PIN, GPIO_PIN_SET);
 	drv_gpio_WritePin(KEY_DOWN_PIN, GPIO_PIN_SET);
@@ -320,11 +318,6 @@ void bsp_key_Scan(void)
 		bsp_key_Detect(i);
 	}
 	
-//	key = bsp_key_GetKey();
-//	if(key == KEY_UP_PRESS) bsp_led_Toggle(1);
-//	else if(key == KEY_OK_PRESS) bsp_led_Toggle(2);
-//	else if(key == KEY_DOWN_PRESS) bsp_led_Toggle(3);
-//	TimerTaskRunMutexSignal = 0;
 }
 
 

@@ -22,7 +22,7 @@
 */
 # include "bsp.h"
 # include "app_pid.h"
-
+# include "bsp_mpu.h"
 
 /*  编码器每圈输出脉冲数  */
 # define ENCONDER_LINES			512
@@ -50,6 +50,7 @@
 /*  小车走走道时的目标速度  */
 # define STRAIGHT_SPEED		2
 
+/*  转向情况  */
 typedef enum
 {
 	TurnLeft = 0x0,
@@ -83,14 +84,14 @@ typedef struct
 	PID_TypeDef PID;											/*  PID参数  */
 	Sensor_TypeDef Sensor[SENSOR_COUNT];	/*  传感器  */
 	Motor_TypeDef Motor;									/*  电机  */
-	LoseLine_TypeDef LossLine;
-	Road_TypeDef NowRoad;
-	
+	LoseLine_TypeDef LossLine;						/*  丢线  */
+	Road_TypeDef NowRoad;									/*  当前路况  */
+	MPU_TypeDef MPU;											/*  MPU参数  */
 	
 	float HorizontalAE, VecticalAE;				/*  传感器水平、垂直和差比  */
-	float CarSpeed, TargetSpeed, LeftTargetSpeed, RightTargetSpeed;
+	float CarSpeed, TargetSpeed, LeftTargetSpeed, RightTargetSpeed;	/*  当前车速,整体目标速度,左右轮目标速度  */
 	int16_t OutThreshold[SENSOR_COUNT];		/*  出线阈值  */
-	int16_t MaxPWM;
+	int16_t MaxPWM;												/*  最大PWM  */
 }Car_TypeDef;
 
 extern Car_TypeDef Car;
@@ -99,6 +100,8 @@ void Car_ParaInit(void);
 void Car_Control(void);
 void Car_ParaStroe(void);
 void Car_Running(void);
+void Car_Stop(void);
+void Car_Start(void);
 # endif
 
 /********************************************  END OF FILE  *******************************************/

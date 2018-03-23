@@ -116,35 +116,6 @@ uint8_t GUI_MessageBoxDelete(MessageBox_Typedef* messagebox)
    return(1);
 }
 
-MessageBox_Typedef MessageBox={
-0,
-0,	
-128,
-64,
-"reset",	
-"system will be resetni hao a1234?",
-"OK",
-"Cancel"
-};
-
-
-//≤‚ ‘œ˚œ¢øÚ
-void test_MessageBox(void)
-{
- GUI_MessageBoxDraw(&MessageBox);
- GUI_Refresh();
- bsp_tim_DelayMs(2000);
- GUI_MessageBoxButtonStatus(&MessageBox, 1);	
- GUI_Refresh();
- bsp_tim_DelayMs(2000);
- GUI_MessageBoxButtonStatus(&MessageBox, 0);		
- GUI_Refresh();
- bsp_tim_DelayMs(2000);	
-GUI_MessageBoxDelete(&MessageBox);	
-	
-	
-}
-
 
 
 

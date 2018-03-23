@@ -18,6 +18,11 @@ extern Scrollbar_Typedef MenuScrollbar;
 extern MenuItem_Typedef*  CurMenu;
 extern MenuItem_Typedef MainMenu[5];
 extern MenuItem_Typedef PIDAdjMenu[9];
+extern uint8_t key;
+extern bool isChangeMenu;
+extern int selected;
+extern MenuItem_Typedef*  CurItem;
+extern uint8_t getMenuSelectitem(MenuItem_Typedef menu[]);
 Button_Typedef bt_add={
 4,
 46,
@@ -45,118 +50,339 @@ Button_Typedef bt_ok={
 1
 };
 
-uint8_t setkp = 0;
-void Kp()
-{
-	setkp = 1;
-}
 
-void exitPIDSet(void)
-{
-//	setShow_ui(MAIN_UI);
-	GUI_ClearSCR();
-	displayInit();
-	MenuWindow.topitem = 0;
-	GUI_WindowsDraw(&MenuWindow);
-	MenuScrollbar.topitem = 1;
-	MenuScrollbar.totalitems = PIDAdjMenu->menuItemCount;
-	GUI_ScrollbarDraw(&MenuScrollbar);
-	
-//	PIDAdjMenu[0].isSelect = true;
-//	for(int i = 0; i< PIDAdjMenu[0].menuItemCount; i++)
-//	{
-////		if(i!=0)PIDAdjMenu[i].isSelect = false;
-//		GUI_MenuItemDraw(30,19,&PIDAdjMenu[i]);
-//	}
-	bsp_key_ClearFIFO();
-	GUI_Refresh();
-}
 
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
 void SpeedKp_Set(void)
 {
-	uint16_t cnt = 0;
+	static uint16_t cnt = 0;
 	uint16_t keytime = 0;
-	uint8_t Kp[128];
-	float kp_temp = (Car.PID.Kp_Straight);
-	MenuWindow.title = "Speed Kp";
-
-	GUI_WindowsDraw(&MenuWindow);
-	GUI_DrawButton(&bt_add);
-	GUI_DrawButton(&bt_mines);
-	GUI_DrawButton(&bt_ok);
+	static float kp_temp;
 	
-	GUI_Refresh();
-//	DISABLE_INT();
-	
-	setkp = 0;
-	drv_gpio_WritePin(KEY_OK_PIN, 1);
-	while(drv_gpio_ReadPin(KEY_OK_PIN) == 1)
+	if(cnt == 0)
 	{
-
-		if(drv_gpio_ReadPin(KEY_UP_PIN) == 0)
-		{
-			GUI_Button_Selected(&bt_add, 0);
-			bsp_led_Toggle(2);
-			GUI_Refresh();
-			while(drv_gpio_ReadPin(KEY_UP_PIN) == 0);
-			kp_temp += 0.5;
-		}
-		else
-		{
-			GUI_Button_Selected(&bt_add, 1);
-		}
-		
-		if(drv_gpio_ReadPin(KEY_DOWN_PIN) == 0)
-		{
-			GUI_Button_Selected(&bt_mines, 0);
-			bsp_led_Toggle(2);
-			GUI_Refresh();
-			while(drv_gpio_ReadPin(KEY_DOWN_PIN) == 0);
-			kp_temp -= 0.5;
-//			sprintf(Kp, "Kp:%lf",kp_temp);
-		}
-		else
-		{
-			GUI_Button_Selected(&bt_mines, 1);
-		}
-		
-//		if(drv_gpio_ReadPin(KEY_OK_PIN) == 0)
-//		{
-//			keytime++;
-//			GUI_Button_Selected(&bt_ok, 0);
-//			GUI_Refresh();
-//			while(drv_gpio_ReadPin(KEY_OK_PIN) == 0);
-////			PIDAdjMenu[0].isSelect = false;
-////			cur_sequence = 0;
-////			bsp_key_ClearFIFO();
-//			
-////		
-//			
-////			drv_gpio_WritePin(KEY_OK_PIN, 1);
-////			
-//			return;
-//		}
-//		else
-//		{
-//			keytime = 0;
-//			GUI_Button_Selected(&bt_ok, 1);
-//		}
-
-		cnt++;
-		if(cnt % 20 == 0)
-		{
-			bsp_led_Toggle(1);
-			oled_showString(20,16,"Kp:",12,24);
-			oled_showNum(58,16,(uint32_t)(kp_temp*100), 4,12,24);
-			GUI_Refresh();
-		}
+		MenuWindow.title = "Speed Kp";
+		kp_temp = (Car.PID.Kp_Straight);
+		GUI_WindowsDraw(&MenuWindow);
+		GUI_DrawButton(&bt_add);
+		GUI_DrawButton(&bt_mines);
+		GUI_DrawButton(&bt_ok);
+		cnt = 1;
 	}
-	Car.PID.Kp_Straight = kp_temp;
-	exitPIDSet();
+		
+	if(key == KEY_UP_PRESS)
+	{
+		GUI_Button_Selected(&bt_add, 0);
+		kp_temp += 0.5;
+	}
+	else if(KEY_DOWN_PRESS == key)
+	{
+		GUI_Button_Selected(&bt_mines, 0);
+		kp_temp -= 0.5;
+	}else if(key == KEY_OK_PRESS)
+	{
+		Car.PID.Kp_Straight = kp_temp;
+		
+		cnt = 0;
+		displayInit();
+		setShow_ui(MENU_UI);
+		Car_Start();
+	}else
+	{
+		GUI_Button_Selected(&bt_add, 1);
+		GUI_Button_Selected(&bt_mines, 1);
+	}	
+	oled_showString(20,16,"Kp:",12,24);
+	oled_showNum(58,16,(uint32_t)(kp_temp*100), 4,12,24);
 }
 
-void SpeedKi_Set(void);
-void SpeedKd_Set(void);
-void DirctionKp_Set(void);
-void DirctionKi_Set(void);
-void DirctionKd_Set(void);
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
+void SpeedKi_Set(void)
+{
+	static uint16_t cnt = 0;
+	uint16_t keytime = 0;
+	static float ki_temp;
+	
+	if(cnt == 0)
+	{
+		MenuWindow.title = "Speed Ki";
+		ki_temp = (Car.PID.Kp_Straight);
+		GUI_WindowsDraw(&MenuWindow);
+		GUI_DrawButton(&bt_add);
+		GUI_DrawButton(&bt_mines);
+		GUI_DrawButton(&bt_ok);
+		cnt = 1;
+	}
+		
+	if(key == KEY_UP_PRESS)
+	{
+		GUI_Button_Selected(&bt_add, 0);
+		ki_temp += 0.5;
+	}
+	else if(KEY_DOWN_PRESS == key)
+	{
+		GUI_Button_Selected(&bt_mines, 0);
+		ki_temp -= 0.5;
+	}else if(key == KEY_OK_PRESS)
+	{
+		Car.PID.Ki_Straight = ki_temp;
+		
+		cnt = 0;
+		displayInit();
+		setShow_ui(MENU_UI);
+		Car_Start();
+	}else
+	{
+		GUI_Button_Selected(&bt_add, 1);
+		GUI_Button_Selected(&bt_mines, 1);
+	}	
+	oled_showString(20,16,"Ki:",12,24);
+	oled_showNum(58,16,(uint32_t)(ki_temp*10), 4,12,24);
+}
+
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
+void SpeedKd_Set(void)
+{
+	static uint16_t cnt = 0;
+	uint16_t keytime = 0;
+	static float kd_temp;
+	
+	if(cnt == 0)
+	{
+		MenuWindow.title = "Speed Kd";
+		kd_temp = (Car.PID.Kp_Straight);
+		GUI_WindowsDraw(&MenuWindow);
+		GUI_DrawButton(&bt_add);
+		GUI_DrawButton(&bt_mines);
+		GUI_DrawButton(&bt_ok);
+		cnt = 1;
+	}
+		
+	if(key == KEY_UP_PRESS)
+	{
+		GUI_Button_Selected(&bt_add, 0);
+		kd_temp += 0.5;
+	}
+	else if(KEY_DOWN_PRESS == key)
+	{
+		GUI_Button_Selected(&bt_mines, 0);
+		kd_temp -= 0.5;
+	}else if(key == KEY_OK_PRESS)
+	{
+		Car.PID.Ki_Straight = kd_temp;
+		
+		cnt = 0;
+		displayInit();
+		setShow_ui(MENU_UI);
+		Car_Start();
+	}else
+	{
+		GUI_Button_Selected(&bt_add, 1);
+		GUI_Button_Selected(&bt_mines, 1);
+	}	
+	oled_showString(20,16,"Kd:",12,24);
+	oled_showNum(58,16,(uint32_t)(kd_temp*10), 4,12,24);
+}
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
+void DirctionKp_Set(void)
+{
+	static uint16_t cnt = 0;
+	uint16_t keytime = 0;
+	static float kp_temp;
+	
+	if(cnt == 0)
+	{
+		MenuWindow.title = "Dirction Kp";
+		kp_temp = (Car.PID.Kp_Straight);
+		GUI_WindowsDraw(&MenuWindow);
+		GUI_DrawButton(&bt_add);
+		GUI_DrawButton(&bt_mines);
+		GUI_DrawButton(&bt_ok);
+		cnt = 1;
+	}
+		
+	if(key == KEY_UP_PRESS)
+	{
+		GUI_Button_Selected(&bt_add, 0);
+		kp_temp += 0.5;
+	}
+	else if(KEY_DOWN_PRESS == key)
+	{
+		GUI_Button_Selected(&bt_mines, 0);
+		kp_temp -= 0.5;
+	}else if(key == KEY_OK_PRESS)
+	{
+		Car.PID.Kp_Straight = kp_temp;
+		
+		cnt = 0;
+		displayInit();
+		setShow_ui(MENU_UI);
+		Car_Start();
+	}else
+	{
+		GUI_Button_Selected(&bt_add, 1);
+		GUI_Button_Selected(&bt_mines, 1);
+	}	
+	oled_showString(20,16,"Kp:",12,24);
+	oled_showNum(58,16,(uint32_t)(kp_temp*100), 4,12,24);
+}
+
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
+void DirctionKi_Set(void)
+{
+	static uint16_t cnt = 0;
+	uint16_t keytime = 0;
+	static float ki_temp;
+	
+	if(cnt == 0)
+	{
+		MenuWindow.title = "Dirction Ki";
+		ki_temp = (Car.PID.Kp_Straight);
+		GUI_WindowsDraw(&MenuWindow);
+		GUI_DrawButton(&bt_add);
+		GUI_DrawButton(&bt_mines);
+		GUI_DrawButton(&bt_ok);
+		cnt = 1;
+	}
+		
+	if(key == KEY_UP_PRESS)
+	{
+		GUI_Button_Selected(&bt_add, 0);
+		ki_temp += 0.5;
+	}
+	else if(KEY_DOWN_PRESS == key)
+	{
+		GUI_Button_Selected(&bt_mines, 0);
+		ki_temp -= 0.5;
+	}else if(key == KEY_OK_PRESS)
+	{
+		Car.PID.Ki_Straight = ki_temp;
+		
+		cnt = 0;
+		displayInit();
+		setShow_ui(MENU_UI);
+		Car_Start();
+	}else
+	{
+		GUI_Button_Selected(&bt_add, 1);
+		GUI_Button_Selected(&bt_mines, 1);
+	}	
+	oled_showString(20,16,"Ki:",12,24);
+	oled_showNum(58,16,(uint32_t)(ki_temp*10), 4,12,24);
+}
+
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
+void DirctionKd_Set(void)
+{
+	static uint16_t cnt = 0;
+	uint16_t keytime = 0;
+	static float kd_temp;
+	
+	if(cnt == 0)
+	{
+		MenuWindow.title = "Dirction Kd";
+		kd_temp = (Car.PID.Kp_Straight);
+		GUI_WindowsDraw(&MenuWindow);
+		GUI_DrawButton(&bt_add);
+		GUI_DrawButton(&bt_mines);
+		GUI_DrawButton(&bt_ok);
+		cnt = 1;
+	}
+		
+	if(key == KEY_UP_PRESS)
+	{
+		GUI_Button_Selected(&bt_add, 0);
+		kd_temp += 0.5;
+	}
+	else if(KEY_DOWN_PRESS == key)
+	{
+		GUI_Button_Selected(&bt_mines, 0);
+		kd_temp -= 0.5;
+	}else if(key == KEY_OK_PRESS)
+	{
+		Car.PID.Ki_Straight = kd_temp;
+		
+		cnt = 0;
+		displayInit();
+		setShow_ui(MENU_UI);
+		Car_Start();
+	}else
+	{
+		GUI_Button_Selected(&bt_add, 1);
+		GUI_Button_Selected(&bt_mines, 1);
+	}	
+	oled_showString(20,16,"Kd:",12,24);
+	oled_showNum(58,16,(uint32_t)(kd_temp*10), 4,12,24);
+}

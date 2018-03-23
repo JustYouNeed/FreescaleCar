@@ -19,8 +19,8 @@ MenuItem_Typedef PIDAdjMenu[9];
 static MenuItem_Typedef DirctionPIDAdjMenu[4];
 
 MenuItem_Typedef*  CurMenu = MainMenu;
-static MenuItem_Typedef*  CurItem;
-
+MenuItem_Typedef*  CurItem;
+extern uint8_t key;
 const uint8_t *PIDParaAdjMenuTitle[7] = 
 {
 	"1.SpeedKp",
@@ -55,9 +55,9 @@ const uint8_t *ParaAdjMenuTitle[3] =
 
 
 
-static int selected;
+int selected;
 int cur_sequence; //某一级菜单选中项目的序号
-static bool isChangeMenu = true;
+bool isChangeMenu = true;
 const uint8_t* defaultTitle = "Vector Car";
 
 //窗体
@@ -137,6 +137,80 @@ void gotoLastMenu(void)
 	}
 }
 
+
+void gotoParaShow(void)
+{
+	setShow_ui(DEBUG_UI);
+	isChangeMenu = true;
+}
+
+void gotoSetSpeedKp(void)
+{
+	Car_Stop();
+	setShow_ui(SET_S_KP_UI);
+	isChangeMenu = true;
+}
+
+void gotoSetSpeedKi(void)
+{
+	Car_Stop();
+	setShow_ui(SET_S_KI_UI);
+	isChangeMenu = true;
+}
+
+void gotoSetSpeedKd(void)
+{
+	Car_Stop();
+	setShow_ui(SET_S_KD_UI);
+	isChangeMenu = true;
+}
+
+void gotoSetDirctionKp(void)
+{
+	Car_Stop();
+	setShow_ui(SET_D_KP_UI);
+	isChangeMenu = true;
+}
+
+/*
+*********************************************************************************************************
+*                            gotoSetDirctionKi              
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
+void gotoSetDirctionKi(void)
+{
+	Car_Stop();
+	setShow_ui(SET_D_KI_UI);
+	isChangeMenu = true;
+}
+/*
+*********************************************************************************************************
+*                         gotoSetDirctionKd                 
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
+void gotoSetDirctionKd(void)
+{
+	Car_Stop();
+	setShow_ui(SET_D_KD_UI);
+	isChangeMenu = true;
+}
+
 /*显示菜单*/
 void DisplayMenuInit(MenuItem_Typedef* menu)
 {
@@ -171,64 +245,74 @@ void DisplayMenuInit(MenuItem_Typedef* menu)
 	CurItem = menu + cur_sequence;
 	CurItem->isSelect = true;
 	
-	GUI_Refresh();//刷新屏幕
-	
 	isChangeMenu = false;
 }
 
-/*菜单运行*/
+
+/*
+*********************************************************************************************************
+*                                Menu_Run          
+*
+* Description: 菜单运行主函数
+*             
+* Arguments  : None.
+*
+* Reutrn     : None.
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
 void Menu_Run(void)
 {
-	uint8_t key=0;
-	static uint8_t once = 0;
+	uint8_t keyState;
 	static int timeout;
-	volatile uint8_t showItems = 0;
+	uint8_t showItems;
 	
 	DisplayMenuInit(CurMenu);
-	key = bsp_key_GetKey();
-	
+
 	if(key != KEY_NONE) timeout = 0;
+	
 	switch(key)
 	{
-			case KEY_DOWN_PRESS:	//PITCH向后
-				//清除窗口内容
-				GUI_RectangleFill(1, 18, 117, 62, 0);
-				CurItem = CurMenu + cur_sequence;
-				CurItem->isSelect = false;
-				bsp_led_Toggle(2);
-				//菜单项目序号++
-				cur_sequence++;
-				if(cur_sequence >= CurMenu->menuItemCount-1)
-					cur_sequence = CurMenu->menuItemCount-1;
-				CurItem = CurMenu + cur_sequence;
-				CurItem->isSelect = true;
-				
-				//光标位置++
-				CurMenu->cursorPosition++;
-				if(CurMenu->menuItemCount <= MenuWindow.itemsperpage)
-				{
-					showItems = CurMenu->menuItemCount;
-					if(CurMenu->cursorPosition >= CurMenu->menuItemCount)
-						CurMenu->cursorPosition = CurMenu->menuItemCount-1;
+		case KEY_DOWN_PRESS:	//PITCH向后
+			//清除窗口内容
+			GUI_RectangleFill(1, 18, 117, 62, 0);
+			CurItem = CurMenu + cur_sequence;
+			CurItem->isSelect = false;
+		
+			//菜单项目序号++
+			cur_sequence++;
+			if(cur_sequence >= CurMenu->menuItemCount-1)
+				cur_sequence = CurMenu->menuItemCount-1;
+			CurItem = CurMenu + cur_sequence;
+			CurItem->isSelect = true;
+			
+			//光标位置++
+			CurMenu->cursorPosition++;
+			if(CurMenu->menuItemCount <= MenuWindow.itemsperpage)
+			{
+				showItems = CurMenu->menuItemCount;
+				if(CurMenu->cursorPosition >= CurMenu->menuItemCount)
+					CurMenu->cursorPosition = CurMenu->menuItemCount-1;
+			}
+			else
+			{
+				showItems = MenuWindow.itemsperpage;
+				if(CurMenu->cursorPosition > MenuWindow.itemsperpage-1)
+				{		
+					CurMenu->cursorPosition= MenuWindow.itemsperpage-1;
+					if(MenuWindow.topitem < CurMenu->menuItemCount-MenuWindow.itemsperpage)
+						MenuWindow.topitem++;
 				}
-				else
-				{
-					showItems = MenuWindow.itemsperpage;
-					if(CurMenu->cursorPosition > MenuWindow.itemsperpage-1)
-					{		
-						CurMenu->cursorPosition= MenuWindow.itemsperpage-1;
-						if(MenuWindow.topitem < CurMenu->menuItemCount-MenuWindow.itemsperpage)
-							MenuWindow.topitem++;
-					}
-				}
-				for(int i=0; i<showItems; i++)
-				{
-					MenuItem_Typedef* Item = CurMenu+MenuWindow.topitem+i;
-					GUI_MenuItemDraw(MEMU_POSX_1, MEMU_POSY_1+i*15, Item);
-				}     	
+			}
+			for(int i=0; i<showItems; i++)
+			{
+				MenuItem_Typedef* Item = CurMenu+MenuWindow.topitem+i;
+				GUI_MenuItemDraw(MEMU_POSX_1, MEMU_POSY_1+i*15, Item);
+			}
 			MenuScrollbar.topitem = cur_sequence;
-			GUI_Scrollbar_SetPos(&MenuScrollbar);	 				
-				break;
+			GUI_Scrollbar_SetPos(&MenuScrollbar);	      					
+			break;
 					
 		case KEY_UP_PRESS:	//PITCH向前
 			//清除窗口内容
@@ -265,26 +349,32 @@ void Menu_Run(void)
 			{
 				MenuItem_Typedef* Item = CurMenu+MenuWindow.topitem+i;
 				GUI_MenuItemDraw(MEMU_POSX_1, MEMU_POSY_1+i*15, Item);
-			}  					
+			}
 			MenuScrollbar.topitem = cur_sequence;
-			GUI_Scrollbar_SetPos(&MenuScrollbar);   
-			break;	
+			GUI_Scrollbar_SetPos(&MenuScrollbar);      					
+			break;
+			
+//		case RIGHT:  //ROLL向右
+//			gotoNextMenu();//进入下一级菜单
+//			break;
+//			
+//		case LEFT:  //ROLL向左
+//			gotoLastMenu();//进入上一级菜单
+//			break;
+//		
 		default :break;
 	}
 	
-	
+	/*按下摇杆键执行菜单对应的动作*/
 	if(key == KEY_OK_PRESS)
-	{
-		once ++;
-		bsp_led_Toggle(1);
-		if(CurItem->Function != NULL && once > 1)
+	{	
+		if(CurItem->Function != NULL)
 		{
-			key = KEY_NONE;
 			CurItem->Function();
 		}
 	}
-	
-	if(timeout ++ > 80)
+	/*超时退出菜单*/
+	if(timeout++ > 100)
 	{
 		timeout = 0;
 		if(CurItem->parentMenu != NULL)
@@ -294,14 +384,24 @@ void Menu_Run(void)
 			CurItem = CurMenu + selected;
 			CurItem->isSelect = true;
 		}
-		if(CurMenu != MainMenu)
-			exitMenu();
+		exitMenu();
 	}
-	
-	GUI_Refresh();
 }
 
 
+/*
+*********************************************************************************************************
+*                               MainMenu_Init           
+*
+* Description: 一级菜单界面初始化
+*             
+* Arguments  : None.
+*
+* Reutrn     : None.
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
 void MainMenu_Init(void)
 {
 	uint8_t i = 0;
@@ -318,11 +418,26 @@ void MainMenu_Init(void)
 		MainMenu[i].childrenMenu = NULL;
 	}
 	MainMenu[0].isSelect = true;
+	MainMenu[0].Function = gotoParaShow;
+	
 	
 	MainMenu[1].Function = gotoNextMenu;
 	MainMenu[1].childrenMenu = ParaAdjMenu;
 }
 
+/*
+*********************************************************************************************************
+*                        PIDAdjMenu_Init                  
+*
+* Description: 初始化PID调整菜单
+*             
+* Arguments  : None.
+*
+* Reutrn     : None.
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
 void PIDAdjMenu_Init(void)
 {
 	uint8_t i = 0;
@@ -340,12 +455,36 @@ void PIDAdjMenu_Init(void)
 	}
 
 	PIDAdjMenu[0].isSelect = true;
-	PIDAdjMenu[0].Function = Kp;
+	PIDAdjMenu[0].Function = gotoSetSpeedKp;		/*  速度环Kp  */
+	
+	PIDAdjMenu[1].Function = gotoSetSpeedKi;
+	
+	PIDAdjMenu[2].Function = gotoSetSpeedKd;
+	
+	PIDAdjMenu[3].Function = gotoSetDirctionKp;
+	
+	PIDAdjMenu[4].Function = gotoSetDirctionKi;
+	
+	PIDAdjMenu[5].Function = gotoSetDirctionKd;
+	
 	
 	PIDAdjMenu[6].childrenMenu = ParaAdjMenu;
 	PIDAdjMenu[6].Function = gotoNextMenu;
 }
 
+/*
+*********************************************************************************************************
+*                               ParaSetMenu_Init           
+*
+* Description: 二级界面初始化
+*             
+* Arguments  : None.
+*
+* Reutrn     : None.
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
 void ParaSetMenu_Init(void)
 {
 	uint8_t i = 0;

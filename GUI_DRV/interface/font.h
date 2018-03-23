@@ -12,4 +12,5 @@ extern const unsigned char bmp_battery[13][20];
 extern const unsigned char bmp_lock[2][120];
 extern const unsigned char bmp_flightMode[2][120];
 extern const unsigned char bmp_remoter2fly[96];
+extern const unsigned char gImage_nuc[518];
 #endif

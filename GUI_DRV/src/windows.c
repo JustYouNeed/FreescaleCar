@@ -94,24 +94,6 @@ void GUI_WindowsClr(WINDOWS *win)
 }
 
 
-WINDOWS winxp=
-{
-0,
-0,	
-128,
-64,
-3,
-0,
-"XBOS",
-};
-
-//≤‚ ‘¥∞ÃÂ
-void test_window(void)
-{
-	GUI_WindowsDraw(&winxp);	
-}
-
-
 #endif
 
 

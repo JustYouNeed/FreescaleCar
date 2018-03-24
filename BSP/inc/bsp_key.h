@@ -39,7 +39,7 @@
 # define BSP_KEY_COUNT		3
 
 /*  长按时间定义  */
-# define KEY_LONG_TIME		4000
+# define KEY_LONG_TIME		50
 # define KEY_FILTER_TIME	5
 
 /*  按键FIFO深度  */

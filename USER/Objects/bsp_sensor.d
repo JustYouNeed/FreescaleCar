@@ -74,9 +74,10 @@
 .\objects\bsp_sensor.o: ..\BSP\inc\bsp_switch.h
 .\objects\bsp_sensor.o: ..\USER\derivative.h
 .\objects\bsp_sensor.o: D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
+.\objects\bsp_sensor.o: ..\BSP\inc\bsp_mpu.h
+.\objects\bsp_sensor.o: ..\BSP\inc\bsp.h
+.\objects\bsp_sensor.o: ..\MPU\inc\inv_mpu.h
+.\objects\bsp_sensor.o: ..\MPU\inc\inv_mpu_dmp_motion_driver.h
 .\objects\bsp_sensor.o: ..\APP\inc\app_filter.h
 .\objects\bsp_sensor.o: ..\USER\FreescaleCar.h
 .\objects\bsp_sensor.o: ..\APP\inc\app_pid.h
-.\objects\bsp_sensor.o: ..\BSP\inc\bsp_mpu.h
-.\objects\bsp_sensor.o: ..\MPU\inc\inv_mpu.h
-.\objects\bsp_sensor.o: ..\MPU\inc\inv_mpu_dmp_motion_driver.h

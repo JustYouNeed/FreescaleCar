@@ -74,3 +74,7 @@
 .\objects\app_sort.o: ..\BSP\inc\bsp_switch.h
 .\objects\app_sort.o: ..\USER\derivative.h
 .\objects\app_sort.o: D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
+.\objects\app_sort.o: ..\BSP\inc\bsp_mpu.h
+.\objects\app_sort.o: ..\BSP\inc\bsp.h
+.\objects\app_sort.o: ..\MPU\inc\inv_mpu.h
+.\objects\app_sort.o: ..\MPU\inc\inv_mpu_dmp_motion_driver.h

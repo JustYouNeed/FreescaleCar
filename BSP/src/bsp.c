@@ -1,5 +1,5 @@
 # include "bsp.h"
-# include "bsp_mpu.h"
+
 uint8_t TimerTaskRunMutexSignal = 0;
 
 void bsp_Config(void)

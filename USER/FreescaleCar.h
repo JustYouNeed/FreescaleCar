@@ -28,9 +28,9 @@
 # define ENCONDER_LINES			512
 
 /*  速度控制周期,50ms  */
-# define SPEED_CONTROL_PERIOD	20	
+# define SPEED_CONTROL_PERIOD	10	
 
-# define DIRCTION_CONTROL_PERIOD	10
+# define DIRCTION_CONTROL_PERIOD	5
 
 /*  车轮周长,单位 米  */
 # define WHEEL_GIRTH				0.2
@@ -48,7 +48,8 @@
 # define CAR_SPED_CONSTANT	(1000.0/SPEED_CONTROL_PERIOD/ENCONDER_LINES)
 
 /*  小车走走道时的目标速度  */
-# define STRAIGHT_SPEED		2
+# define STRAIGHT_SPEED		25
+# define CURVE_SPEED			5
 
 /*  转向情况  */
 typedef enum
@@ -100,8 +101,8 @@ void Car_ParaInit(void);
 void Car_Control(void);
 void Car_ParaStroe(void);
 void Car_Running(void);
-void Car_Stop(void);
-void Car_Start(void);
+void Car_ControlStop(void);
+void Car_ControlStart(void);
 # endif
 
 /********************************************  END OF FILE  *******************************************/

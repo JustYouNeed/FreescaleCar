@@ -100,8 +100,8 @@ void bsp_encoder_Config(void)
 void bsp_encoder_ReadCounter(void)
 {	
 	/*  读取FTM计数器值  */
-	Car.Motor.LeftEncoder += (uint16_t)FTM0->CNT;
-	Car.Motor.RightEncoder += (uint16_t)FTM1->CNT;
+	Car.Motor.RightEncoder += (uint16_t)FTM0->CNT;
+	Car.Motor.LeftEncoder += (uint16_t)FTM1->CNT;
 	
 	/*  清空计数器  */
 	FTM0->CNT = 0;

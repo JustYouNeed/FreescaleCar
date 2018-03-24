@@ -1,8 +1,8 @@
 # include "menu.h"
-#include "windows.h"
-#include "scrollbar.h"
+# include "windows.h"
+# include "scrollbar.h"
 # include "display.h"
-#include "gui_basic.h"
+# include "gui_basic.h"
 # include "pid_set.h"
 # include "stdio.h"
 /****** 手指按钮图标 阴码 逐列式 顺向(高位在前) *****/
@@ -16,7 +16,6 @@ MenuItem_Typedef MainMenu[5];
 MenuItem_Typedef ParaAdjMenu[5];
 MenuItem_Typedef ParaViewMenu[5];
 MenuItem_Typedef PIDAdjMenu[9];
-static MenuItem_Typedef DirctionPIDAdjMenu[4];
 
 MenuItem_Typedef*  CurMenu = MainMenu;
 MenuItem_Typedef*  CurItem;
@@ -146,28 +145,28 @@ void gotoParaShow(void)
 
 void gotoSetSpeedKp(void)
 {
-	Car_Stop();
+	Car_ControlStop();
 	setShow_ui(SET_S_KP_UI);
 	isChangeMenu = true;
 }
 
 void gotoSetSpeedKi(void)
 {
-	Car_Stop();
+	Car_ControlStop();
 	setShow_ui(SET_S_KI_UI);
 	isChangeMenu = true;
 }
 
 void gotoSetSpeedKd(void)
 {
-	Car_Stop();
+	Car_ControlStop();
 	setShow_ui(SET_S_KD_UI);
 	isChangeMenu = true;
 }
 
 void gotoSetDirctionKp(void)
 {
-	Car_Stop();
+	Car_ControlStop();
 	setShow_ui(SET_D_KP_UI);
 	isChangeMenu = true;
 }
@@ -187,7 +186,7 @@ void gotoSetDirctionKp(void)
 */
 void gotoSetDirctionKi(void)
 {
-	Car_Stop();
+	Car_ControlStop();
 	setShow_ui(SET_D_KI_UI);
 	isChangeMenu = true;
 }
@@ -206,7 +205,7 @@ void gotoSetDirctionKi(void)
 */
 void gotoSetDirctionKd(void)
 {
-	Car_Stop();
+	Car_ControlStop();
 	setShow_ui(SET_D_KD_UI);
 	isChangeMenu = true;
 }
@@ -264,7 +263,6 @@ void DisplayMenuInit(MenuItem_Typedef* menu)
 */
 void Menu_Run(void)
 {
-	uint8_t keyState;
 	static int timeout;
 	uint8_t showItems;
 	
@@ -353,15 +351,6 @@ void Menu_Run(void)
 			MenuScrollbar.topitem = cur_sequence;
 			GUI_Scrollbar_SetPos(&MenuScrollbar);      					
 			break;
-			
-//		case RIGHT:  //ROLL向右
-//			gotoNextMenu();//进入下一级菜单
-//			break;
-//			
-//		case LEFT:  //ROLL向左
-//			gotoLastMenu();//进入上一级菜单
-//			break;
-//		
 		default :break;
 	}
 	
@@ -508,3 +497,4 @@ void ParaSetMenu_Init(void)
 	ParaAdjMenu[2].childrenMenu = MainMenu;
 	ParaAdjMenu[2].Function = gotoNextMenu;
 }
+

@@ -2,7 +2,7 @@
   *******************************************************************************************************
   * File Name: FreescaleCar.c
   * Author: Vector
-  * Version: V1.1.0
+  * Version: V1.2.0
   * Date: 2018-3-3
   * Brief: 本文件用于车子数据记录、处理、保存等，同时车子控制函数也在本文件
   *******************************************************************************************************
@@ -14,6 +14,10 @@
 	*		2.Author: Vector
 	*			Date:	2018-3-19
 	*			Mod: 1.修改车子控制逻辑,改变寻线策略
+	*
+	*		3.Author: Vector
+	*			Date: 2018-3-24
+	*			Mod: 修改速度环,方向环错误,车子速度已上两米
   *******************************************************************************************************
   */	
 	
@@ -38,15 +42,13 @@ static uint16_t g_SpeedControlPeriod = 0;
 /*  小车速度环控制PWM输出  */
 static int16_t g_LeftSpeedControlOutNew = 0;
 static int16_t g_LeftSpeedControlOutOld = 0;
-static float g_LeftSpeedControlIntegral = 0;
-static int16_t g_LeftSpeedControlOut;
+static int16_t g_LeftSpeedControlOut = 0;
 static int16_t g_RightSpeedControlOutNew = 0;
 static int16_t g_RightSpeedControlOutOld = 0;
-static float g_RightSpeedControlIntegral = 0;
-static int16_t g_RightSpeedControlOut;
+static int16_t g_RightSpeedControlOut = 0;
 
 /*  小车方向控制变量  */
-static int16_t g_DirctionControlOut =0 ;
+static int16_t g_DirctionControlOut = 0;
 static int16_t g_DirctionControlCounter = 0;
 static int16_t g_DirctionControlPeriod = 0;
 static int16_t g_DirctionControlOutNew = 0;
@@ -106,8 +108,8 @@ void Car_ParaInit(void)
 	Car.Motor.LeftSpeed = 0;
 	Car.Motor.RightSpeed = 0;
 	
-	/*  小车基本速度  */
-//	Car.TargetSpeed = drv_flash_ReadSector(CAR_PARA_FLASH_ADDR, 0, int16_t);
+	/*  小车目标速度  */
+	Car.TargetSpeed = STRAIGHT_SPEED;
 	Car.LeftTargetSpeed = STRAIGHT_SPEED;
 	Car.RightTargetSpeed = STRAIGHT_SPEED;
 	
@@ -138,106 +140,43 @@ void Car_Running(void)
 	bsp_led_Toggle(2);
 }
 
-
-void Car_Stop(void)
+/*
+*********************************************************************************************************
+*                           Car_ControlStop               
+*
+* Description: 停止小车控制,用于按键调参时暂停小车控制
+*             
+* Arguments  : None.
+*
+* Reutrn     : None.
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
+void Car_ControlStop(void)
 {
-	DRV_DISABLE();
-	bsp_tim_DeleteHardTimer(1);
-//	bsp_tim_DeleteSoftTimer(2);
+	DRV_DISABLE();							/*  关闭驱动  */
+	bsp_tim_DeleteHardTimer(1);	/*  停止小车控制中断  */
 }
 
-void Car_Start(void)
+/*
+*********************************************************************************************************
+*                        Car_Start                  
+*
+* Description: 重启小车控制,用于
+*             
+* Arguments  : None.
+*
+* Reutrn     : None.
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
+void Car_ControlStart(void)
 {
 	bsp_tim_CreateHardTimer(1, 1, Car_Control);
 }
-/*
-*********************************************************************************************************
-*                            Car_ParaStroe              
-*
-* Description: 
-*             
-* Arguments  : 
-*
-* Reutrn     : 
-*
-* Note(s)    : 
-*********************************************************************************************************
-*/
-void Car_ParaStroe(void)
-{
-//	drv_flash_EraseSector(CAR_PARA_FLASH_ADDR);
-//	drv_flash_WriteSector(CAR_PARA_FLASH_ADDR, (const uint8_t *)&Car.TargetSpeed, 2, 0);
-}
 
-
-/*
-*********************************************************************************************************
-*                                          
-*
-* Description: 
-*             
-* Arguments  : 
-*
-* Reutrn     : 
-*
-* Note(s)    : 
-*********************************************************************************************************
-*/
-void Car_RaodCalc(void)
-{
-	uint8_t LastDir = 0;
-	static uint8_t LeftLossLineCount = 0, RightLossLineCount = 0;
-	
-	/*  如果右边电感的归一化值大于左边的电感,说明上一个时刻是保持右转的状态  */
-	if((100 * (Car.Sensor[SENSOR_H_R].NormalizedValue - Car.Sensor[SENSOR_H_L].NormalizedValue)) >= 20) 
-	{
-		LastDir = TurnRight;
-		LeftLossLineCount ++;
-	}
-	else LeftLossLineCount = 0;
-	
-	/*  如果左边电感的归一化值大于右边的电感,说明上一个时刻是保持左转的状态  */
-	if((100 * (Car.Sensor[SENSOR_H_L].NormalizedValue - Car.Sensor[SENSOR_H_R].NormalizedValue)) >= 20)
-	{
-		LastDir = TurnLeft;
-		RightLossLineCount ++;
-	}
-	else LeftLossLineCount = 0;
-	
-	/*  左边丢线很多,已经向左偏了  */
-	if(LeftLossLineCount > 20)	
-	{
-		Car.LeftTargetSpeed += 1;		/*  加大左边电机目标速度  */
-		Car.RightTargetSpeed -= 1;	/*  减小右边电机目标速度  */
-	}
-	else if(LeftLossLineCount > 50)		/*  大弯丢线  */
-	{
-		Car.LeftTargetSpeed += 2;		/*  加大左边电机目标速度  */
-		Car.RightTargetSpeed -= 2;	/*  减小右边电机目标速度  */
-	}
-	else												/*  没有丢线,直道  */
-	{
-		Car.LeftTargetSpeed = STRAIGHT_SPEED;
-		Car.RightTargetSpeed = STRAIGHT_SPEED;
-	}
-	
-	/*  右边丢线很多,已经向右偏了  */
-	if(RightLossLineCount > 20)	
-	{
-		Car.LeftTargetSpeed -= 1;		/*  减小左边电机目标速度  */
-		Car.RightTargetSpeed += 1;	/*  加大右边电机目标速度  */
-	}
-	else if(RightLossLineCount > 50)		/*  大弯丢线  */
-	{
-		Car.LeftTargetSpeed -= 2;		/*  减小左边电机目标速度  */
-		Car.RightTargetSpeed += 2;	/*  加大右边电机目标速度  */
-	}
-	else												/*  没有丢线,直道  */
-	{
-		Car.LeftTargetSpeed = STRAIGHT_SPEED;
-		Car.RightTargetSpeed = STRAIGHT_SPEED;
-	}
-}
 
 /*
 *********************************************************************************************************
@@ -257,28 +196,24 @@ int16_t Car_LeftVelocityPIDCalc(int16_t LeftSpeed)
 	static float SpeedFilter, SpeedIntegal;
 	int16_t Velocity = 0;
 	float SpeedError = 0;
-	static int16_t PreSpeedError;
 	
 	/*  速度偏差  */
-	SpeedError = (float)(LeftSpeed - Car.LeftTargetSpeed) * 10.0f;
+	SpeedError = (float)(LeftSpeed - Car.LeftTargetSpeed);
 	
 	/*  低通滤波,让速度平滑过渡  */
 	SpeedFilter *= 0.7;
 	SpeedFilter += (SpeedError * 0.3);
-	SpeedIntegal += SpeedFilter;
+	
+	if(SpeedError < 100 || SpeedError >= -100)
+		SpeedIntegal += SpeedFilter;
 	
 	/*  积分限幅  */
-	if(SpeedIntegal > 7200) SpeedIntegal = 7200;			//积分限幅
-	else if(SpeedIntegal < -7200) SpeedIntegal = -7200;		//
+	if(SpeedIntegal > 3000) SpeedIntegal = 3000;			//积分限幅
+	else if(SpeedIntegal < -3000) SpeedIntegal = -3000;		//
 	
 	/*  速度环PD控制,实际上Ki = 0  */
-	Velocity = (int16_t)(SpeedFilter * (-Car.PID.Velocity_Kp) +
-							SpeedIntegal * (-Car.PID.Velocity_Ki)) + 
-							(SpeedError - PreSpeedError)*(-Car.PID.Velocity_Kd);	//速度环PID计算	
-	
-	/*  保存上一时刻偏差值  */
-	PreSpeedError = SpeedError;
-	
+	Velocity = (int16_t)(SpeedFilter * (-Car.PID.Velocity_Kp) + SpeedIntegal * (-Car.PID.Velocity_Ki));	//速度环PID计算	
+		
 	return Velocity;
 }
 
@@ -300,28 +235,25 @@ int16_t Car_RightVelocityPIDCalc(int16_t RightSpeed)
 	static float SpeedFilter, SpeedIntegal;
 	int16_t Velocity = 0;
 	float SpeedError = 0;
-	static int16_t PreSpeedError;
 	
 	/*  速度偏差  */
-	SpeedError = (float)(RightSpeed - Car.RightTargetSpeed) * 10.0f;
+	SpeedError = (float)(RightSpeed - Car.RightTargetSpeed);
 	
 	/*  低通滤波,让速度平滑过渡  */
 	SpeedFilter *= 0.7;
 	SpeedFilter += (SpeedError * 0.3);
-	SpeedIntegal += SpeedFilter;
+	
+	if(SpeedError < 10 || SpeedError >= -10)
+		SpeedIntegal += SpeedFilter;
 	
 	/*  积分限幅  */
-	if(SpeedIntegal > 7200) SpeedIntegal = 7200;			//积分限幅
-	else if(SpeedIntegal < -7200) SpeedIntegal = -7200;		//
+	if(SpeedIntegal > 3000) SpeedIntegal = 3000;			//积分限幅
+	else if(SpeedIntegal < -3000) SpeedIntegal = -3000;		//
 	
 	/*  速度环PD控制,实际上Ki = 0  */
 	Velocity = (int16_t)(SpeedFilter * (-Car.PID.Velocity_Kp) +
-							SpeedIntegal * (-Car.PID.Velocity_Ki)) + 
-							(SpeedError - PreSpeedError)*(-Car.PID.Velocity_Kd);	//速度环PID计算	
-	
-	/*  保存上一时刻偏差值  */
-	PreSpeedError = SpeedError;
-	
+							SpeedIntegal * (-Car.PID.Velocity_Ki));//速度环PID计算	
+		
 	return Velocity;
 }
 /*
@@ -339,62 +271,62 @@ int16_t Car_RightVelocityPIDCalc(int16_t RightSpeed)
 */
 void Car_SpeedControl(void)
 {
-	static uint16_t LossLineCnt = 0;
-	float omega = 0, RotateSpeed = 0;
-	uint8_t TurnDirction = Straight;
-	float LeftSpeedDelta = 0, RightSpeedDelta = 0;
-	float LeftPValue = 0, LeftIValue = 0, RightPValue = 0, RightIValue = 0;
-	float CurveRadius = 0;
-	
-	/*  如果左边电感的值大于三边,说明方向需要左转  */
-	if(Car.Sensor[SENSOR_H_L].Average - Car.Sensor[SENSOR_H_R].Average >= 20)
-		TurnDirction = TurnLeft;
-	else if(Car.Sensor[SENSOR_H_R].Average - Car.Sensor[SENSOR_H_L].Average >= 20)	/*  右转  */
-		TurnDirction = TurnRight;
-	else 			/*  直道  */
-		TurnDirction = Straight;
-	
-	if(Car.HorizontalAE > 10 || Car.HorizontalAE < -10)
-	{
-		LossLineCnt ++;
-		
-		/*  丢线计数器很小,说明离中心近,走直道方式  */
-		if(LossLineCnt < 10)
-		{
-			CurveRadius = STRAIGHT;
-		}
-		else if(LossLineCnt < 30)
-		{
-			CurveRadius = SMALL_CURVE_R;
-		}
-		else 
-		{
-			CurveRadius = BIG_CURVE_R;
-		}
-	}
-	else	LossLineCnt = 0;
-	
-	/*  计算小车转弯整体角速度  */
-	omega = Car.CarSpeed / CurveRadius;
-	/*  计算两轮电机差速 W1 = 2w(R + L/2)d, W2 = 2w(R - L/2)d, 差速为2wLd */
-	RotateSpeed = 2 * omega * WHEEL_LEN * WHEEL_D;
-	
-	/*  如果是左转弯,则外侧电机加速,内侧电机减速  */
-	if(TurnDirction == TurnLeft)
-	{
-		Car.LeftTargetSpeed = Car.TargetSpeed - RotateSpeed/2;
-		Car.RightTargetSpeed = Car.TargetSpeed + RotateSpeed/2;
-	}
-	else if(TurnDirction == TurnRight)	/*  右转则相反  */
-	{
-		Car.LeftTargetSpeed = Car.TargetSpeed + RotateSpeed/2;
-		Car.RightTargetSpeed = Car.TargetSpeed - RotateSpeed/2;
-	}
-	else 		/*  直道  */
-	{
-		Car.RightTargetSpeed = Car.TargetSpeed;
-		Car.LeftTargetSpeed = Car.TargetSpeed;
-	}
+//	static uint16_t LossLineCnt = 0;
+//	float omega = 0, RotateSpeed = 0;
+//	uint8_t TurnDirction = Straight;
+//	float LeftSpeedDelta = 0, RightSpeedDelta = 0;
+//	float LeftPValue = 0, LeftIValue = 0, RightPValue = 0, RightIValue = 0;
+//	float CurveRadius = 0;
+//	
+//	/*  如果左边电感的值大于三边,说明方向需要左转  */
+//	if(Car.Sensor[SENSOR_H_L].Average - Car.Sensor[SENSOR_H_R].Average >= 20)
+//		TurnDirction = TurnLeft;
+//	else if(Car.Sensor[SENSOR_H_R].Average - Car.Sensor[SENSOR_H_L].Average >= 20)	/*  右转  */
+//		TurnDirction = TurnRight;
+//	else 			/*  直道  */
+//		TurnDirction = Straight;
+//	
+//	if(Car.HorizontalAE > 10 || Car.HorizontalAE < -10)
+//	{
+//		LossLineCnt ++;
+//		
+//		/*  丢线计数器很小,说明离中心近,走直道方式  */
+//		if(LossLineCnt < 10)
+//		{
+//			CurveRadius = STRAIGHT;
+//		}
+//		else if(LossLineCnt < 30)
+//		{
+//			CurveRadius = SMALL_CURVE_R;
+//		}
+//		else 
+//		{
+//			CurveRadius = BIG_CURVE_R;
+//		}
+//	}
+//	else	LossLineCnt = 0;
+//	
+//	/*  计算小车转弯整体角速度  */
+//	omega = Car.CarSpeed / CurveRadius;
+//	/*  计算两轮电机差速 W1 = 2w(R + L/2)d, W2 = 2w(R - L/2)d, 差速为2wLd */
+//	RotateSpeed = 2 * omega * WHEEL_LEN * WHEEL_D;
+//	
+//	/*  如果是左转弯,则外侧电机加速,内侧电机减速  */
+//	if(TurnDirction == TurnLeft)
+//	{
+//		Car.LeftTargetSpeed = Car.TargetSpeed - RotateSpeed/2;
+//		Car.RightTargetSpeed = Car.TargetSpeed + RotateSpeed/2;
+//	}
+//	else if(TurnDirction == TurnRight)	/*  右转则相反  */
+//	{
+//		Car.LeftTargetSpeed = Car.TargetSpeed + RotateSpeed/2;
+//		Car.RightTargetSpeed = Car.TargetSpeed - RotateSpeed/2;
+//	}
+//	else 		/*  直道  */
+//	{
+//		Car.RightTargetSpeed = Car.TargetSpeed;
+//		Car.LeftTargetSpeed = Car.TargetSpeed;
+//	}
 	
 	/*  左边电机速度环计算  */
 	Car.Motor.LeftSpeed = (float)(Car.Motor.LeftEncoder * CAR_SPED_CONSTANT);
@@ -439,7 +371,7 @@ void Car_SpeedControl(void)
 */
 void Car_SpeedControlOutput(void)
 {
-	float SpeedControlValue;
+	int16_t SpeedControlValue;
 	
 	/*  计算左边电机输出量  */
 	SpeedControlValue = g_LeftSpeedControlOutNew - g_LeftSpeedControlOutOld;
@@ -455,35 +387,37 @@ void Car_SpeedControlOutput(void)
 *********************************************************************************************************
 *                       Car_DirctionControl                   
 *
-* Description: 
+* Description: 小车方向环控制函数
 *             
-* Arguments  : 
+* Arguments  : None.
 *
-* Reutrn     : 
+* Reutrn     : None.
 *
-* Note(s)    : 
+* Note(s)    : None.
 *********************************************************************************************************
 */
 void Car_DirctionControl(void)
 {
-	int16_t pwm = 0;
-	static float LastError;
+	static float LastError, Error;
 	
-	Car.PID.Error = Car.HorizontalAE - LastError;		/*  计算当前微分量  */
+	Error = Car.HorizontalAE*10 - LastError;		/*  计算当前微分量  */
 	
-	g_DirctionControlPeriod = g_DirctionControlOutNew;
+	
+	/*  保存上次的PWM  */
+	g_DirciotnControlOutOld = g_DirctionControlOutNew; 
+	
 	/*  计算PWM  */
-	g_DirctionControlOutNew = (int16_t)((Car.HorizontalAE*10 *  Car.PID.Kp_Straight) + (Car.PID.Error * Car.PID.Kd_Straight));
+	g_DirctionControlOutNew = (int16_t)((Car.HorizontalAE * 10 *  Car.PID.Kp_Straight) + (Error * Car.PID.Kd_Straight));
 	
 	/*  保存上个时刻的误差  */
-	LastError = (float)(Car.HorizontalAE);
+	LastError = (float)(Car.HorizontalAE * 10);
 }
 
 /*
 *********************************************************************************************************
 *                      Car_DirctionControlOutput                    
 *
-* Description: 方向环控制输出
+* Description: 方向环控制输出,将方向环的输出均分为控制周期的n等份输出,让速度平滑
 *             
 * Arguments  : None.
 *
@@ -496,8 +430,8 @@ void Car_DirctionControlOutput(void)
 {
 	int16_t DirctionOutput = 0;
 	
-	DirctionOutput = g_DirctionControlOutNew - g_DirctionControlPeriod;
-	g_DirctionControlOut = DirctionOutput * (g_DirctionControlOut + 1)/DIRCTION_CONTROL_PERIOD + g_DirciotnControlOutOld;
+	DirctionOutput = (int16_t)(g_DirctionControlOutNew - g_DirciotnControlOutOld);
+	g_DirctionControlOut = (int16_t)(DirctionOutput * (g_DirctionControlPeriod + 1) / DIRCTION_CONTROL_PERIOD + g_DirciotnControlOutOld);
 }
 
 /*
@@ -515,16 +449,32 @@ void Car_DirctionControlOutput(void)
 */
 void Car_MotorOutput(void)
 {
+	int16_t LeftPwm = 0, RightPwm = 0;
 	/*  将速度环和转向环的PWM叠加起来  */
-	Car.Motor.LeftPwm = g_LeftSpeedControlOut - g_DirctionControlOut;
-	Car.Motor.RightPwm = g_RightSpeedControlOut + g_DirctionControlOut;
+	LeftPwm = (int16_t)(g_LeftSpeedControlOut + g_DirctionControlOut);
+	RightPwm = (int16_t)(g_RightSpeedControlOut - g_DirctionControlOut);
 	
 	/*  限幅  */
-	if(Car.Motor.LeftPwm > Car.MaxPWM) Car.Motor.LeftPwm = Car.MaxPWM;
-	else if(Car.Motor.LeftPwm < - Car.MaxPWM) Car.Motor.LeftPwm = -Car.MaxPWM;
+	if(LeftPwm > Car.MaxPWM) LeftPwm = Car.MaxPWM;
+	else if(LeftPwm < -Car.MaxPWM) LeftPwm = -Car.MaxPWM;
 	
-	if(Car.Motor.RightPwm > Car.MaxPWM) Car.Motor.RightPwm = Car.MaxPWM;
-	else if(Car.Motor.RightPwm < - Car.MaxPWM) Car.Motor.RightPwm = -Car.MaxPWM;
+	if(RightPwm > Car.MaxPWM) RightPwm = Car.MaxPWM;
+	else if(RightPwm < -Car.MaxPWM) RightPwm = -Car.MaxPWM;
+	
+	Car.Motor.LeftPwm = LeftPwm;
+	Car.Motor.RightPwm = RightPwm;
+	
+	/*  冲出跑道时停止  */
+	if(Car.Sensor[SENSOR_H_L].Average < 20 && Car.Sensor[SENSOR_H_R].Average < 20)
+	{
+		Car.LeftTargetSpeed = 0;
+		Car.LeftTargetSpeed = 0;
+	}
+	else
+	{
+		Car.LeftTargetSpeed = STRAIGHT_SPEED;
+		Car.RightTargetSpeed = STRAIGHT_SPEED;
+	}
 	
 	/*  输出到电机  */
 	bsp_motor_SetPwm(Car.Motor.LeftPwm, Car.Motor.RightPwm);
@@ -534,7 +484,7 @@ void Car_MotorOutput(void)
 *********************************************************************************************************
 *                       Car_Control                   
 *
-* Description: 车子控制函数,解算传感器数据
+* Description: 小车总控制函数
 *             
 * Arguments  : None.
 *
@@ -545,10 +495,7 @@ void Car_MotorOutput(void)
 */
 void Car_Control(void)
 {
-	static uint16_t CarControlCunter = 0;
-	
-	volatile int16_t TurnPwm = 0, LeftVelocityPwm = 0, RightVelocityPwm = 0;
-	
+	static uint16_t CarControlCunter = 0;	
 	
 	/*  控制计数器  */
 	CarControlCunter++;
@@ -571,7 +518,7 @@ void Car_Control(void)
 		case 2:
 		{
 			g_SpeedControlCounter++;
-			if(g_SpeedControlCounter >= 4)
+			if(g_SpeedControlCounter >= SPEED_CONTROL_PERIOD/5)
 			{
 				g_SpeedControlCounter = 0;
 				g_SpeedControlPeriod = 0;
@@ -583,9 +530,10 @@ void Car_Control(void)
 		case 3:
 		{
 			g_DirctionControlCounter++;
-			if(g_DirctionControlCounter >= 2)
+			if(g_DirctionControlCounter >= DIRCTION_CONTROL_PERIOD/5)
 			{
 				g_DirctionControlCounter = 0;
+				g_DirctionControlPeriod = 0;
 				Car_DirctionControl();
 			}
 		}break;/*  end of case 3  */
@@ -598,7 +546,14 @@ void Car_Control(void)
 			Car_MotorOutput();
 			CarControlCunter=0;
 		}break;
-		default:CarControlCunter = 0;break;
+		default:
+		{
+			CarControlCunter = 0;
+			g_DirctionControlCounter = 0;
+			g_SpeedControlCounter = 0;
+			g_SpeedControlPeriod = 0;
+			g_DirctionControlPeriod = 0;
+		}break;
 	}
 }
 	

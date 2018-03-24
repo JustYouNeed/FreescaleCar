@@ -74,5 +74,6 @@
 .\objects\bsp.o: ..\USER\derivative.h
 .\objects\bsp.o: D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
 .\objects\bsp.o: ..\BSP\inc\bsp_mpu.h
+.\objects\bsp.o: ..\BSP\inc\bsp.h
 .\objects\bsp.o: ..\MPU\inc\inv_mpu.h
 .\objects\bsp.o: ..\MPU\inc\inv_mpu_dmp_motion_driver.h

@@ -356,7 +356,7 @@ void DirctionKp_Set(void)
 		GUI_Button_Selected(&bt_mines, 1);
 	}	
 	oled_showString(20,16,"Kp:",12,24);
-	oled_showNum(58,16,(uint32_t)(kp_temp*100), 4,12,24);
+	oled_showNum(58,16,(uint32_t)(kp_temp*10), 4,12,24);
 }
 
 /*
@@ -508,7 +508,7 @@ void DirctionKd_Set(void)
 		GUI_Button_Selected(&bt_mines, 1);
 	}	
 	oled_showString(20,16,"Kd:",12,24);
-	oled_showNum(58,16,(uint32_t)(kd_temp*10), 4,12,24);
+	oled_showNum(58,16,(uint32_t)(kd_temp), 4,12,24);
 }
 
 

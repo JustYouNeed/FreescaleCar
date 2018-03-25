@@ -659,6 +659,11 @@
               <FileType>1</FileType>
               <FilePath>..\GUI_APP\src\para_show.c</FilePath>
             </File>
+            <File>
+              <FileName>calibration.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GUI_APP\src\calibration.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

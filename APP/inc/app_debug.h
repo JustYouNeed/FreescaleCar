@@ -25,7 +25,7 @@
 //PID参数在上传及接收时使用的变换因子
 # define ANO_PID_TRAN_FAC_P 10
 # define ANO_PID_TRAN_FAC_I 10
-# define ANO_PID_TRAN_FAC_D	10
+# define ANO_PID_TRAN_FAC_D	1
 
 
 //默认PID参数，使用在线调参时可以保证程序初始化时有PID参数

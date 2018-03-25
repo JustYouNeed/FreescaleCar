@@ -533,10 +533,10 @@ ARM Macro Assembler    Page 9
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M0+ --apcs=inter
 work --depend=.\objects\startup_skeaz1284.d -o.\objects\startup_skeaz1284.o -IE
-:\学习资料\比赛\飞思卡尔智能车大赛\程序\Freescale\USER\RTE -ID:\KeilPack\Keil\K
-inetis_KEAxx_DFP\1.3.0\Device\Include -IC:\Keil_v5\ARM\CMSIS\Include --predefin
-e="__UVISION_VERSION SETA 521" --predefine="SKEAZ128xxx4 SETA 1" --list=.\listi
-ngs\startup_skeaz1284.lst ..\CORE\startup_SKEAZ1284.s
+:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE -ID:\Keil
+Pack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include -IC:\Keil_v5\ARM\CMSIS\Include
+ --predefine="__UVISION_VERSION SETA 521" --predefine="SKEAZ128xxx4 SETA 1" --l
+ist=.\listings\startup_skeaz1284.lst ..\CORE\startup_SKEAZ1284.s
 
 
 

@@ -120,6 +120,8 @@ void Car_ParaInit(void)
 	Car.LossLine = LostLine_None;
 	
 	Car.MaxPWM = 800;
+	
+	Car.Running = 1;
 }
 
 /*
@@ -270,87 +272,20 @@ int16_t Car_RightVelocityPIDCalc(int16_t RightSpeed)
 *********************************************************************************************************
 */
 void Car_SpeedControl(void)
-{
-//	static uint16_t LossLineCnt = 0;
-//	float omega = 0, RotateSpeed = 0;
-//	uint8_t TurnDirction = Straight;
-//	float LeftSpeedDelta = 0, RightSpeedDelta = 0;
-//	float LeftPValue = 0, LeftIValue = 0, RightPValue = 0, RightIValue = 0;
-//	float CurveRadius = 0;
-//	
-//	/*  如果左边电感的值大于三边,说明方向需要左转  */
-//	if(Car.Sensor[SENSOR_H_L].Average - Car.Sensor[SENSOR_H_R].Average >= 20)
-//		TurnDirction = TurnLeft;
-//	else if(Car.Sensor[SENSOR_H_R].Average - Car.Sensor[SENSOR_H_L].Average >= 20)	/*  右转  */
-//		TurnDirction = TurnRight;
-//	else 			/*  直道  */
-//		TurnDirction = Straight;
-//	
-//	if(Car.HorizontalAE > 10 || Car.HorizontalAE < -10)
-//	{
-//		LossLineCnt ++;
-//		
-//		/*  丢线计数器很小,说明离中心近,走直道方式  */
-//		if(LossLineCnt < 10)
-//		{
-//			CurveRadius = STRAIGHT;
-//		}
-//		else if(LossLineCnt < 30)
-//		{
-//			CurveRadius = SMALL_CURVE_R;
-//		}
-//		else 
-//		{
-//			CurveRadius = BIG_CURVE_R;
-//		}
-//	}
-//	else	LossLineCnt = 0;
-//	
-//	/*  计算小车转弯整体角速度  */
-//	omega = Car.CarSpeed / CurveRadius;
-//	/*  计算两轮电机差速 W1 = 2w(R + L/2)d, W2 = 2w(R - L/2)d, 差速为2wLd */
-//	RotateSpeed = 2 * omega * WHEEL_LEN * WHEEL_D;
-//	
-//	/*  如果是左转弯,则外侧电机加速,内侧电机减速  */
-//	if(TurnDirction == TurnLeft)
-//	{
-//		Car.LeftTargetSpeed = Car.TargetSpeed - RotateSpeed/2;
-//		Car.RightTargetSpeed = Car.TargetSpeed + RotateSpeed/2;
-//	}
-//	else if(TurnDirction == TurnRight)	/*  右转则相反  */
-//	{
-//		Car.LeftTargetSpeed = Car.TargetSpeed + RotateSpeed/2;
-//		Car.RightTargetSpeed = Car.TargetSpeed - RotateSpeed/2;
-//	}
-//	else 		/*  直道  */
-//	{
-//		Car.RightTargetSpeed = Car.TargetSpeed;
-//		Car.LeftTargetSpeed = Car.TargetSpeed;
-//	}
-	
+{	
 	/*  左边电机速度环计算  */
 	Car.Motor.LeftSpeed = (float)(Car.Motor.LeftEncoder * CAR_SPED_CONSTANT);
 	if(drv_gpio_ReadPin(LEFTENCONDER_DIR_PIN) == 0) Car.Motor.LeftSpeed = -Car.Motor.LeftSpeed;
 	Car.Motor.LeftEncoder = 0;
-	
-//	LeftSpeedDelta = (Car.TargetSpeed - Car.Motor.LeftSpeed) * 10.0f;
-//	LeftPValue = LeftSpeedDelta * Car.PID.Velocity_Kp;
-//	LeftIValue = LeftSpeedDelta * Car.PID.Velocity_Ki;
-//	g_LeftSpeedControlIntegral += LeftIValue;
-	
+		
 	g_LeftSpeedControlOutOld = g_LeftSpeedControlOutNew;
-	g_LeftSpeedControlOutNew = Car_LeftVelocityPIDCalc(Car.Motor.LeftSpeed); //(int16_t)(LeftPValue + g_LeftSpeedControlIntegral);
+	g_LeftSpeedControlOutNew = Car_LeftVelocityPIDCalc(Car.Motor.LeftSpeed);
+	
 	
 	/*  右边电机速度环计算  */
 	Car.Motor.RightSpeed = (float)(Car.Motor.RightEncoder * CAR_SPED_CONSTANT);
 	if(drv_gpio_ReadPin(RIGHTENCONDER_DIR_PIN) == 1) Car.Motor.RightSpeed = -Car.Motor.RightSpeed;
 	Car.Motor.RightEncoder = 0;
-	
-	
-//	RightSpeedDelta = (Car.TargetSpeed - Car.Motor.RightSpeed) * 10.0f;
-//	RightPValue = RightSpeedDelta * Car.PID.Velocity_Kp;
-//	RightIValue = RightSpeedDelta * Car.PID.Velocity_Ki;
-//	g_RightSpeedControlIntegral += RightIValue;
 	
 	g_RightSpeedControlOutOld = g_RightSpeedControlOutNew;
 	g_RightSpeedControlOutNew = Car_RightVelocityPIDCalc(Car.Motor.RightSpeed); //(int16_t)(RightPValue + g_RightSpeedControlIntegral);
@@ -403,12 +338,16 @@ void Car_DirctionControl(void)
 	Error = Car.HorizontalAE*10 - LastError;		/*  计算当前微分量  */
 	
 	
+	if(Car.Sensor[SENSOR_H_L].Average < 11 && Car.Sensor[SENSOR_H_R].Average < 11)
+		Car.Running ++;
+		
 	/*  保存上次的PWM  */
 	g_DirciotnControlOutOld = g_DirctionControlOutNew; 
 	
 	/*  计算PWM  */
 	g_DirctionControlOutNew = (int16_t)((Car.HorizontalAE * 10 *  Car.PID.Kp_Straight) + (Error * Car.PID.Kd_Straight));
 	
+	if(Car.HorizontalAE*100 < 4 && Car.HorizontalAE*100>-4) g_DirctionControlOutNew = 0;
 	/*  保存上个时刻的误差  */
 	LastError = (float)(Car.HorizontalAE * 10);
 }
@@ -463,19 +402,7 @@ void Car_MotorOutput(void)
 	
 	Car.Motor.LeftPwm = LeftPwm;
 	Car.Motor.RightPwm = RightPwm;
-	
-	/*  冲出跑道时停止  */
-	if(Car.Sensor[SENSOR_H_L].Average < 20 && Car.Sensor[SENSOR_H_R].Average < 20)
-	{
-		Car.LeftTargetSpeed = 0;
-		Car.LeftTargetSpeed = 0;
-	}
-	else
-	{
-		Car.LeftTargetSpeed = STRAIGHT_SPEED;
-		Car.RightTargetSpeed = STRAIGHT_SPEED;
-	}
-	
+		
 	/*  输出到电机  */
 	bsp_motor_SetPwm(Car.Motor.LeftPwm, Car.Motor.RightPwm);
 }
@@ -497,6 +424,15 @@ void Car_Control(void)
 {
 	static uint16_t CarControlCunter = 0;	
 	
+	if(Car.Running > 2)
+	{
+//		Car.LeftTargetSpeed = 0;
+//		Car.RightTargetSpeed = 0;
+		bsp_motor_SetPwm(0,0);
+		return;
+	}
+	
+
 	/*  控制计数器  */
 	CarControlCunter++;
 	

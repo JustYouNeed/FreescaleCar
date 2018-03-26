@@ -9,7 +9,7 @@
 # include "display.h"
 
 extern uint8_t key;
-static uint8_t showFlag = 0;
+static int8_t showFlag = 0;
 static bool isWindowChange = true;
 WINDOWS DebugWindow={
 .x = 0,
@@ -83,20 +83,50 @@ void Para_Show_UI(void)
 		
 		oled_showString(55,50,"Nor:", 6, 12);
 		oled_showNum(85, 50, (Car.Sensor[0].CalibrationMax), 3, 6, 12);
+	}else if(showFlag == 2)
+	{
+		oled_showString(3, 15, "SKP:", 6, 12);
+		oled_showNum(27, 15, Car.PID.SpeedKp*10, 4, 6, 12);
+		
+		oled_showString(55, 15, "SKI:", 6, 12);
+		oled_showNum(85, 15, Car.PID.SpeedKi*10, 4, 6, 12);
+		
+		oled_showString(3, 33, "DKP:", 6, 12);
+		oled_showNum(27, 33, Car.PID.DirctionKp, 4, 6, 12);
+		
+		oled_showString(55, 33, "DKD:", 6, 12);
+		oled_showNum(85, 33, Car.PID.DirctionKd, 4, 6, 12);
 	}
 	
-	if(key == KEY_DOWN_PRESS && showFlag == 0)
-	{
-		showFlag++;
-		isWindowChange = true;
-		DebugWindow.title = "Motor Parameters";
-	}
-	else if(key == KEY_UP_PRESS && showFlag == 1)
+	if(key == KEY_DOWN_PRESS)
 	{
 		showFlag--;
 		isWindowChange = true;
-		DebugWindow.title = "Sensor Parameters";
-	}else if(key == KEY_OK_PRESS)
+		if(showFlag < 0)
+			showFlag = 2;
+		switch(showFlag)
+		{
+			case 0: DebugWindow.title = "Motor Parameters";break;
+			case 1: DebugWindow.title = "Sensor Parameters";break;
+			case 2: DebugWindow.title = "PID Parameters";
+			default: break;
+		}
+	}else if(key == KEY_UP_PRESS)
+	{
+		showFlag++;
+		isWindowChange = true;
+		if(showFlag>2)
+			showFlag = 0;
+		
+		switch(showFlag)
+		{
+			case 0: DebugWindow.title = "Motor Parameters";break;
+			case 1: DebugWindow.title = "Sensor Parameters";break;
+			case 2: DebugWindow.title = "PID Parameters";
+			default: break;
+		}
+	}
+	else	if(key == KEY_OK_PRESS)
 	{
 		isWindowChange = true;
 		setShow_ui(MAIN_UI);

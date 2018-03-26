@@ -219,55 +219,33 @@ uint8_t debug_DataUpload(uint8_t *buff, uint8_t funCode, uint8_t len)
 void debug_PIDParaReport(void)
 {
 	uint8_t Buff[18] = {0};
-	short temp;
+	short temp = 0;
 	
-	temp = (short)(Car.PID.Kp_Straight * ANO_PID_TRAN_FAC_P);
+	temp = (short)(Car.PID.DirctionKp * ANO_PID_TRAN_FAC_P);
 	Buff[0] = BYTE2(temp);
 	Buff[1] = BYTE1(temp);
 	
-	temp = (short)(Car.PID.Ki_Straight * ANO_PID_TRAN_FAC_I);
+	temp = (short)(Car.PID.DirctionKi * ANO_PID_TRAN_FAC_I);
 	Buff[2] = BYTE2(temp);
 	Buff[3] = BYTE1(temp);
 	
-	temp = (short)(Car.PID.Kd_Straight * ANO_PID_TRAN_FAC_D);
+	temp = (short)(Car.PID.DirctionKd * ANO_PID_TRAN_FAC_D);
 	Buff[4] = BYTE2(temp);
 	Buff[5] = BYTE1(temp);
 	
-	temp = (short)(Car.PID.Kp_Curved * ANO_PID_TRAN_FAC_P);
+	
+	temp = (short)(Car.PID.SpeedKp * ANO_PID_TRAN_FAC_P);
 	Buff[6] = BYTE2(temp);
 	Buff[7] = BYTE1(temp);
 	
-	temp = (short)(Car.PID.Ki_Curved * ANO_PID_TRAN_FAC_I);
+	temp = (short)(Car.PID.SpeedKi * ANO_PID_TRAN_FAC_I);
 	Buff[8] = BYTE2(temp);
 	Buff[9] = BYTE1(temp);
 	
-	temp = (short)(Car.PID.Kd_Curved * ANO_PID_TRAN_FAC_D);
+	temp = (short)(Car.PID.SpeedKd * ANO_PID_TRAN_FAC_D);
 	Buff[10] = BYTE2(temp);
 	Buff[11] = BYTE1(temp);
-
-//	Buff[12] = BYTE2(Car.BaseSpeed);
-//	Buff[13] = BYTE1(Car.BaseSpeed);
 	
-	temp = (short)(Car.PID.Velocity_Kp * ANO_PID_TRAN_FAC_P);
-	Buff[12] = BYTE2(temp);
-	Buff[13] = BYTE1(temp);
-	
-	temp = (short)(Car.PID.Velocity_Ki * ANO_PID_TRAN_FAC_I);
-	Buff[14] = BYTE2(temp);
-	Buff[15] = BYTE1(temp);
-	
-	temp = (short)(Car.PID.Velocity_Kd * ANO_PID_TRAN_FAC_D);
-	Buff[16] = BYTE2(temp);
-	Buff[17] = BYTE1(temp);
-//	
-//	temp = 0;
-//	Buff[14] = BYTE2(temp);
-//	Buff[15] = BYTE1(temp);
-//	
-//	temp = 0;
-//	Buff[16] = BYTE2(temp);
-//	Buff[17] = BYTE1(temp);
-//	
 	debug_DataUpload(Buff,0x10,18);
 }
 
@@ -290,25 +268,25 @@ void debug_PIDDownload(void)
 	//转换完成后除以相应的传输因子
 	uint8_t cnt = 4;
 	
-	Car.PID.Kp_Straight = MERGE(RecBuff[cnt], RecBuff[cnt+1], float) / ANO_PID_TRAN_FAC_P;
+	Car.PID.DirctionKp = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_P;
 	cnt += 2;
-	Car.PID.Ki_Straight = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_I;
+	Car.PID.DirctionKi = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_I;
 	cnt += 2;
-	Car.PID.Kd_Straight = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_D;
-	cnt += 2;
-	
-	Car.PID.Kp_Curved = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_P;
-	cnt += 2;
-	Car.PID.Ki_Curved = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_I;
-	cnt += 2;
-	Car.PID.Kd_Curved = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_D;
+	Car.PID.DirctionKd = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_D;
 	cnt += 2;
 	
-	Car.PID.Velocity_Kp = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float)/10;
+//	Car.PID.Kp_Curved = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_P;
+//	cnt += 2;
+//	Car.PID.Ki_Curved = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_I;
+//	cnt += 2;
+//	Car.PID.Kd_Curved = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_D;
+//	cnt += 2;
+	
+	Car.PID.SpeedKp = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float)/10;
 	cnt += 2;
-	Car.PID.Velocity_Ki = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / 10;
+	Car.PID.SpeedKi = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / 10;
 	cnt += 2;
-	Car.PID.Velocity_Kd = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float)/10;
+	Car.PID.SpeedKd = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float)/10;
 	cnt += 2;
 
 	pid_StorePara();	/*  将PID参数保存到Flash中  */
@@ -457,9 +435,9 @@ void debug_ShowPara(void)
 	TimerTaskRunMutexSignal = 1;
 	
 //	bsp_oled_Clear();
-//	bsp_oled_ShowInteger(0,0,(int)(Car.PID.Kp_Straight ), 16);
-//	bsp_oled_ShowInteger(42,0,(int)(Car.PID.Ki_Straight ), 16);
-//	bsp_oled_ShowInteger(84,0,(int)(Car.PID.Kd_Straight ), 16);
+//	bsp_oled_ShowInteger(0,0,(int)(Car.PID.DirctionKp ), 16);
+//	bsp_oled_ShowInteger(42,0,(int)(Car.PID.DirctionKi ), 16);
+//	bsp_oled_ShowInteger(84,0,(int)(Car.PID.DirctionKd ), 16);
 //	
 //	bsp_oled_ShowString(0, 0, "L:");
 //	bsp_oled_ShowInteger(24, 0, Car.Motor.LeftEncoder, 16);

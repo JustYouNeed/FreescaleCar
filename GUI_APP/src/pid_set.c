@@ -77,7 +77,7 @@ void SpeedKp_Set(void)
 	if(cnt == 0)
 	{
 		MenuWindow.title = "Speed Kp";
-		kp_temp = (Car.PID.Velocity_Kp);
+		kp_temp = (Car.PID.SpeedKp);
 		GUI_WindowsDraw(&MenuWindow);
 		GUI_DrawButton(&bt_add);
 		GUI_DrawButton(&bt_mines);
@@ -117,7 +117,7 @@ void SpeedKp_Set(void)
 	}
 	else if(key == KEY_OK_PRESS)
 	{
-		Car.PID.Velocity_Kp = kp_temp;
+		Car.PID.SpeedKp = kp_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
 		cnt = 0;
 		displayInit();
@@ -153,7 +153,7 @@ void SpeedKi_Set(void)
 	if(cnt == 0)
 	{
 		MenuWindow.title = "Speed Ki";
-		ki_temp = (Car.PID.Velocity_Ki);
+		ki_temp = (Car.PID.SpeedKi);
 		GUI_WindowsDraw(&MenuWindow);
 		GUI_DrawButton(&bt_add);
 		GUI_DrawButton(&bt_mines);
@@ -193,7 +193,7 @@ void SpeedKi_Set(void)
 	}
 	else if(key == KEY_OK_PRESS)
 	{
-		Car.PID.Velocity_Ki = ki_temp;
+		Car.PID.SpeedKi = ki_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
 		cnt = 0;
 		displayInit();
@@ -229,7 +229,7 @@ void SpeedKd_Set(void)
 	if(cnt == 0)
 	{
 		MenuWindow.title = "Speed Kd";
-		kd_temp = (Car.PID.Velocity_Kd);
+		kd_temp = (Car.PID.SpeedKd);
 		GUI_WindowsDraw(&MenuWindow);
 		GUI_DrawButton(&bt_add);
 		GUI_DrawButton(&bt_mines);
@@ -269,7 +269,7 @@ void SpeedKd_Set(void)
 	}
 	else if(key == KEY_OK_PRESS)
 	{
-		Car.PID.Velocity_Kd = kd_temp;
+		Car.PID.SpeedKd = kd_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
 		cnt = 0;
 		displayInit();
@@ -304,7 +304,7 @@ void DirctionKp_Set(void)
 	if(cnt == 0)
 	{
 		MenuWindow.title = "Dirction Kp";
-		kp_temp = (Car.PID.Kp_Straight);
+		kp_temp = (Car.PID.DirctionKp);
 		GUI_WindowsDraw(&MenuWindow);
 		GUI_DrawButton(&bt_add);
 		GUI_DrawButton(&bt_mines);
@@ -344,7 +344,7 @@ void DirctionKp_Set(void)
 	}
 	else if(key == KEY_OK_PRESS)
 	{
-		Car.PID.Kp_Straight = kp_temp;
+		Car.PID.DirctionKp = kp_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
 		cnt = 0;
 		displayInit();
@@ -380,7 +380,7 @@ void DirctionKi_Set(void)
 	if(cnt == 0)
 	{
 		MenuWindow.title = "Dirction Ki";
-		ki_temp = (Car.PID.Ki_Straight);
+		ki_temp = (Car.PID.DirctionKi);
 		GUI_WindowsDraw(&MenuWindow);
 		GUI_DrawButton(&bt_add);
 		GUI_DrawButton(&bt_mines);
@@ -420,7 +420,7 @@ void DirctionKi_Set(void)
 	}
 	else if(key == KEY_OK_PRESS)
 	{
-		Car.PID.Ki_Straight = ki_temp;
+		Car.PID.DirctionKi = ki_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
 		cnt = 0;
 		displayInit();
@@ -456,7 +456,7 @@ void DirctionKd_Set(void)
 	if(cnt == 0)
 	{
 		MenuWindow.title = "Dirction Kd";
-		kd_temp = (Car.PID.Kd_Straight);
+		kd_temp = (Car.PID.DirctionKd);
 		GUI_WindowsDraw(&MenuWindow);
 		GUI_DrawButton(&bt_add);
 		GUI_DrawButton(&bt_mines);
@@ -467,36 +467,36 @@ void DirctionKd_Set(void)
 	if(key == KEY_UP_PRESS)
 	{
 		GUI_Button_Selected(&bt_add, 0);
-		kd_temp += 0.5;
+		kd_temp += 5;
 	}else if(key == KEY_UP_LONG)
 	{
 		GUI_Button_Selected(&bt_add, 0);
 		while(drv_gpio_ReadPin(KEY_UP_PIN) == 0)
 		{
-			kd_temp += 0.5;
+			kd_temp += 5;
 			bsp_tim_DelayMs(10);
-			oled_showNum(58,16,(uint32_t)(kd_temp*10), 4,12,24);
+			oled_showNum(58,16,(uint32_t)(kd_temp), 4,12,24);
 			GUI_Refresh();
 		}
 	}
 	else if(KEY_DOWN_PRESS == key)
 	{
 		GUI_Button_Selected(&bt_mines, 0);
-		kd_temp -= 0.5;
+		kd_temp -= 5;
 	}else if(key == KEY_DOWN_LONG)
 	{
 		GUI_Button_Selected(&bt_mines, 0);
 		while(drv_gpio_ReadPin(KEY_DOWN_PIN) == 0)
 		{
-			kd_temp -= 0.5;
+			kd_temp -= 5;
 			bsp_tim_DelayMs(10);
-			oled_showNum(58,16,(uint32_t)(kd_temp*10), 4,12,24);
+			oled_showNum(58,16,(uint32_t)(kd_temp), 4,12,24);
 			GUI_Refresh();
 		}
 	}
 	else if(key == KEY_OK_PRESS)
 	{
-		Car.PID.Kd_Straight = kd_temp;
+		Car.PID.DirctionKd = kd_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
 		cnt = 0;
 		displayInit();
@@ -515,6 +515,70 @@ void DirctionKd_Set(void)
 void PID_ParaSet(void)
 {
 	
+}
+
+
+void Car_SetTarSpeed(void)
+{
+	static uint16_t cnt = 0;
+	static float speed;
+	
+	if(cnt == 0)
+	{
+		MenuWindow.title = "Set TargetSpped";
+		speed = Car.TargetSpeed;
+		GUI_WindowsDraw(&MenuWindow);
+		GUI_DrawButton(&bt_add);
+		GUI_DrawButton(&bt_mines);
+		GUI_DrawButton(&bt_ok);
+		cnt = 1;
+	}
+		
+	if(key == KEY_UP_PRESS)
+	{
+		GUI_Button_Selected(&bt_add, 0);
+		speed += 1;
+	}else if(key == KEY_UP_LONG)
+	{
+		GUI_Button_Selected(&bt_add, 0);
+		while(drv_gpio_ReadPin(KEY_UP_PIN) == 0)
+		{
+			speed += 1;
+			bsp_tim_DelayMs(10);
+			oled_showNum(58,16,(uint32_t)(speed), 4,12,24);
+			GUI_Refresh();
+		}
+	}
+	else if(KEY_DOWN_PRESS == key)
+	{
+		GUI_Button_Selected(&bt_mines, 0);
+		speed -= 1;
+	}else if(key == KEY_DOWN_LONG)
+	{
+		GUI_Button_Selected(&bt_mines, 0);
+		while(drv_gpio_ReadPin(KEY_DOWN_PIN) == 0)
+		{
+			speed -= 1;
+			bsp_tim_DelayMs(10);
+			oled_showNum(58,16,(uint32_t)(speed), 4,12,24);
+			GUI_Refresh();
+		}
+	}
+	else if(key == KEY_OK_PRESS)
+	{
+		Car.TargetSpeed = speed;
+
+		cnt = 0;
+		displayInit();
+		setShow_ui(MENU_UI);
+		Car_ControlStart();
+	}else
+	{
+		GUI_Button_Selected(&bt_add, 1);
+		GUI_Button_Selected(&bt_mines, 1);
+	}	
+	oled_showString(10,16,"Speed:",12,24);
+	oled_showNum(58,16,(uint32_t)(speed), 4,12,24);
 }
 
 

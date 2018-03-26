@@ -1,14 +1,19 @@
 /**
   *******************************************************************************************************
-  * File Name: 
-  * Author: 
-  * Version: 
-  * Date: 
-  * Brief: 
+  * File Name: FreescaleCar.h
+  * Author: Vector
+  * Version: 1.2.0
+  * Date: 2018-3-18
+  * Brief: 本文件提供了有关车子控制的函数,变量等
   *******************************************************************************************************
   * History
+  *		1.Author: Vector
+	*			Date: 2018-3-18
+	*			Mod: 建立文件
   *
-  *
+	*		2.Author: Vector
+	*			Date: 2018-3-26
+	*			Mod: 删除小车结构体中阈值变量
   *******************************************************************************************************
   */	
 	
@@ -44,7 +49,7 @@
 # define STRAIGHT					0
 
 
-/*  速度转换比例因子,计算完成后速度单位为 m/s  */
+/*  速度转换比例因子,计算完成后速度单位为 转速  */
 # define CAR_SPED_CONSTANT	(1000.0/SPEED_CONTROL_PERIOD/ENCONDER_LINES)
 
 /*  小车走走道时的目标速度  */
@@ -91,8 +96,7 @@ typedef struct
 	
 	uint8_t Running;
 	float HorizontalAE, VecticalAE;				/*  传感器水平、垂直和差比  */
-	float CarSpeed, TargetSpeed, LeftTargetSpeed, RightTargetSpeed;	/*  当前车速,整体目标速度,左右轮目标速度  */
-	int16_t OutThreshold[SENSOR_COUNT];		/*  出线阈值  */
+	float CarSpeed, TargetSpeed;	/*  当前车速,整体目标速度,左右轮目标速度  */
 	int16_t MaxPWM;												/*  最大PWM  */
 }Car_TypeDef;
 

@@ -38,13 +38,13 @@
 */
 void pid_ReadPara(void)
 {
-	Car.PID.Kp_Straight = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 0, float);
-	Car.PID.Ki_Straight = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 4, float);
-	Car.PID.Kd_Straight = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 8, float);
+	Car.PID.DirctionKp = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 0, float);
+	Car.PID.DirctionKi = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 4, float);
+	Car.PID.DirctionKd = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 8, float);
 	
-	Car.PID.Kp_Curved = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 12, float);
-	Car.PID.Ki_Curved = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 16, float);
-	Car.PID.Kd_Curved = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 20, float);
+	Car.PID.SpeedKp = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 12, float);
+	Car.PID.SpeedKi = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 16, float);
+	Car.PID.SpeedKd = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 20, float);
 }
 
 /*

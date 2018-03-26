@@ -1,13 +1,19 @@
 /**
   *******************************************************************************************************
-  * File Name: 
-  * Author: 
-  * Version: 
-  * Date: 
-  * Brief: 
+  * File Name: app_pid.h
+  * Author: Vector
+  * Version: V1.2.0
+  * Date: 2018-2-1
+  * Brief: 本文件提供了关于PID函数的声明,以及相关变量的定义
   *******************************************************************************************************
   * History
-  *
+  *		1.Author: Vector
+	*			Date: 2018-2-1
+	*			Mod: 建立本文件
+	*
+	*		2.Author: Vector
+	*			Date: 2018-3-26
+	*			Mod: 修改PID结体变量名字,删除不必要的变量,Error, Sum等
   *
   *******************************************************************************************************
   */	
@@ -24,20 +30,10 @@
 	
 typedef struct
 {
-	float Kp_Straight;
-	float Ki_Straight;
-	float Kd_Straight;
-	
-	float Kp_Curved;
-	float Ki_Curved;
-	float Kd_Curved;
-	
-	float Velocity_Kp, Velocity_Ki, Velocity_Kd;	/*  速度环PID  */
-	float Error;
-	int16_t Sum;
+	float SpeedKp, SpeedKi, SpeedKd;
+	float DirctionKp, DirctionKi, DirctionKd;
 }PID_TypeDef;
 
-extern PID_TypeDef PID;
 
 void pid_ParaInit(void);
 void pid_ReadPara(void);

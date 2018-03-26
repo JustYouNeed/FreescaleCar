@@ -45,6 +45,14 @@ int main(void)
 	while(1)
 	{
 		displayTask();
+//		bsp_mpu_ReadGyro(&Car.MPU.Gryox, &Car.MPU.Gryoy, &Car.MPU.Gryoz);
+//		if(Car.MPU.Gryoz < 0)
+//		{
+//			oled_showChar(0,0,'-',6,12,1);
+//			oled_showNum(3,0, -Car.MPU.Gryoz, 5,6,12);
+//		}else
+//			oled_showNum(0,0, Car.MPU.Gryoz, 5,6,12);
+//		oled_refreshGram();
 		bsp_tim_DelayMs(100);
 	}
 }

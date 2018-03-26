@@ -24,11 +24,9 @@ const uint8_t *PIDParaAdjMenuTitle[7] =
 {
 	"1.SpeedKp",
 	"2.SpeedKi",
-	"3.SpeedKd",
-	"4.DirctionKp",
-	"5.DirctionKi",
-	"6.DirctionKd",
-	"7.Exit",
+	"3.DirctionKp",
+	"4.DirctionKd",
+	"5.Exit",
 };
 const uint8_t* MainMenuTitle[5]=
 {
@@ -36,7 +34,6 @@ const uint8_t* MainMenuTitle[5]=
 	"2.Para Adjust",
 	"3.Calibration",
 	"4.Reset",
-	"5.Exit",
 };
 
 const uint8_t *ParaAdjMenuTitle[3] = 
@@ -157,12 +154,6 @@ void gotoSetSpeedKi(void)
 	isChangeMenu = true;
 }
 
-void gotoSetSpeedKd(void)
-{
-	Car_ControlStop();
-	setShow_ui(SET_S_KD_UI);
-	isChangeMenu = true;
-}
 
 void gotoSetDirctionKp(void)
 {
@@ -171,25 +162,6 @@ void gotoSetDirctionKp(void)
 	isChangeMenu = true;
 }
 
-/*
-*********************************************************************************************************
-*                            gotoSetDirctionKi              
-*
-* Description: 
-*             
-* Arguments  : 
-*
-* Reutrn     : 
-*
-* Note(s)    : 
-*********************************************************************************************************
-*/
-void gotoSetDirctionKi(void)
-{
-	Car_ControlStop();
-	setShow_ui(SET_D_KI_UI);
-	isChangeMenu = true;
-}
 /*
 *********************************************************************************************************
 *                         gotoSetDirctionKd                 
@@ -207,6 +179,13 @@ void gotoSetDirctionKd(void)
 {
 	Car_ControlStop();
 	setShow_ui(SET_D_KD_UI);
+	isChangeMenu = true;
+}
+
+void gotoSetTargetSpeed(void)
+{
+	Car_ControlStop();
+	setShow_ui(SET_TAR_SPEED);
 	isChangeMenu = true;
 }
 
@@ -377,6 +356,12 @@ void Menu_Run(void)
 	}
 }
 
+void gotoMainUI(void)
+{
+	setShow_ui(MAIN_UI);
+	key = KEY_NONE;
+	isChangeMenu = true;
+}
 
 /*
 *********************************************************************************************************
@@ -395,9 +380,9 @@ void MainMenu_Init(void)
 {
 	uint8_t i = 0;
 	/*  主菜单初始化  */
-	for(i=0; i<5; i++)
+	for(i=0; i<4; i++)
 	{
-		MainMenu[i].menuItemCount = 5;
+		MainMenu[i].menuItemCount = 4;
 		MainMenu[i].isSelect = false;
 		MainMenu[i].icoSelected = finger_img;
 		MainMenu[i].icoUnselected = NULL;
@@ -412,6 +397,7 @@ void MainMenu_Init(void)
 	
 	MainMenu[1].Function = gotoNextMenu;
 	MainMenu[1].childrenMenu = ParaAdjMenu;
+	
 }
 
 /*
@@ -431,14 +417,14 @@ void PIDAdjMenu_Init(void)
 {
 	uint8_t i = 0;
 	
-	for(i = 0; i < 7; i++)
+	for(i = 0; i < 5; i++)
 	{
 		PIDAdjMenu[i].childrenMenu = NULL;
 		PIDAdjMenu[i].Function = NULL;
 		PIDAdjMenu[i].icoSelected = finger_img;
 		PIDAdjMenu[i].icoUnselected = NULL;
 		PIDAdjMenu[i].isSelect = false;
-		PIDAdjMenu[i].menuItemCount = 7;
+		PIDAdjMenu[i].menuItemCount = 5;
 		PIDAdjMenu[i].parentMenu = NULL;
 		PIDAdjMenu[i].title = PIDParaAdjMenuTitle[i];
 	}
@@ -448,17 +434,15 @@ void PIDAdjMenu_Init(void)
 	
 	PIDAdjMenu[1].Function = gotoSetSpeedKi;
 	
-	PIDAdjMenu[2].Function = gotoSetSpeedKd;
 	
-	PIDAdjMenu[3].Function = gotoSetDirctionKp;
-	
-	PIDAdjMenu[4].Function = gotoSetDirctionKi;
-	
-	PIDAdjMenu[5].Function = gotoSetDirctionKd;
+	PIDAdjMenu[2].Function = gotoSetDirctionKp;
 	
 	
-	PIDAdjMenu[6].childrenMenu = ParaAdjMenu;
-	PIDAdjMenu[6].Function = gotoNextMenu;
+	PIDAdjMenu[3].Function = gotoSetDirctionKd;
+	
+	
+	PIDAdjMenu[4].childrenMenu = ParaAdjMenu;
+	PIDAdjMenu[4].Function = gotoNextMenu;
 }
 
 /*
@@ -493,6 +477,8 @@ void ParaSetMenu_Init(void)
 	ParaAdjMenu[0].isSelect = true;
 	ParaAdjMenu[0].Function = gotoNextMenu;
 	ParaAdjMenu[0].childrenMenu = PIDAdjMenu;
+	
+	ParaAdjMenu[1].Function = gotoSetTargetSpeed;
 	
 	ParaAdjMenu[2].childrenMenu = MainMenu;
 	ParaAdjMenu[2].Function = gotoNextMenu;

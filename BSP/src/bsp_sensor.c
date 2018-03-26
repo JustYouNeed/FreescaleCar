@@ -1,8 +1,8 @@
 /**
   *******************************************************************************************************
-  * File Name: bsp_sensor
+  * File Name: bsp_sensor.c
   * Author: Vector
-  * Version: V1.1.0
+  * Version: V1.3.0
   * Date: 2018-3-1
   * Brief: 本文件为电磁传感器提供了基本的操作函数
   *******************************************************************************************************
@@ -15,6 +15,10 @@
 	*			Date: 2018-3-2
 	*			Mod: 1.添加新函数bsp_sensor_DataNormalized,bsp_sensor_DataCopy,bsp_sensor_Calibration
 	*					 2.将独立的传感器数据整合到由Car结构体中,便于管理
+	*
+	*		2.Author: Vector
+	*			Date: 2018-3-26
+	*			Mod: 传感器数据采集由中断改为查询方式
   *
   *******************************************************************************************************
   */	
@@ -58,9 +62,6 @@ void bsp_sensor_Config(void)
 	ADC_InitStruct.ADC_RefSource = ADC_RefSource_VDD;
 	ADC_InitStruct.ADC_ScanConvMode = DISABLE;
 	drv_adc_Init(&ADC_InitStruct);
-	
-//	ADC_InitStruct.ADC_Channel =  SENSOR_3 | SENSOR_4;
-//	drv_adc_Init(&ADC_InitStruct);
 }
 
 /*
@@ -131,7 +132,7 @@ void bsp_sensor_DataProcess(void)
 //	uint16_t ADC_ValueTemp[SENSOR_FIFO_SIZE] = {0};	
 	
 	/*  用于从ADC寄存器中读取出转换结果  */
-	uint16_t ADC_Value[SENSOR_COUNT];
+//	uint16_t ADC_Value[SENSOR_COUNT];
 	
 	/*  获取各个传感器的电压值  */
 //	drv_adc_GetMultiADCResult(ADC_Value);
@@ -183,7 +184,7 @@ void bsp_sensor_Calibration(void)
 {
 	uint16_t i = 0, j;
 	
-	uint16_t ADC_ValueTemp[SENSOR_COUNT];
+//	uint16_t ADC_ValueTemp[SENSOR_COUNT];
 	uint16_t CalibrationValueTemp[SENSOR_COUNT * 2] = {0};
 	
 	oled_showString(0, 0, (uint8_t *)"Calibration...", 8, 16);

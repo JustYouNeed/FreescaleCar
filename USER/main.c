@@ -3,6 +3,11 @@
 # include "display.h"
 
 
+void ReadGryo(void)
+{
+	bsp_mpu_ReadGyro(&Car.MPU.Gryox, &Car.MPU.Gryoy, &Car.MPU.Gryoz);
+}
+
 /*
 *********************************************************************************************************
 *                                          
@@ -25,7 +30,7 @@ int main(void)
 	displayInit();
 	
 	/*  选择是否需要校准传感器  */
-	if(bsp_switch_GetValue() == 14)
+	if(drv_gpio_ReadPin(KEY_OK_PIN) == 0)
 		bsp_sensor_Calibration();
 
 	/*  注册软件定时器任务,传感器数据上传任务,周期50ms  */
@@ -39,20 +44,13 @@ int main(void)
 	
 	/*  硬件定时器任务,车子控制任务,周期20ms  */
 	bsp_tim_CreateHardTimer(1, 1, Car_Control);
+	bsp_tim_CreateHardTimer(0,5, ReadGryo);
 	DRV_ENABLE();
-	
+//	bsp_motor_SetPwm(200,200);
 	setShow_ui(MAIN_UI);
 	while(1)
 	{
 		displayTask();
-//		bsp_mpu_ReadGyro(&Car.MPU.Gryox, &Car.MPU.Gryoy, &Car.MPU.Gryoz);
-//		if(Car.MPU.Gryoz < 0)
-//		{
-//			oled_showChar(0,0,'-',6,12,1);
-//			oled_showNum(3,0, -Car.MPU.Gryoz, 5,6,12);
-//		}else
-//			oled_showNum(0,0, Car.MPU.Gryoz, 5,6,12);
-//		oled_refreshGram();
 		bsp_tim_DelayMs(100);
 	}
 }

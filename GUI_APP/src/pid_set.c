@@ -273,15 +273,15 @@ void SpeedKd_Set(void)
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
 		cnt = 0;
 		displayInit();
-		setShow_ui(MENU_UI);
 		Car_ControlStart();
+		setShow_ui(MENU_UI);
 	}else
 	{
 		GUI_Button_Selected(&bt_add, 1);
 		GUI_Button_Selected(&bt_mines, 1);
 	}	
 	oled_showString(20,16,"Kd:",12,24);
-	oled_showNum(58,16,(uint32_t)(kd_temp*10), 4,12,24);
+	oled_showNum(58,16,(uint32_t)(kd_temp*10), 4, 12, 24);
 }
 /*
 *********************************************************************************************************

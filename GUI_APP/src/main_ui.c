@@ -25,7 +25,6 @@
 uint8_t isMainUIChange = true;
 void main_ui(void)
 {
-	bsp_led_Toggle(1);
 	if(isMainUIChange == false) return;
 	
 	oled_showPicture(108, 4, bmp_battery[12], 10, 16);

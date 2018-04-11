@@ -50,16 +50,18 @@ static uint32_t   ADC_Order[24] = {0};		/*  ADC通道顺序,用来获取单个ADC转换结果 
 */
 void drv_adc_Init(ADC_InitTypeDef *ADC_InitStruct)
 {
-	uint32_t posbit = 0, channel = 0;
+	uint32_t posbit = 0, channel = 0, reg_tmp = 0;
 	uint8_t reg = 0;
 	uint8_t i = 0, cnt = 0;
 	
 	drv_rcc_ClockCmd(RCC_PeriphClock_ADC, ENABLE);  /*  开启ADC时钟  */
 	
-	ADC->APCTL1 |= ADC_InitStruct->ADC_Channel;     /*  设置ADC采样通道  */
-	ADC->SC3 |= ADC_InitStruct->ADC_Resolution;			/*  设置ADC采样位数  */
-	ADC->SC3 |= ADC_InitStruct->ADC_Prescaler;			/*  时钟分频  */
-	ADC->SC3 |= ADC_InitStruct->ADC_ClockSource;		/*  时钟源  */
+	ADC->APCTL1 |= (uint16_t)ADC_InitStruct->ADC_Channel;     /*  设置ADC采样通道  */
+	reg_tmp |= ADC_InitStruct->ADC_Resolution;			/*  设置ADC采样位数  */
+	reg_tmp |= ADC_InitStruct->ADC_Prescaler;			/*  时钟分频  */
+	reg_tmp |= ADC_InitStruct->ADC_ClockSource;		/*  时钟源  */
+	ADC->SC3 = reg_tmp;
+
 	ADC->SC2 |= ADC_InitStruct->ADC_RefSource;			/*  参考电压源  */
 	
 	if(ADC_InitStruct->ADC_ContinuousConvMode == ENABLE)	/*  如果开启了连续转换模式  */
@@ -125,10 +127,10 @@ void drv_adc_Init(ADC_InitTypeDef *ADC_InitStruct)
 * Note(s)    : None.
 *********************************************************************************************************
 */
+# include "bsp_led.h"
 void ADC0_IRQHandler(void)
 {
 	uint8_t i = 0;
-	
 	for(; i < ADC_Count; i++)
 	{
 		ADC_Result[i] = ADC->R;

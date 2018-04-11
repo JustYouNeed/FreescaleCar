@@ -43,3 +43,6 @@
 .\objects\drv_adc.o: ..\DRV\inc\drv_kbi.h
 .\objects\drv_adc.o: ..\USER\derivative.h
 .\objects\drv_adc.o: D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
+.\objects\drv_adc.o: ..\BSP\inc\bsp_led.h
+.\objects\drv_adc.o: ..\USER\derivative.h
+.\objects\drv_adc.o: D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h

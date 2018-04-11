@@ -23,6 +23,6 @@
 
 
 void bsp_Config(void);
-
+float f_abs(float num);
 # endif
 

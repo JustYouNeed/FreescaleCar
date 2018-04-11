@@ -202,7 +202,7 @@ uint8_t bsp_mpu_Config(void)
 	bsp_mpu_WriteByte(MPU_PWR_MGMT1_REG, 0x00);
 	bsp_mpu_SetGyroFsr(3);
 	bsp_mpu_SetAccelFsr(0);
-	bsp_mpu_SetRate(200);
+	bsp_mpu_SetRate(100);
 	bsp_mpu_WriteByte(MPU_USER_CTRL_REG, 0x00);
 	bsp_mpu_WriteByte(MPU_FIFO_EN_REG, 0x00);
 	bsp_mpu_WriteByte(MPU_INTBP_CFG_REG, 0x80);

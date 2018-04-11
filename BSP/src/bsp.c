@@ -18,3 +18,10 @@ void bsp_Config(void)
 	ENABLE_INT();						/*  ¿ªÆôÖÐ¶Ï  */
 }
 
+
+
+float f_abs(float num)
+{
+	return (num < 0)?(-num):num;
+}
+

@@ -51,17 +51,22 @@ void Para_Show_UI(void)
 		oled_showString(65,15,"H_R:", 6, 12);
 		oled_showNum(95, 15, Car.Sensor[SENSOR_H_R].Average, 3, 6, 12);
 		
-		oled_showString(3,33,"V_L:", 6, 12);
-		oled_showNum(27, 33, Car.Sensor[SENSOR_V_L].Average, 3, 6, 12);
-		
-		oled_showString(65,33,"V_R:", 6, 12);
-		oled_showNum(95, 33, Car.Sensor[SENSOR_V_R].Average, 3, 6, 12);
+//		oled_showString(3,33,"H_M:", 6, 12);
+//		oled_showNum(27, 33, Car.Sensor[SENSOR_V_L].Average, 3, 6, 12);
+//		
+//		oled_showString(65,33,"H_M:", 6, 12);
+//		oled_showNum(95, 33, Car.Sensor[SENSOR_V_R].Average, 3, 6, 12);
 		
 		oled_showString(3,50,"HAE:", 6, 12);
-		oled_showNum(27, 50, (int16_t)(Car.HorizontalAE*100), 3, 6, 12);
+		if(Car.HorizontalAE < 0)
+		{
+			oled_showChar(27, 50, '-', 3, 6, 12);
+			oled_showNum(33, 50, (int16_t)(Car.HorizontalAE), 3, 6, 12);
+		}else
+			oled_showNum(27, 50, (int16_t)(Car.HorizontalAE), 3, 6, 12);
 		
 		oled_showString(65,50,"VAE:", 6, 12);
-		oled_showNum(95, 50, (int16_t)(Car.VecticalAE*100), 3, 6, 12);
+		oled_showNum(95, 50, (int16_t)(Car.VecticalAE), 3, 6, 12);
 	}
 	else if(showFlag == 1)
 	{
@@ -73,10 +78,20 @@ void Para_Show_UI(void)
 		oled_showNum(85, 15, Car.Motor.RightEncoder, 4, 6, 12);
 		
 		oled_showString(3, 33, "L_P:", 6, 12);
-		oled_showNum(27, 33, Car.Motor.LeftPwm, 4, 6, 12);
+		if(Car.Motor.LeftPwm<0)
+		{
+			oled_showChar(27, 50, '-', 3, 6, 12);
+			oled_showNum(33, 50, Car.Motor.LeftPwm, 3, 6, 12);
+		}else
+			oled_showNum(27, 33, Car.Motor.LeftPwm, 4, 6, 12);
 		
 		oled_showString(55, 33, "R_P:", 6, 12);
-		oled_showNum(85, 33, Car.Motor.RightPwm, 4, 6, 12);
+		if(Car.Motor.RightPwm<0)
+		{
+			oled_showChar(85, 50, '-', 3, 6, 12);
+			oled_showNum(91, 50, Car.Motor.RightPwm, 3, 6, 12);
+		}else
+			oled_showNum(85, 33, Car.Motor.RightPwm, 4, 6, 12);
 		
 		oled_showString(3,50,"Nor:", 6, 12);
 		oled_showNum(27, 50, (Car.Sensor[0].CalibrationMax), 3, 6, 12);

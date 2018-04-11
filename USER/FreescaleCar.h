@@ -50,11 +50,9 @@
 
 
 /*  速度转换比例因子,计算完成后速度单位为 转速  */
-# define CAR_SPED_CONSTANT	(1000.0/SPEED_CONTROL_PERIOD/ENCONDER_LINES)
+# define CAR_SPEED_CONSTANT	(1000.0/SPEED_CONTROL_PERIOD/ENCONDER_LINES)
 
-/*  小车走走道时的目标速度  */
-# define STRAIGHT_SPEED		20
-# define CURVE_SPEED			5
+
 
 /*  转向情况  */
 typedef enum
@@ -96,7 +94,7 @@ typedef struct
 	
 	uint8_t Running;
 	float HorizontalAE, VecticalAE;				/*  传感器水平、垂直和差比  */
-	float CarSpeed, TargetSpeed;	/*  当前车速,整体目标速度,左右轮目标速度  */
+	float CarSpeed, TargetSpeed, LeftTargetSpeed, RightTargetSpeed;	/*  当前车速,整体目标速度,左右轮目标速度  */
 	int16_t MaxPWM;												/*  最大PWM  */
 }Car_TypeDef;
 

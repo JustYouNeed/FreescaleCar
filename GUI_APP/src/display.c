@@ -43,9 +43,10 @@ void displayTask(void)
 		case MENU_UI:	Menu_Run();	break;
 		case SET_S_KP_UI:	SpeedKp_Set(); break;
 		case SET_S_KI_UI:	SpeedKi_Set(); break;
-		case SET_D_KP_UI: DirctionKp_Set(); break;
-		case SET_D_KD_UI: DirctionKd_Set(); break;
-		case SET_TAR_SPEED: Car_SetTarSpeed();break;
+		case SET_D_KP_UI: DirectionKp_Set(); break;
+		case SET_D_KD_UI: DirectionKd_Set(); break;
+		case SET_TAR_SPEED_UI: Car_SetTarSpeed();break;
+		case RESET_UI:SystemReset();break;
 		default:break;
 	}
 	

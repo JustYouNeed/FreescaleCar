@@ -51,11 +51,11 @@ void Para_Show_UI(void)
 		oled_showString(65,15,"H_R:", 6, 12);
 		oled_showNum(95, 15, Car.Sensor[SENSOR_H_R].Average, 3, 6, 12);
 		
-//		oled_showString(3,33,"H_M:", 6, 12);
-//		oled_showNum(27, 33, Car.Sensor[SENSOR_V_L].Average, 3, 6, 12);
-//		
-//		oled_showString(65,33,"H_M:", 6, 12);
-//		oled_showNum(95, 33, Car.Sensor[SENSOR_V_R].Average, 3, 6, 12);
+		oled_showString(3,33,"V_L:", 6, 12);
+		oled_showNum(27, 33, Car.Sensor[SENSOR_V_L].Average, 3, 6, 12);
+		
+		oled_showString(65,33,"V_R:", 6, 12);
+		oled_showNum(95, 33, Car.Sensor[SENSOR_V_R].Average, 3, 6, 12);
 		
 		oled_showString(3,50,"HAE:", 6, 12);
 		if(Car.HorizontalAE < 0)
@@ -107,10 +107,16 @@ void Para_Show_UI(void)
 		oled_showNum(85, 15, Car.PID.SpeedKi*10, 4, 6, 12);
 		
 		oled_showString(3, 33, "DKP:", 6, 12);
-		oled_showNum(27, 33, Car.PID.DirctionKp, 4, 6, 12);
+		oled_showNum(27, 33, Car.PID.DirectionKp, 4, 6, 12);
 		
 		oled_showString(55, 33, "DKD:", 6, 12);
-		oled_showNum(85, 33, Car.PID.DirctionKd, 4, 6, 12);
+		oled_showNum(85, 33, Car.PID.DirectionKd, 4, 6, 12);
+		
+		oled_showString(3,50,"LT:", 6, 12);
+		oled_showNum(27, 50, (Car.LeftTargetSpeed), 2, 6, 12);
+		
+		oled_showString(55,50,"RT:", 6, 12);
+		oled_showNum(85, 50, (Car.RightTargetSpeed), 2, 6, 12);
 	}
 	
 	if(key == KEY_DOWN_PRESS)

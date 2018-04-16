@@ -79,3 +79,4 @@
 .\objects\freescalecar.o: ..\MPU\inc\inv_mpu.h
 .\objects\freescalecar.o: ..\MPU\inc\inv_mpu_dmp_motion_driver.h
 .\objects\freescalecar.o: ..\APP\inc\app_pid.h
+.\objects\freescalecar.o: ..\APP\inc\app_debug.h

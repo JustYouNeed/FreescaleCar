@@ -164,7 +164,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name>/</Name>
+          <Name>HR?P踱wHR?</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -202,7 +202,40 @@
           <Name>UL2CM3(-S0 -C0 -P0 -FD1FFFF000 -FC1000 -FN1 -FF0MKE04Zxxx_P128KB -FS00 -FL020000 -FP0($$Device:SKEAZ128xxx4$Flash\MKE04Zxxx_P128KB.FLM))</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint/>
+      <Breakpoint>
+        <Bp>
+          <Number>0</Number>
+          <Type>0</Type>
+          <LineNumber>569</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>4664</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>E:\瀛︿範璧勬枡\姣旇禌\椋炴€濆崱灏旀櫤鑳借溅澶ц禌\鐢电涓夎疆缁?绋嬪簭\Freescale\GUI_APP\src\pid_set.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\FreescaleCar\../GUI_APP/src/pid_set.c\569</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>149</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>4162</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>E:\瀛︿範璧勬枡\姣旇禌\椋炴€濆崱灏旀櫤鑳借溅澶ц禌\鐢电涓夎疆缁?绋嬪簭\Freescale\USER\FreescaleCar.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\FreescaleCar\FreescaleCar.c\149</Expression>
+        </Bp>
+      </Breakpoint>
       <WatchWindow1>
         <Ww>
           <count>0</count>
@@ -219,12 +252,17 @@
           <WinNumber>1</WinNumber>
           <ItemText>ADC_Result</ItemText>
         </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>speed</ItemText>
+        </Ww>
       </WatchWindow1>
       <MemoryWindow1>
         <Mm>
           <WinNumber>1</WinNumber>
           <SubType>0</SubType>
-          <ItemText>0x01fc00</ItemText>
+          <ItemText>0x01f800</ItemText>
           <AccSizeX>0</AccSizeX>
         </Mm>
       </MemoryWindow1>
@@ -740,7 +778,7 @@
 
   <Group>
     <GroupName>GUI_DRV</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

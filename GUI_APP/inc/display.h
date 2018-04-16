@@ -24,7 +24,8 @@ enum ui_e
 	SET_S_KI_UI,
 	SET_D_KP_UI,
 	SET_D_KD_UI,
-	SET_TAR_SPEED,
+	SET_TAR_SPEED_UI,
+	RESET_UI,
 };
 
 void setShow_ui(enum ui_e ui);

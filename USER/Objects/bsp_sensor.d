@@ -81,3 +81,4 @@
 .\objects\bsp_sensor.o: ..\APP\inc\app_filter.h
 .\objects\bsp_sensor.o: ..\USER\FreescaleCar.h
 .\objects\bsp_sensor.o: ..\APP\inc\app_pid.h
+.\objects\bsp_sensor.o: ..\APP\inc\app_debug.h

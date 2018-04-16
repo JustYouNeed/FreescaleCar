@@ -221,15 +221,15 @@ void debug_PIDParaReport(void)
 	uint8_t Buff[18] = {0};
 	short temp = 0;
 	
-	temp = (short)(Car.PID.DirctionKp * ANO_PID_TRAN_FAC_P);
+	temp = (short)(Car.PID.DirectionKp * ANO_PID_TRAN_FAC_P);
 	Buff[0] = BYTE2(temp);
 	Buff[1] = BYTE1(temp);
 	
-	temp = (short)(Car.PID.DirctionKi * ANO_PID_TRAN_FAC_I);
+	temp = (short)(Car.PID.DirectionKi * ANO_PID_TRAN_FAC_I);
 	Buff[2] = BYTE2(temp);
 	Buff[3] = BYTE1(temp);
 	
-	temp = (short)(Car.PID.DirctionKd * ANO_PID_TRAN_FAC_D);
+	temp = (short)(Car.PID.DirectionKd * ANO_PID_TRAN_FAC_D);
 	Buff[4] = BYTE2(temp);
 	Buff[5] = BYTE1(temp);
 	
@@ -268,11 +268,11 @@ void debug_PIDDownload(void)
 	//转换完成后除以相应的传输因子
 	uint8_t cnt = 4;
 	
-	Car.PID.DirctionKp = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_P;
+	Car.PID.DirectionKp = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_P;
 	cnt += 2;
-	Car.PID.DirctionKi = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_I;
+	Car.PID.DirectionKi = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_I;
 	cnt += 2;
-	Car.PID.DirctionKd = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_D;
+	Car.PID.DirectionKd = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_D;
 	cnt += 2;
 	
 //	Car.PID.Kp_Curved = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_P;
@@ -309,7 +309,7 @@ void debug_PIDDownload(void)
 */
 void debug_SensorDataReport(void)
 {
-	uint8_t Buff[18] = {0};
+	uint8_t Buff[32] = {0};
 	uint8_t cnt = 0;
 	
 	Buff[cnt++] = BYTE2(Car.Sensor[SENSOR_H_L].Average);
@@ -331,7 +331,12 @@ void debug_SensorDataReport(void)
 	Buff[cnt++] = BYTE2((int16_t)(Car.VecticalAE));
 	Buff[cnt++] = BYTE1((int16_t)(Car.VecticalAE));
 	
-
+	Buff[cnt++] = BYTE2((int16_t)(Car.HorizontalAE - Car.VecticalAE));
+	Buff[cnt++] = BYTE1((int16_t)(Car.HorizontalAE - Car.VecticalAE));
+	
+	Buff[cnt++] = BYTE2((int16_t)(Car.AE));
+	Buff[cnt++] = BYTE1((int16_t)(Car.AE));
+	
 	debug_DataUpload(Buff,0xf2,cnt);
 }
 

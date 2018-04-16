@@ -6,7 +6,7 @@
 
 void SpeedKp_Set(void);
 void SpeedKi_Set(void);
-void DirctionKp_Set(void);
-void DirctionKd_Set(void);
+void DirectionKp_Set(void);
+void DirectionKd_Set(void);
 void Car_SetTarSpeed(void);
 # endif

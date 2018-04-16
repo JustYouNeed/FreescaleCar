@@ -16,5 +16,6 @@ void MenuHookFun(uint8_t key);//¹³×Óº¯Êý
 void exitMenu(void);
 void gotoNextMenu(void);
 void gotoLastMenu(void);
+void SystemReset(void);
 # endif
 

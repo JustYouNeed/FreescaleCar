@@ -42,11 +42,17 @@
 # define WHEEL_LEN					0.16
 # define WHEEL_D						0.06
 
+/*  小车走走道时的目标速度  */
+# define STRAIGHT_SPEED		15
+# define CURVE_SPEED_LOW	20
 
-# define BIG_CURVE_R			0.5
-# define MID_CURVE_R			0,3
-# define SMALL_CURVE_R		0.2
-# define STRAIGHT					0
+# define DEFAULT_SPEED_KP	245
+# define DEFAULT_SPEED_KD	1
+
+# define DEFAULT_DIRECTION_KP	30
+# define DEFAULT_DIRECTION_KD	300
+
+# define DEFAULT_SPEED  20
 
 
 /*  速度转换比例因子,计算完成后速度单位为 转速  */
@@ -93,7 +99,8 @@ typedef struct
 	MPU_TypeDef MPU;											/*  MPU参数  */
 	
 	uint8_t Running;
-	float HorizontalAE, VecticalAE;				/*  传感器水平、垂直和差比  */
+	float HorizontalAE, VecticalAE, AE;				/*  传感器水平、垂直和差比  */
+	float HorizontalAEMax, HorizontalAEMin, VecticalAEMax, VecticalAEMin;
 	float CarSpeed, TargetSpeed, LeftTargetSpeed, RightTargetSpeed;	/*  当前车速,整体目标速度,左右轮目标速度  */
 	int16_t MaxPWM;												/*  最大PWM  */
 }Car_TypeDef;
@@ -102,7 +109,8 @@ extern Car_TypeDef Car;
 
 void Car_ParaInit(void);
 void Car_Control(void);
-void Car_ParaStroe(void);
+void Car_ParaStore(void);
+void Car_Reset(void);
 void Car_Running(void);
 void Car_ControlStop(void);
 void Car_ControlStart(void);

@@ -5,6 +5,8 @@
 # include "gui_basic.h"
 # include "pid_set.h"
 # include "stdio.h"
+# include "messagebox.h"
+
 /****** 手指按钮图标 阴码 逐列式 顺向(高位在前) *****/
 const uint8_t finger_img[32]={
 0x07,0xF0,0x04,0x10,0x04,0x10,0x08,0x08,0x08,0x08,0x08,0x08,0x10,0x04,0x20,0x04,
@@ -76,6 +78,17 @@ Scrollbar_Typedef MenuScrollbar={
 .itemsperpage = 3,
 .topitem = 0,
 .scbbarlen = 0,
+};
+
+MessageBox_Typedef MessageBox={
+0,
+0,	
+128,
+64,
+"Car Reset",	
+"reset system?",
+"OK",
+"Cancel"
 };
 
 uint8_t getMenuSelectitem(MenuItem_Typedef menu[])
@@ -162,6 +175,57 @@ void gotoSetDirctionKp(void)
 	isChangeMenu = true;
 }
 
+void gotoCarParaReset(void)
+{
+	Car_ControlStop();
+	setShow_ui(RESET_UI);
+	isChangeMenu = true;
+}
+
+void SystemReset(void)
+{
+	static uint8_t flag = 0;
+	
+	if(flag == 0)
+	{
+		flag = 1;
+		GUI_MessageBoxDraw(&MessageBox);
+	}
+		
+	if(key == KEY_DOWN_PRESS)		/*  down按键按下时选中取消按钮  */
+	{
+		GUI_MessageBoxButtonStatus(&MessageBox, 0);	
+		GUI_MessageBoxButtonStatus(&MessageBox, 0);
+		GUI_Refresh();
+		while(drv_gpio_ReadPin(KEY_UP_PIN) == 0);
+	}
+
+	if(key == KEY_UP_PRESS)		/*  up按键按下时选中确认按钮  */
+	{
+		GUI_MessageBoxButtonStatus(&MessageBox, 1);	
+		GUI_MessageBoxButtonStatus(&MessageBox, 1);	
+		GUI_Refresh();
+		while(drv_gpio_ReadPin(KEY_DOWN_PIN) == 0);
+	}
+	
+	if(key == KEY_OK_PRESS)		/*  ok键按下时根据当前按钮选择执行相应操作  */
+	{
+		flag = 0;
+		while(drv_gpio_ReadPin(KEY_OK_PIN) == 0);
+		
+		if(GUI_MessageBoxResult(&MessageBox) == 1)
+		{
+			displayInit();
+			setShow_ui(MENU_UI);
+			Car_Reset();
+		}
+		else
+		{
+			displayInit();
+			setShow_ui(MENU_UI);
+		}
+	}
+}
 /*
 *********************************************************************************************************
 *                         gotoSetDirctionKd                 
@@ -182,10 +246,11 @@ void gotoSetDirctionKd(void)
 	isChangeMenu = true;
 }
 
+
 void gotoSetTargetSpeed(void)
 {
-	Car_ControlStop();
-	setShow_ui(SET_TAR_SPEED);
+//	Car_ControlStop();
+	setShow_ui(SET_TAR_SPEED_UI);
 	isChangeMenu = true;
 }
 
@@ -398,6 +463,8 @@ void MainMenu_Init(void)
 	MainMenu[1].Function = gotoNextMenu;
 	MainMenu[1].childrenMenu = ParaAdjMenu;
 	
+	
+	MainMenu[3].Function = gotoCarParaReset;
 }
 
 /*

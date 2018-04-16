@@ -296,15 +296,15 @@ void SpeedKd_Set(void)
 * Note(s)    : 
 *********************************************************************************************************
 */
-void DirctionKp_Set(void)
+void DirectionKp_Set(void)
 {
 	static uint16_t cnt = 0;
 	static float kp_temp;
 	
 	if(cnt == 0)
 	{
-		MenuWindow.title = "Dirction Kp";
-		kp_temp = (Car.PID.DirctionKp);
+		MenuWindow.title = "Direction Kp";
+		kp_temp = (Car.PID.DirectionKp);
 		GUI_WindowsDraw(&MenuWindow);
 		GUI_DrawButton(&bt_add);
 		GUI_DrawButton(&bt_mines);
@@ -344,7 +344,7 @@ void DirctionKp_Set(void)
 	}
 	else if(key == KEY_OK_PRESS)
 	{
-		Car.PID.DirctionKp = kp_temp;
+		Car.PID.DirectionKp = kp_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
 		cnt = 0;
 		displayInit();
@@ -372,15 +372,15 @@ void DirctionKp_Set(void)
 * Note(s)    : 
 *********************************************************************************************************
 */
-void DirctionKi_Set(void)
+void DirectionKi_Set(void)
 {
 	static uint16_t cnt = 0;
 	static float ki_temp;
 	
 	if(cnt == 0)
 	{
-		MenuWindow.title = "Dirction Ki";
-		ki_temp = (Car.PID.DirctionKi);
+		MenuWindow.title = "Direction Ki";
+		ki_temp = (Car.PID.DirectionKi);
 		GUI_WindowsDraw(&MenuWindow);
 		GUI_DrawButton(&bt_add);
 		GUI_DrawButton(&bt_mines);
@@ -420,7 +420,7 @@ void DirctionKi_Set(void)
 	}
 	else if(key == KEY_OK_PRESS)
 	{
-		Car.PID.DirctionKi = ki_temp;
+		Car.PID.DirectionKi = ki_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
 		cnt = 0;
 		displayInit();
@@ -448,15 +448,15 @@ void DirctionKi_Set(void)
 * Note(s)    : 
 *********************************************************************************************************
 */
-void DirctionKd_Set(void)
+void DirectionKd_Set(void)
 {
 	static uint16_t cnt = 0;
 	static float kd_temp;
 	
 	if(cnt == 0)
 	{
-		MenuWindow.title = "Dirction Kd";
-		kd_temp = (Car.PID.DirctionKd);
+		MenuWindow.title = "Direction Kd";
+		kd_temp = (Car.PID.DirectionKd);
 		GUI_WindowsDraw(&MenuWindow);
 		GUI_DrawButton(&bt_add);
 		GUI_DrawButton(&bt_mines);
@@ -496,7 +496,7 @@ void DirctionKd_Set(void)
 	}
 	else if(key == KEY_OK_PRESS)
 	{
-		Car.PID.DirctionKd = kd_temp;
+		Car.PID.DirectionKd = kd_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
 		cnt = 0;
 		displayInit();
@@ -521,8 +521,8 @@ void PID_ParaSet(void)
 void Car_SetTarSpeed(void)
 {
 	static uint16_t cnt = 0;
-	static float speed;
-	
+	static float speed = 0;;
+
 	if(cnt == 0)
 	{
 		MenuWindow.title = "Set TargetSpped";
@@ -545,7 +545,7 @@ void Car_SetTarSpeed(void)
 		{
 			speed += 1;
 			bsp_tim_DelayMs(10);
-			oled_showNum(58,16,(uint32_t)(speed), 4,12,24);
+			oled_showNum(88,16,(speed), 2,12,24);
 			GUI_Refresh();
 		}
 	}
@@ -560,7 +560,7 @@ void Car_SetTarSpeed(void)
 		{
 			speed -= 1;
 			bsp_tim_DelayMs(10);
-			oled_showNum(58,16,(uint32_t)(speed), 4,12,24);
+			oled_showNum(88,16,(speed), 2,12,24);
 			GUI_Refresh();
 		}
 	}
@@ -569,6 +569,7 @@ void Car_SetTarSpeed(void)
 		Car.TargetSpeed = speed;
 
 		cnt = 0;
+		Car_ParaStore();
 		displayInit();
 		setShow_ui(MENU_UI);
 		Car_ControlStart();
@@ -578,7 +579,7 @@ void Car_SetTarSpeed(void)
 		GUI_Button_Selected(&bt_mines, 1);
 	}	
 	oled_showString(10,16,"Speed:",12,24);
-	oled_showNum(58,16,(uint32_t)(speed), 4,12,24);
+	oled_showNum(88,16,(speed), 2,12,24);
 }
 
 

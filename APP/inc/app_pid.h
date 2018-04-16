@@ -31,7 +31,7 @@
 typedef struct
 {
 	float SpeedKp, SpeedKi, SpeedKd;
-	float DirctionKp, DirctionKi, DirctionKd;
+	float DirectionKp, DirectionKi, DirectionKd;
 }PID_TypeDef;
 
 

@@ -36,6 +36,7 @@
 # include "app_sort.h"
 # include "app_filter.h"
 # include "FreescaleCar.h"
+# include "app_debug.h"
 
 extern uint16_t ADC_Value[SENSOR_COUNT];
 
@@ -62,7 +63,7 @@ void bsp_sensor_Config(void)
 	ADC_InitStruct.ADC_ClockSource = ADC_ClockSource_BusClock;
 	ADC_InitStruct.ADC_ContinuousConvMode = DISABLE;
 	ADC_InitStruct.ADC_IRQCmd = DISABLE;
-	ADC_InitStruct.ADC_Prescaler = ADC_Prescaler_Div4;
+	ADC_InitStruct.ADC_Prescaler = ADC_Prescaler_Div2;
 	ADC_InitStruct.ADC_RefSource = ADC_RefSource_VDD;
 	ADC_InitStruct.ADC_ScanConvMode = DISABLE;
 	drv_adc_Init(&ADC_InitStruct);
@@ -131,10 +132,8 @@ void bsp_sensor_DataCopy(uint16_t *dst, uint16_t *src, uint16_t length)
 void bsp_sensor_DataProcess(void)
 {	
 	uint8_t cnt = 0;
-		
-//	uint16_t ADC_ConvertedValue[SENSOR_COUNT] = {0};
+	float HAENor = 0, VAENor = 0;
 	
-//	drv_adc_GetMultiADCResult(ADC_ConvertedValue);
 	/*  循环处理每一个传感器的值  */
 	for(; cnt < SENSOR_COUNT; cnt ++)
 	{
@@ -161,8 +160,16 @@ void bsp_sensor_DataProcess(void)
 														(Car.Sensor[SENSOR_H_R].NormalizedValue + Car.Sensor[SENSOR_H_L].NormalizedValue));
 	
 	/*  计算垂直和比差,扩大100倍  */
-//	Car.VecticalAE = 100 * ((Car.Sensor[SENSOR_V_R].NormalizedValue - Car.Sensor[SENSOR_V_L].NormalizedValue) / 
-//														(Car.Sensor[SENSOR_V_R].NormalizedValue + Car.Sensor[SENSOR_V_L].NormalizedValue));
+	Car.VecticalAE = 100 * ((Car.Sensor[SENSOR_V_R].NormalizedValue - Car.Sensor[SENSOR_V_L].NormalizedValue) / 
+														(Car.Sensor[SENSOR_V_R].NormalizedValue + Car.Sensor[SENSOR_V_L].NormalizedValue));
+	
+	/*  水平和差比归一化  */
+	HAENor = (Car.HorizontalAE - Car.HorizontalAEMin)/(Car.HorizontalAEMax - Car.HorizontalAEMin);
+	
+	VAENor = (Car.VecticalAE - Car.VecticalAEMin) / (Car.VecticalAEMax - Car.VecticalAEMin);
+	
+	/*  计算和差比  */
+	Car.AE = 100 * (HAENor - VAENor)/(HAENor + VAENor);
 }
 
 /*
@@ -183,12 +190,21 @@ void bsp_sensor_Calibration(void)
 	uint16_t i = 0, j, cnt = 0;
 	
 //	uint16_t ADC_ValueTemp[SENSOR_COUNT];
-	uint16_t CalibrationValueTemp[SENSOR_COUNT * 2] = {0};
+	uint32_t CalibrationValueTemp[SENSOR_COUNT * 2 + 2] = {0};
+	
+	Car.HorizontalAEMax = 0;
+	Car.HorizontalAEMin = 0;
+	Car.VecticalAEMax = 0;
+	Car.VecticalAEMin = 0;
 	
 	oled_showString(0, 0, "Calibration...", 6, 12);
 	oled_showChar(100, 0, '%', 6, 12, 1);
 	oled_refreshGram();
 	
+	for(j = 0; i < SENSOR_COUNT * 4; i++)
+	{
+		CalibrationValueTemp[j] = 0;
+	}
 	/*  先假设最大最小值都为0  */
 	for(j = 0; j < SENSOR_COUNT; j++)
 	{
@@ -197,7 +213,7 @@ void bsp_sensor_Calibration(void)
 	}
 	
 	/*  平行移动车子,找出传感器的最大最小值  */
-	for(; i < 3000; i ++)
+	for(; i < 1000; i ++)
 	{
 		/*  获取传感器电压值  */
 //		drv_adc_GetMultiADCResult(ADC_ValueTemp);
@@ -237,21 +253,70 @@ void bsp_sensor_Calibration(void)
 		bsp_tim_DelayMs(5);
 	} /*  end of for  */
 	
+//	oled_showString(0, 12, "Calibration AE...", 6, 12);
+//	oled_showChar(118, 12, '%', 6, 12, 1);
+//	oled_refreshGram();
+//	
+//	for(i = 0; i < 1000; i++)
+//	{
+//		for(cnt = 0; cnt < SENSOR_COUNT; cnt ++)
+//		{
+//			switch(cnt)
+//			{
+//				case SENSOR_H_L: Car.Sensor[SENSOR_H_L].FIFO[Car.Sensor[SENSOR_H_L].Write++] = drv_adc_ConvOnce(ADC_Channel_F6, ADC_Resolution_8b);break;
+//				case SENSOR_H_R: Car.Sensor[SENSOR_H_R].FIFO[Car.Sensor[SENSOR_H_R].Write++] = drv_adc_ConvOnce(ADC_Channel_C3, ADC_Resolution_8b);break;
+//				case SENSOR_V_L: Car.Sensor[SENSOR_V_L].FIFO[Car.Sensor[SENSOR_V_L].Write++] = drv_adc_ConvOnce(ADC_Channel_F7, ADC_Resolution_8b);break;
+//				case SENSOR_V_R: Car.Sensor[SENSOR_V_R].FIFO[Car.Sensor[SENSOR_V_R].Write++] = drv_adc_ConvOnce(ADC_Channel_C2, ADC_Resolution_8b);break;
+//			}
+//	//		Car.Sensor[cnt].FIFO[Car.Sensor[cnt].Write++] = ADC_ConvertedValue[cnt];
+//			if(Car.Sensor[cnt].Write >= SENSOR_FIFO_SIZE) Car.Sensor[cnt].Write = 0;	/*  环形队列  */
+//			
+//			/*  滑动平均滤波器  */
+//			filter_SildingAverage(Car.Sensor[cnt].FIFO, &Car.Sensor[cnt].Average, SENSOR_FIFO_SIZE);	
+//			
+//			/*  归一化处理  */
+//			Car.Sensor[cnt].NormalizedValue = (float)(Car.Sensor[cnt].Average - Car.Sensor[cnt].CalibrationMin) / 
+//																					 (Car.Sensor[cnt].CalibrationMax - Car.Sensor[cnt].CalibrationMin);
+//		}
+//		
+//		/*  计算水平差比和,扩大100倍  */
+//		Car.HorizontalAE = 100 * ((Car.Sensor[SENSOR_H_R].NormalizedValue - Car.Sensor[SENSOR_H_L].NormalizedValue) / 
+//															(Car.Sensor[SENSOR_H_R].NormalizedValue + Car.Sensor[SENSOR_H_L].NormalizedValue));
+//		
+//		/*  计算垂直和比差,扩大100倍  */
+//		Car.VecticalAE = 100 * ((Car.Sensor[SENSOR_V_R].NormalizedValue - Car.Sensor[SENSOR_V_L].NormalizedValue) / 
+//															(Car.Sensor[SENSOR_V_R].NormalizedValue + Car.Sensor[SENSOR_V_L].NormalizedValue));
+//		
+//		if(Car.HorizontalAEMax < Car.HorizontalAE)Car.HorizontalAEMax = Car.HorizontalAE;
+//		if(Car.VecticalAEMax < Car.VecticalAE) Car.VecticalAEMax = Car.VecticalAE;
+//		
+//		cnt ++;
+//		if(cnt % 10 == 0) 
+//		{
+//			bsp_led_Toggle(0);	
+//			oled_refreshGram();
+//		}
+//		oled_showNum(102, 12, (i+1)/10, 3, 6, 12);
+//		bsp_tim_DelayMs(5);
+//	}
 	/*  先将各标定值暂存到缓存区,便于写入Flash  */
 	for(j = 0; j < SENSOR_COUNT; j ++)
 	{
-		CalibrationValueTemp[j] = Car.Sensor[j].CalibrationMax;
-		CalibrationValueTemp[j + SENSOR_COUNT] = Car.Sensor[j + SENSOR_COUNT].CalibrationMin;
+		CalibrationValueTemp[j * 2] = Car.Sensor[j].CalibrationMax;
+		CalibrationValueTemp[j * 2 + 1] = Car.Sensor[j].CalibrationMin;
 	}
 	
-	oled_showString(0, 12, "Calibration OK!", 6 ,12);
-	oled_showString(0, 24, "Saving...", 6, 12);
+//	CalibrationValueTemp[SENSOR_COUNT] = Car.HorizontalAEMax;
+//	CalibrationValueTemp[SENSOR_COUNT + 1] = Car.VecticalAEMax;
+	
+	oled_showString(0, 24, "Calibration OK!", 6 ,12);
+	oled_showString(0, 36, "Saving...", 6, 12);
 	oled_refreshGram();
 	bsp_tim_DelayMs(1000);
 	/*  保存标定最大值到FLASH  */
 	drv_flash_EraseSector(SENSOR_PARA_FLASH_ADDR);
-	drv_flash_WriteSector(SENSOR_PARA_FLASH_ADDR, (const uint8_t *)CalibrationValueTemp, SENSOR_COUNT * 4, 0);
-	oled_showString(0,36, "Saved!!", 6, 12);
+	drv_flash_WriteSector(SENSOR_PARA_FLASH_ADDR, (const uint8_t *)CalibrationValueTemp, SENSOR_COUNT * 8, 0);
+	oled_showString(0,48, "Saved!!", 6, 12);
 	oled_refreshGram();
 	bsp_tim_DelayMs(1000);
 }

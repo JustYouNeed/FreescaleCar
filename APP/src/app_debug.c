@@ -337,6 +337,9 @@ void debug_SensorDataReport(void)
 	Buff[cnt++] = BYTE2((int16_t)(Car.AE));
 	Buff[cnt++] = BYTE1((int16_t)(Car.AE));
 	
+	Buff[cnt++] = BYTE2(Car.Sensor[SENSOR_M].Average);
+	Buff[cnt++] = BYTE1(Car.Sensor[SENSOR_M].Average);
+	
 	debug_DataUpload(Buff,0xf2,cnt);
 }
 

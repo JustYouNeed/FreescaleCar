@@ -15,6 +15,7 @@ void bsp_Config(void)
 	bsp_motor_Config();			/*  电机控制初始化  */
 	bsp_encoder_Config();		/*  电机编码器初始化  */
 	bsp_sensor_Config();		/*  电磁传感器初始化  */
+//	bsp_bat_Config();
 	ENABLE_INT();						/*  开启中断  */
 }
 

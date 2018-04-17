@@ -1,12 +1,5 @@
-# include "app_debug.h"
 # include "FreescaleCar.h"
 # include "display.h"
-
-
-void ReadGryo(void)
-{
-	bsp_mpu_ReadGyro(&Car.MPU.Gryox, &Car.MPU.Gryoy, &Car.MPU.Gryoz);
-}
 
 /*
 *********************************************************************************************************
@@ -46,7 +39,7 @@ int main(void)
 	bsp_tim_CreateHardTimer(1, 1, Car_Control);
 	bsp_tim_CreateHardTimer(0,5, ReadGryo);
 	DRV_ENABLE();
-//	bsp_motor_SetPwm(200,200);
+//	bsp_motor_SetPwm(400,400);
 	setShow_ui(MAIN_UI);
 	while(1)
 	{

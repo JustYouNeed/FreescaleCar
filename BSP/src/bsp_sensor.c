@@ -32,13 +32,10 @@
   *                              INCLUDE FILES
   *******************************************************************************************************
 */
-# include "bsp_sensor.h"
 # include "app_sort.h"
 # include "app_filter.h"
 # include "FreescaleCar.h"
 # include "app_debug.h"
-
-extern uint16_t ADC_Value[SENSOR_COUNT];
 
 
 /*
@@ -58,7 +55,8 @@ void bsp_sensor_Config(void)
 {
 	ADC_InitTypeDef ADC_InitStruct;
 	
-	ADC_InitStruct.ADC_Channel = SENSOR_1 | SENSOR_2 | SENSOR_3 | SENSOR_4 | SENSOR_5 | SENSOR_6;
+	ADC_InitStruct.ADC_Channel = ADC_Channel_C2 | ADC_Channel_C3 | ADC_Channel_F6 | ADC_Channel_F7 | ADC_Channel_C0 | ADC_Channel_A1;
+//	ADC_InitStruct.ADC_Resolution = ADC_Resolution_8b;
 	ADC_InitStruct.ADC_ChannelCount = 1;
 	ADC_InitStruct.ADC_ClockSource = ADC_ClockSource_BusClock;
 	ADC_InitStruct.ADC_ContinuousConvMode = DISABLE;
@@ -116,6 +114,23 @@ void bsp_sensor_DataCopy(uint16_t *dst, uint16_t *src, uint16_t length)
 }
 
 
+uint16_t adc_once(void)
+{
+        //超频后，设置ADC的CLK为总线时钟/2
+        ADC->SC3 = (0
+                    | ADC_SC3_ADIV(1)           //分频系数
+                    | ADC_SC3_MODE(0x0)         //分辨率
+                    | ADC_SC3_ADICLK(0)         //使用总线时钟做为ADC得时钟源
+                    //| ADC_SC3_ADLSMP_MASK       //1：长采样时间  0：短采样时间   注释为0 长采样时间采集更稳定
+                    );
+    
+
+    ADC->SC1 = ADC_SC1_ADCH(8);       //启动转换
+    
+    while(!(ADC->SC1 & ADC_SC1_COCO_MASK)); //等待转换完成
+    return (ADC->R & ADC_R_ADR_MASK);       //返回结果
+}
+
 /*
 *********************************************************************************************************
 *                           bsp_sensor_DataProcess               
@@ -132,7 +147,6 @@ void bsp_sensor_DataCopy(uint16_t *dst, uint16_t *src, uint16_t length)
 void bsp_sensor_DataProcess(void)
 {	
 	uint8_t cnt = 0;
-	float HAENor = 0, VAENor = 0;
 	
 	/*  循环处理每一个传感器的值  */
 	for(; cnt < SENSOR_COUNT; cnt ++)
@@ -143,8 +157,8 @@ void bsp_sensor_DataProcess(void)
 			case SENSOR_H_R: Car.Sensor[SENSOR_H_R].FIFO[Car.Sensor[SENSOR_H_R].Write++] = drv_adc_ConvOnce(ADC_Channel_C3, ADC_Resolution_8b);break;
 			case SENSOR_V_L: Car.Sensor[SENSOR_V_L].FIFO[Car.Sensor[SENSOR_V_L].Write++] = drv_adc_ConvOnce(ADC_Channel_F7, ADC_Resolution_8b);break;
 			case SENSOR_V_R: Car.Sensor[SENSOR_V_R].FIFO[Car.Sensor[SENSOR_V_R].Write++] = drv_adc_ConvOnce(ADC_Channel_C2, ADC_Resolution_8b);break;
+			case SENSOR_M: Car.Sensor[SENSOR_M].FIFO[Car.Sensor[SENSOR_M].Write++] = adc_once();break;//drv_adc_ConvOnce(ADC_Channel_C0, ADC_Resolution_8b);break;
 		}
-//		Car.Sensor[cnt].FIFO[Car.Sensor[cnt].Write++] = ADC_ConvertedValue[cnt];
 		if(Car.Sensor[cnt].Write >= SENSOR_FIFO_SIZE) Car.Sensor[cnt].Write = 0;	/*  环形队列  */
 		
 		/*  滑动平均滤波器  */
@@ -163,13 +177,8 @@ void bsp_sensor_DataProcess(void)
 	Car.VecticalAE = 100 * ((Car.Sensor[SENSOR_V_R].NormalizedValue - Car.Sensor[SENSOR_V_L].NormalizedValue) / 
 														(Car.Sensor[SENSOR_V_R].NormalizedValue + Car.Sensor[SENSOR_V_L].NormalizedValue));
 	
-	/*  水平和差比归一化  */
-	HAENor = (Car.HorizontalAE - Car.HorizontalAEMin)/(Car.HorizontalAEMax - Car.HorizontalAEMin);
-	
-	VAENor = (Car.VecticalAE - Car.VecticalAEMin) / (Car.VecticalAEMax - Car.VecticalAEMin);
-	
 	/*  计算和差比  */
-	Car.AE = 100 * (HAENor - VAENor)/(HAENor + VAENor);
+	Car.AE = Car.HorizontalAE - Car.VecticalAE;
 }
 
 /*
@@ -189,19 +198,13 @@ void bsp_sensor_Calibration(void)
 {
 	uint16_t i = 0, j, cnt = 0;
 	
-//	uint16_t ADC_ValueTemp[SENSOR_COUNT];
-	uint32_t CalibrationValueTemp[SENSOR_COUNT * 2 + 2] = {0};
-	
-	Car.HorizontalAEMax = 0;
-	Car.HorizontalAEMin = 0;
-	Car.VecticalAEMax = 0;
-	Car.VecticalAEMin = 0;
-	
+	uint32_t CalibrationValueTemp[SENSOR_COUNT * 2] = {0};
+		
 	oled_showString(0, 0, "Calibration...", 6, 12);
 	oled_showChar(100, 0, '%', 6, 12, 1);
 	oled_refreshGram();
 	
-	for(j = 0; i < SENSOR_COUNT * 4; i++)
+	for(j = 0; i < SENSOR_COUNT * 2; i++)
 	{
 		CalibrationValueTemp[j] = 0;
 	}
@@ -213,21 +216,19 @@ void bsp_sensor_Calibration(void)
 	}
 	
 	/*  平行移动车子,找出传感器的最大最小值  */
-	for(; i < 1000; i ++)
+	for(; i < 3000; i ++)
 	{
-		/*  获取传感器电压值  */
-//		drv_adc_GetMultiADCResult(ADC_ValueTemp);
 		
 		/*  循环处理每一个传感器  */
 		for(j = 0; j < SENSOR_COUNT; j ++)
 		{
-//			Car.Sensor[j].FIFO[Car.Sensor[j].Write++] = ADC_ValueTemp[j];					/*  保存电压值  */
 			switch(j)
 			{
 				case SENSOR_H_L: Car.Sensor[SENSOR_H_L].FIFO[Car.Sensor[SENSOR_H_L].Write++] = drv_adc_ConvOnce(ADC_Channel_F6, ADC_Resolution_8b);break;
 				case SENSOR_H_R: Car.Sensor[SENSOR_H_R].FIFO[Car.Sensor[SENSOR_H_R].Write++] = drv_adc_ConvOnce(ADC_Channel_C3, ADC_Resolution_8b);break;
 				case SENSOR_V_L: Car.Sensor[SENSOR_V_L].FIFO[Car.Sensor[SENSOR_V_L].Write++] = drv_adc_ConvOnce(ADC_Channel_F7, ADC_Resolution_8b);break;
 				case SENSOR_V_R: Car.Sensor[SENSOR_V_R].FIFO[Car.Sensor[SENSOR_V_R].Write++] = drv_adc_ConvOnce(ADC_Channel_C2, ADC_Resolution_8b);break;
+				case SENSOR_M: Car.Sensor[SENSOR_M].FIFO[Car.Sensor[SENSOR_M].Write++] = drv_adc_ConvOnce(ADC_Channel_C0, ADC_Resolution_8b);break;
 			}
 			
 			if(Car.Sensor[j].Write >= SENSOR_FIFO_SIZE) Car.Sensor[j].Write = 0;	/*  环形队列  */
@@ -253,52 +254,6 @@ void bsp_sensor_Calibration(void)
 		bsp_tim_DelayMs(5);
 	} /*  end of for  */
 	
-//	oled_showString(0, 12, "Calibration AE...", 6, 12);
-//	oled_showChar(118, 12, '%', 6, 12, 1);
-//	oled_refreshGram();
-//	
-//	for(i = 0; i < 1000; i++)
-//	{
-//		for(cnt = 0; cnt < SENSOR_COUNT; cnt ++)
-//		{
-//			switch(cnt)
-//			{
-//				case SENSOR_H_L: Car.Sensor[SENSOR_H_L].FIFO[Car.Sensor[SENSOR_H_L].Write++] = drv_adc_ConvOnce(ADC_Channel_F6, ADC_Resolution_8b);break;
-//				case SENSOR_H_R: Car.Sensor[SENSOR_H_R].FIFO[Car.Sensor[SENSOR_H_R].Write++] = drv_adc_ConvOnce(ADC_Channel_C3, ADC_Resolution_8b);break;
-//				case SENSOR_V_L: Car.Sensor[SENSOR_V_L].FIFO[Car.Sensor[SENSOR_V_L].Write++] = drv_adc_ConvOnce(ADC_Channel_F7, ADC_Resolution_8b);break;
-//				case SENSOR_V_R: Car.Sensor[SENSOR_V_R].FIFO[Car.Sensor[SENSOR_V_R].Write++] = drv_adc_ConvOnce(ADC_Channel_C2, ADC_Resolution_8b);break;
-//			}
-//	//		Car.Sensor[cnt].FIFO[Car.Sensor[cnt].Write++] = ADC_ConvertedValue[cnt];
-//			if(Car.Sensor[cnt].Write >= SENSOR_FIFO_SIZE) Car.Sensor[cnt].Write = 0;	/*  环形队列  */
-//			
-//			/*  滑动平均滤波器  */
-//			filter_SildingAverage(Car.Sensor[cnt].FIFO, &Car.Sensor[cnt].Average, SENSOR_FIFO_SIZE);	
-//			
-//			/*  归一化处理  */
-//			Car.Sensor[cnt].NormalizedValue = (float)(Car.Sensor[cnt].Average - Car.Sensor[cnt].CalibrationMin) / 
-//																					 (Car.Sensor[cnt].CalibrationMax - Car.Sensor[cnt].CalibrationMin);
-//		}
-//		
-//		/*  计算水平差比和,扩大100倍  */
-//		Car.HorizontalAE = 100 * ((Car.Sensor[SENSOR_H_R].NormalizedValue - Car.Sensor[SENSOR_H_L].NormalizedValue) / 
-//															(Car.Sensor[SENSOR_H_R].NormalizedValue + Car.Sensor[SENSOR_H_L].NormalizedValue));
-//		
-//		/*  计算垂直和比差,扩大100倍  */
-//		Car.VecticalAE = 100 * ((Car.Sensor[SENSOR_V_R].NormalizedValue - Car.Sensor[SENSOR_V_L].NormalizedValue) / 
-//															(Car.Sensor[SENSOR_V_R].NormalizedValue + Car.Sensor[SENSOR_V_L].NormalizedValue));
-//		
-//		if(Car.HorizontalAEMax < Car.HorizontalAE)Car.HorizontalAEMax = Car.HorizontalAE;
-//		if(Car.VecticalAEMax < Car.VecticalAE) Car.VecticalAEMax = Car.VecticalAE;
-//		
-//		cnt ++;
-//		if(cnt % 10 == 0) 
-//		{
-//			bsp_led_Toggle(0);	
-//			oled_refreshGram();
-//		}
-//		oled_showNum(102, 12, (i+1)/10, 3, 6, 12);
-//		bsp_tim_DelayMs(5);
-//	}
 	/*  先将各标定值暂存到缓存区,便于写入Flash  */
 	for(j = 0; j < SENSOR_COUNT; j ++)
 	{
@@ -306,17 +261,15 @@ void bsp_sensor_Calibration(void)
 		CalibrationValueTemp[j * 2 + 1] = Car.Sensor[j].CalibrationMin;
 	}
 	
-//	CalibrationValueTemp[SENSOR_COUNT] = Car.HorizontalAEMax;
-//	CalibrationValueTemp[SENSOR_COUNT + 1] = Car.VecticalAEMax;
-	
-	oled_showString(0, 24, "Calibration OK!", 6 ,12);
-	oled_showString(0, 36, "Saving...", 6, 12);
+	oled_showString(0, 12, "Calibration OK!", 6 ,12);
+	oled_showString(0, 24, "Saving...", 6, 12);
 	oled_refreshGram();
 	bsp_tim_DelayMs(1000);
+	
 	/*  保存标定最大值到FLASH  */
 	drv_flash_EraseSector(SENSOR_PARA_FLASH_ADDR);
 	drv_flash_WriteSector(SENSOR_PARA_FLASH_ADDR, (const uint8_t *)CalibrationValueTemp, SENSOR_COUNT * 8, 0);
-	oled_showString(0,48, "Saved!!", 6, 12);
+	oled_showString(0,36, "Saved!!", 6, 12);
 	oled_refreshGram();
 	bsp_tim_DelayMs(1000);
 }

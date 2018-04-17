@@ -41,6 +41,7 @@ typedef enum
 	SENSOR_H_R,
 	SENSOR_V_L,
 	SENSOR_V_R,
+	SENSOR_M,
 	SENSOR_COUNT,
 }SENSOR_ID_EnumType;
 

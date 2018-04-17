@@ -1,32 +1,39 @@
 /**
   *******************************************************************************************************
-  * File Name: app.h
+  * File Name: bsp_battery.h
   * Author: Vector
   * Version: V1.0.0
-  * Date: 2018-4-18
-  * Brief: 
+  * Date: 2018-4-17
+  * Brief: 本文件提供了测量车子电池电量的功能
   *******************************************************************************************************
   * History
-  *
+  *		1.Author: Vector
+	*			Date: 2018-4-17
+	*			Mod: 建立本文件
   *
   *******************************************************************************************************
   */	
 
-# ifndef __APP_H
-# define __APP_H
+# ifndef __BSP_BATTERY_H
+# define __BSP_BATTERY_H
+
+
 /*
   *******************************************************************************************************
   *                              INCLUDE FILES
   *******************************************************************************************************
 */
-# include "app_debug.h"
-# include "app_filter.h"
-# include "app_debug.h"
-# include "app_sort.h"
-# include "app_pid.h"
+# include "drv.h"
 
+# define BAT_CHANNEL		ADC_Channel_A1
+# define BAT_FULL_VOL		8.0f
+# define BAT_LOW_VOL		6.8f
 
-void app_Config(void);
+# define R1 2.2f
+# define R2 2.0f
+
+void bsp_bat_Config(void);
+float bsp_bat_GetVol(void);
 
 # endif
 

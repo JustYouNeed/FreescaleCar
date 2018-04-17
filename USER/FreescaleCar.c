@@ -55,9 +55,9 @@ static uint16_t g_SpeedControlPeriod = 0;
 
 
 /*  小车速度环控制PWM输出  */
-static int16_t g_SpeedControlOutNew = 0;
-static int16_t g_SpeedControlOutOld = 0;
-static int16_t g_SpeedControlOut = 0;
+//static int16_t g_SpeedControlOutNew = 0;
+//static int16_t g_SpeedControlOutOld = 0;
+//static int16_t g_SpeedControlOut = 0;
 
 static int16_t g_LeftSpeedControlOutNew = 0;
 static int16_t g_LeftSpeedControlOutOld = 0;
@@ -135,22 +135,7 @@ void Car_ParaInit(void)
 		Car.Sensor[i].CalibrationMax = drv_flash_ReadSector(SENSOR_PARA_FLASH_ADDR, (i * 2) * 4, uint16_t);
 		Car.Sensor[i].CalibrationMin = drv_flash_ReadSector(SENSOR_PARA_FLASH_ADDR, (i * 2 +  1 ) * 4, uint16_t);
 	}
-	
-//	Car.HorizontalAEMax = drv_flash_ReadSector(SENSOR_PARA_FLASH_ADDR, SENSOR_COUNT * 8 , float);
-//	Car.VecticalAEMax = drv_flash_ReadSector(SENSOR_PARA_FLASH_ADDR, SENSOR_COUNT * 8 + 4, float);
-//	
-//	Car.Sensor[SENSOR_H_L].CalibrationMax = drv_flash_ReadSector(SENSOR_PARA_FLASH_ADDR, 0, uint16_t);
-//	Car.Sensor[SENSOR_H_L].CalibrationMin = 0;//drv_flash_ReadSector(SENSOR_PARA_FLASH_ADDR, 4, uint16_t);
-//	
-//	Car.Sensor[SENSOR_H_R].CalibrationMax = drv_flash_ReadSector(SENSOR_PARA_FLASH_ADDR, 8, uint16_t);
-//	Car.Sensor[SENSOR_H_R].CalibrationMin = 0;//drv_flash_ReadSector(SENSOR_PARA_FLASH_ADDR, 12, uint16_t);
-//	
-//	Car.Sensor[SENSOR_V_L].CalibrationMax = drv_flash_ReadSector(SENSOR_PARA_FLASH_ADDR, 16, uint16_t);
-//	Car.Sensor[SENSOR_V_L].CalibrationMin = 0;//drv_flash_ReadSector(SENSOR_PARA_FLASH_ADDR, 20, uint16_t);
-//	
-//	Car.Sensor[SENSOR_V_R].CalibrationMax = drv_flash_ReadSector(SENSOR_PARA_FLASH_ADDR, 24, uint16_t);
-//	Car.Sensor[SENSOR_V_R].CalibrationMin = 0;//drv_flash_ReadSector(SENSOR_PARA_FLASH_ADDR, 28, uint16_t);
-	
+		
 
 	/*  电机控制参数初始化  */
 	Car.Motor.PWM_Frequency = 10;	/*  电机PWM频率为10KHz  */
@@ -164,18 +149,11 @@ void Car_ParaInit(void)
 	
 	/*  小车目标速度  */
 	Car.TargetSpeed = 25;//drv_flash_ReadSector(CAR_PARA_FLASH_ADDR, 0, float);
-	Car.LeftTargetSpeed = 25;//drv_flash_ReadSector(CAR_PARA_FLASH_ADDR, 4, float);
-	Car.RightTargetSpeed = 25;//drv_flash_ReadSector(CAR_PARA_FLASH_ADDR, 8, float);
-	
-	/*  小车初始道路为直道  */
-	Car.NowRoad = Road_Straight;
-	
-	/*  小车开始未丢线  */
-	Car.LossLine = LostLine_None;
-	
+	Car.LeftTargetSpeed = 10;//drv_flash_ReadSector(CAR_PARA_FLASH_ADDR, 4, float);
+	Car.RightTargetSpeed = 10;//drv_flash_ReadSector(CAR_PARA_FLASH_ADDR, 8, float);
+		
 	Car.MaxPWM = 800;
 	
-	Car.Running = 1;
 }
 
 /*
@@ -510,13 +488,19 @@ void Car_DirectionControl(void)
 	int16_t KdGryozOut = 0;
 	static float k = 0.3f;
 	
+
+	
 	/*  如果右边的电感归一化值大于左边的电感,说明车子在右转  */
 //	if(Car.Sensor[SENSOR_H_R].NormalizedValue - Car.Sensor[SENSOR_H_L].NormalizedValue >=20) g_CarLastDirection = 1;
 
 //	/*  车子在左转  */
 //	if(Car.Sensor[SENSOR_H_L].NormalizedValue - Car.Sensor[SENSOR_H_R].NormalizedValue >=20) g_CarLastDirection = 0;
 	
-	Error = Car.HorizontalAE - LastError;		/*  计算当前微分量  */
+
+	
+
+	Error = Car.HorizontalAE - LastError;
+
 	
 //	if(Car.LeftTargetSpeed == 25)
 //	{
@@ -545,7 +529,12 @@ void Car_DirectionControl(void)
 		
 	
 	KdOutLast = KdOutNow;		/*  由于采用不完全微分,所以需要保存上一时刻的微分  */
-	KpOut = Car.HorizontalAE * Kp;		/*  转向环的比例  */
+	
+	
+
+	
+
+		KpOut = (Car.HorizontalAE - 0) * Kp;		/*  转向环的比例  */
 	KdOutNow = Error * Kd;				/*  转向环的微分  */
 	KdGryozOut = g_GryoZ_Kd * (Car.MPU.Gryoz - MPU_GRYOZ_ZERO);		/*  采用陀螺仪的角速度进行补偿,抵制转向  */
 		
@@ -602,6 +591,8 @@ void Car_DirectionControlOutput(void)
 void Car_MotorOutput(void)
 {
 	int16_t LeftPwm = 0, RightPwm = 0;
+		static uint8_t firstFlag = 0, secondFlag = 0, thirdFlag = 0;
+	static uint32_t firstTime = 0, secondTime = 0, thirdTime = 0, circle = 0, circlecnt = 0, flag = 0;
 	
 	/*  将速度环和转向环的PWM叠加起来  */
 	LeftPwm = (int16_t)(g_LeftSpeedControlOut + g_DirectionControlOut);
@@ -620,66 +611,45 @@ void Car_MotorOutput(void)
 	Car.Motor.LeftPwm = LeftPwm;
 	Car.Motor.RightPwm = RightPwm;
 		
+	
+//	if(Car.Sensor[SENSOR_M].Average == 110) 
+//	{
+//		firstFlag ++;
+//		firstTime = bsp_tim_GetRunTime();
+//	}
+//	
+//	if(Car.Sensor[SENSOR_M].Average == 118 && firstFlag > 2)
+//	{
+//		secondTime = bsp_tim_GetRunTime();
+//		secondFlag ++;
+//		//if(secondTime - firstTime > 100)
+//	}
+//		if(Car.Sensor[SENSOR_M].Average == 110 && secondFlag > 2)
+//	{
+//		bsp_led_ON(1);
+//		thirdFlag = 1;
+//		thirdTime = bsp_tim_GetRunTime();
+
+//			firstFlag = 0;
+//			secondFlag = 0;
+//	}
+
+	if(Car.Sensor[SENSOR_H_L].Average > 110 && Car.Sensor[SENSOR_H_R].Average > 110 && Car.Sensor[SENSOR_M].Average > 110)
+	{
+//		
+			bsp_motor_SetPwm(300, 400);
+//		bsp_tim_DelayMs(100);
+		for(circle=0;circle < 2000; circle++)
+		{
+			for(circlecnt = 0; circlecnt < 5000; circlecnt++);
+		}
+	}
+	else
+		bsp_motor_SetPwm(Car.Motor.LeftPwm, Car.Motor.RightPwm);
 	/*  输出到电机  */
-	bsp_motor_SetPwm(Car.Motor.LeftPwm, Car.Motor.RightPwm);
+		
 }
 
-
-
-//void Car_RoadDetect(void)
-//{
-//	uint8_t TurnDirection = 0;
-//	
-//	/*  左右两边的电感值差,说明进入弯道了,进行减速,采用弯道PID  */
-//	if(Car.Sensor[SENSOR_H_L].Average - Car.Sensor[SENSOR_H_R].Average > 10 || 
-//		 Car.Sensor[SENSOR_H_R].Average - Car.Sensor[SENSOR_H_L].Average > 10)
-//	{
-//		Car.TargetSpeed = CURVE_SPEED_LOW;
-//		Car.PID.DirectionKp = BIG_CURVE_KP;
-//		Car.PID.DirectionKd = BIG_CURVE_KD;
-//	}
-//	
-//	/*  两边的电感值都处于中线的附近  */
-//	if(Car.Sensor[SENSOR_H_L].Average > 90 && Car.Sensor[SENSOR_H_R].Average > 90)
-//	{
-//		/*  如果有偏差,则累积偏差,该值越小,则说明偏离中线越大  */
-//		if(Car.HorizontalAE < 20)
-//			g_LossLineCounter++;
-//		else
-//			g_LossLineCounter = 0;
-//		
-//		/*  计数器值很小,说明已经丢线,降速  */
-//		if(g_LossLineCounter < 5)
-//		{
-//			Car.TargetSpeed = g_CarCurveSpeedLow;
-//			Car.PID.DirectionKp = STRAIGHT_KP;
-//			Car.PID.DirectionKd = STRAIGHT_KD;
-//		}
-//		else if(g_LossLineCounter > 5 && g_LossLineCounter < 30)	/*  偏离中线较大  */
-//		{
-//			Car.TargetSpeed = g_CarCurveSpeedLow;
-//			Car.PID.DirectionKp = BIG_CURVE_KP;
-//			Car.PID.DirectionKd = BIG_CURVE_KD;
-//		}
-//		else if(g_LossLineCounter > 30 && g_LossLineCounter < 50)	/*  偏离中线不是很多  */
-//		{
-//			Car.TargetSpeed = g_CarCurveSpeedHigh;
-//			Car.PID.DirectionKp = SMALL_CURVE_KP;
-//			Car.PID.DirectionKd = SMALL_CURVE_KD;
-//		}else if(g_LossLineCounter > 50 && g_LossLineCounter < 60)	/*  有偏离,但是很小  */
-//		{
-//			Car.TargetSpeed = g_CarStraightSpeed;
-//			Car.PID.DirectionKp = STRAIGHT_KP;
-//			Car.PID.DirectionKd = STRAIGHT_KD;
-//		}
-//		else 		/*  没有偏离中线  */
-//		{
-//			Car.TargetSpeed = g_CarStraightSpeed;
-//			Car.PID.DirectionKp = STRAIGHT_KP;
-//			Car.PID.DirectionKd = STRAIGHT_KD;
-//		}
-//	}
-//}
 
 /*
 *********************************************************************************************************
@@ -696,6 +666,7 @@ void Car_MotorOutput(void)
 */
 void Car_Control(void)
 {
+	static uint16_t circle = 0;
 	static uint16_t CarControlCunter = 0;	
 	
 	/*  控制计数器  */
@@ -708,66 +679,6 @@ void Car_Control(void)
 	/*  方向控制输出  */
 	g_DirectionControlPeriod++;
 	Car_DirectionControlOutput();
-	
-	if(g_OutCounter > 2)		/*  车子冲出跑道后设置目标速度为0,同时关闭转向环输出,以便快速停车  */
-	{
-		bsp_motor_SetPwm(0,0);
-//		Car.TargetSpeed = 0;
-		Car.LeftTargetSpeed = 0;
-		Car.RightTargetSpeed = 0;
-		g_DirectionControlOut = 0;
-		g_DirciotnControlOutOld = 0;
-		g_DirectionControlOutNew = 0;
-		Car.PID.DirectionKd = 0;
-		Car.PID.DirectionKp = 0;
-		return;
-	}
-	else
-	{
-		if((Car.Sensor[SENSOR_H_L].Average - Car.Sensor[SENSOR_H_R].Average) > 15)
-		{
-			g_LeftCurveFlag++;
-			if(g_LeftCurveFlag < 15)
-			{
-				Car.TargetSpeed = 10;
-				Car.LeftTargetSpeed = 5;
-				Car.RightTargetSpeed =70;
-			}else 
-			{
-				Car.TargetSpeed = 25;
-				Car.LeftTargetSpeed = 25;
-				Car.RightTargetSpeed = 35;
-			}
-			g_StaightFlag = 0; 
-		}else if((Car.Sensor[SENSOR_H_R].Average - Car.Sensor[SENSOR_H_L].Average) > 15)
-		{
-			g_RightCurveFlag++;
-			if(g_RightCurveFlag < 15)
-			{
-				Car.TargetSpeed = 10;
-				Car.LeftTargetSpeed = 5;
-				Car.RightTargetSpeed =10;
-			}else 
-			{
-				Car.TargetSpeed = 25;
-				Car.LeftTargetSpeed = 35;
-				Car.RightTargetSpeed = 25;
-			}
-			g_StaightFlag = 0; 
-		}
-		else		/*  直道计数,当该值大于一个阈值的时候才认为是直道  */
-		{
-			g_StaightFlag ++;
-			g_LeftCurveFlag = 0;
-			g_RightCurveFlag = 0;
-			if(g_StaightFlag > 3)
-			{
-				Car.TargetSpeed = 45;
-				Car.LeftTargetSpeed = 40;
-				Car.RightTargetSpeed = 40;
-			}
-		}
-	}
 	
 	/*  控制状态机  */
 	switch(CarControlCunter)

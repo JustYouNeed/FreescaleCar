@@ -77,3 +77,4 @@
 .\objects\bsp.o: ..\BSP\inc\bsp.h
 .\objects\bsp.o: ..\MPU\inc\inv_mpu.h
 .\objects\bsp.o: ..\MPU\inc\inv_mpu_dmp_motion_driver.h
+.\objects\bsp.o: ..\BSP\inc\bsp_battery.h

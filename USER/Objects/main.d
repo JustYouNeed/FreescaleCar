@@ -1,5 +1,5 @@
 .\objects\main.o: main.c
-.\objects\main.o: ..\APP\inc\app_debug.h
+.\objects\main.o: FreescaleCar.h
 .\objects\main.o: ..\BSP\inc\bsp.h
 .\objects\main.o: ..\BSP\inc\bsp_led.h
 .\objects\main.o: ..\USER\derivative.h
@@ -78,6 +78,10 @@
 .\objects\main.o: ..\BSP\inc\bsp.h
 .\objects\main.o: ..\MPU\inc\inv_mpu.h
 .\objects\main.o: ..\MPU\inc\inv_mpu_dmp_motion_driver.h
-.\objects\main.o: FreescaleCar.h
+.\objects\main.o: ..\BSP\inc\bsp_battery.h
+.\objects\main.o: ..\APP\inc\app.h
+.\objects\main.o: ..\APP\inc\app_debug.h
+.\objects\main.o: ..\APP\inc\app_filter.h
+.\objects\main.o: ..\APP\inc\app_sort.h
 .\objects\main.o: ..\APP\inc\app_pid.h
 .\objects\main.o: ..\GUI_APP\inc\display.h

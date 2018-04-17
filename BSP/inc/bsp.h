@@ -12,6 +12,7 @@
 # include "bsp_sensor.h"
 # include "bsp_switch.h"
 # include "bsp_mpu.h"
+# include "bsp_battery.h"
 
 # define PID_PARA_FLASH_ADDR			254
 # define PID_PARA_LENGTH					60

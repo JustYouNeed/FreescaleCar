@@ -145,7 +145,7 @@ uint8_t bsp_mpu_ReadAcc(short* ax, short*ay, short*az);
 
 void bsp_mpu_DataProcess(void);
 
-
+void ReadGryo(void);
 # endif
 
 

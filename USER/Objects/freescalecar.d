@@ -78,5 +78,9 @@
 .\objects\freescalecar.o: ..\BSP\inc\bsp.h
 .\objects\freescalecar.o: ..\MPU\inc\inv_mpu.h
 .\objects\freescalecar.o: ..\MPU\inc\inv_mpu_dmp_motion_driver.h
-.\objects\freescalecar.o: ..\APP\inc\app_pid.h
+.\objects\freescalecar.o: ..\BSP\inc\bsp_battery.h
+.\objects\freescalecar.o: ..\APP\inc\app.h
 .\objects\freescalecar.o: ..\APP\inc\app_debug.h
+.\objects\freescalecar.o: ..\APP\inc\app_filter.h
+.\objects\freescalecar.o: ..\APP\inc\app_sort.h
+.\objects\freescalecar.o: ..\APP\inc\app_pid.h

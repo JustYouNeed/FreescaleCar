@@ -78,4 +78,9 @@
 .\objects\app_pid.o: ..\BSP\inc\bsp.h
 .\objects\app_pid.o: ..\MPU\inc\inv_mpu.h
 .\objects\app_pid.o: ..\MPU\inc\inv_mpu_dmp_motion_driver.h
+.\objects\app_pid.o: ..\BSP\inc\bsp_battery.h
 .\objects\app_pid.o: ..\USER\FreescaleCar.h
+.\objects\app_pid.o: ..\APP\inc\app.h
+.\objects\app_pid.o: ..\APP\inc\app_debug.h
+.\objects\app_pid.o: ..\APP\inc\app_filter.h
+.\objects\app_pid.o: ..\APP\inc\app_sort.h

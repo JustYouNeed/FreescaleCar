@@ -164,7 +164,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name>HR?P踱wHR?</Name>
+          <Name>/</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -208,7 +208,7 @@
           <Type>0</Type>
           <LineNumber>569</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>4664</Address>
+          <Address>5194</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -222,18 +222,18 @@
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>149</LineNumber>
+          <LineNumber>303</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>4162</Address>
+          <Address>16798</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>E:\瀛︿範璧勬枡\姣旇禌\椋炴€濆崱灏旀櫤鑳借溅澶ц禌\鐢电涓夎疆缁?绋嬪簭\Freescale\USER\FreescaleCar.c</Filename>
+          <Filename>E:\瀛︿範璧勬枡\姣旇禌\椋炴€濆崱灏旀櫤鑳借溅澶ц禌\鐢电涓夎疆缁?绋嬪簭\Freescale\BSP\src\bsp_sensor.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\FreescaleCar\FreescaleCar.c\149</Expression>
+          <Expression>\\FreescaleCar\../BSP/src/bsp_sensor.c\303</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -257,12 +257,17 @@
           <WinNumber>1</WinNumber>
           <ItemText>speed</ItemText>
         </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>\\FreescaleCar\FreescaleCar.c\Car.HorizontalAEMax</ItemText>
+        </Ww>
       </WatchWindow1>
       <MemoryWindow1>
         <Mm>
           <WinNumber>1</WinNumber>
           <SubType>0</SubType>
-          <ItemText>0x01f800</ItemText>
+          <ItemText>0x01fa00</ItemText>
           <AccSizeX>0</AccSizeX>
         </Mm>
       </MemoryWindow1>
@@ -558,7 +563,7 @@
 
   <Group>
     <GroupName>BSP</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

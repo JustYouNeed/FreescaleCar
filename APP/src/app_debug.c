@@ -242,7 +242,7 @@ void debug_PIDParaReport(void)
 	Buff[8] = BYTE2(temp);
 	Buff[9] = BYTE1(temp);
 	
-	temp = (short)(Car.PID.SpeedKd * ANO_PID_TRAN_FAC_D);
+	temp = (short)(Car.PID.SpeedKd * 100);
 	Buff[10] = BYTE2(temp);
 	Buff[11] = BYTE1(temp);
 	
@@ -286,7 +286,7 @@ void debug_PIDDownload(void)
 	cnt += 2;
 	Car.PID.SpeedKi = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / 10;
 	cnt += 2;
-	Car.PID.SpeedKd = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float)/10;
+	Car.PID.SpeedKd = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float)/100;
 	cnt += 2;
 
 	pid_StorePara();	/*  将PID参数保存到Flash中  */
@@ -380,11 +380,11 @@ void debug_MotorDataReport(void)
 	SendBuff[cnt++] = BYTE2(Car.Motor.RightEncoder);
 	SendBuff[cnt++] = BYTE1(Car.Motor.RightEncoder);
 	
-	SendBuff[cnt++] = BYTE2((int)(Car.Motor.LeftSpeed*10));
-	SendBuff[cnt++] = BYTE1((int)(Car.Motor.LeftSpeed*10));
+	SendBuff[cnt++] = BYTE2((int16_t)(Car.Motor.LeftSpeed*10));
+	SendBuff[cnt++] = BYTE1((int16_t)(Car.Motor.LeftSpeed*10));
 	
-	SendBuff[cnt++] = BYTE2((int)(Car.Motor.RightSpeed*10));
-	SendBuff[cnt++] = BYTE1((int)(Car.Motor.RightSpeed*10));
+	SendBuff[cnt++] = BYTE2((int16_t)(Car.Motor.RightSpeed*10));
+	SendBuff[cnt++] = BYTE1((int16_t)(Car.Motor.RightSpeed*10));
 	
 	debug_DataUpload(SendBuff, 0xf1, cnt);
 }

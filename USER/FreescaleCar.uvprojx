@@ -554,6 +554,16 @@
               <FileType>1</FileType>
               <FilePath>..\BSP\src\bsp_i2c.c</FilePath>
             </File>
+            <File>
+              <FileName>bsp_battery.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\bsp_battery.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_beep.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\bsp_beep.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

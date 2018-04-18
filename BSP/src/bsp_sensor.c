@@ -55,7 +55,7 @@ void bsp_sensor_Config(void)
 {
 	ADC_InitTypeDef ADC_InitStruct;
 	
-	ADC_InitStruct.ADC_Channel = ADC_Channel_C2 | ADC_Channel_C3 | ADC_Channel_F6 | ADC_Channel_F7 | ADC_Channel_C0 | ADC_Channel_A1;
+	ADC_InitStruct.ADC_Channel = ADC_Channel_C2 | ADC_Channel_C3 | ADC_Channel_F6 | ADC_Channel_F7 | ADC_Channel_C0;
 //	ADC_InitStruct.ADC_Resolution = ADC_Resolution_8b;
 	ADC_InitStruct.ADC_ChannelCount = 1;
 	ADC_InitStruct.ADC_ClockSource = ADC_ClockSource_BusClock;
@@ -114,7 +114,7 @@ void bsp_sensor_DataCopy(uint16_t *dst, uint16_t *src, uint16_t length)
 }
 
 
-uint16_t adc_once(void)
+uint16_t adc_once(uint8_t channel)
 {
         //超频后，设置ADC的CLK为总线时钟/2
         ADC->SC3 = (0
@@ -125,7 +125,7 @@ uint16_t adc_once(void)
                     );
     
 
-    ADC->SC1 = ADC_SC1_ADCH(8);       //启动转换
+    ADC->SC1 = ADC_SC1_ADCH(channel);       //启动转换
     
     while(!(ADC->SC1 & ADC_SC1_COCO_MASK)); //等待转换完成
     return (ADC->R & ADC_R_ADR_MASK);       //返回结果
@@ -144,9 +144,11 @@ uint16_t adc_once(void)
 * Note(s)    : 该函数应该周期性调用
 *********************************************************************************************************
 */
+extern uint16_t g_CircleSpeedError;
 void bsp_sensor_DataProcess(void)
 {	
 	uint8_t cnt = 0;
+	static uint8_t flag = 0, first = 0;
 	
 	/*  循环处理每一个传感器的值  */
 	for(; cnt < SENSOR_COUNT; cnt ++)
@@ -157,7 +159,7 @@ void bsp_sensor_DataProcess(void)
 			case SENSOR_H_R: Car.Sensor[SENSOR_H_R].FIFO[Car.Sensor[SENSOR_H_R].Write++] = drv_adc_ConvOnce(ADC_Channel_C3, ADC_Resolution_8b);break;
 			case SENSOR_V_L: Car.Sensor[SENSOR_V_L].FIFO[Car.Sensor[SENSOR_V_L].Write++] = drv_adc_ConvOnce(ADC_Channel_F7, ADC_Resolution_8b);break;
 			case SENSOR_V_R: Car.Sensor[SENSOR_V_R].FIFO[Car.Sensor[SENSOR_V_R].Write++] = drv_adc_ConvOnce(ADC_Channel_C2, ADC_Resolution_8b);break;
-			case SENSOR_M: Car.Sensor[SENSOR_M].FIFO[Car.Sensor[SENSOR_M].Write++] = adc_once();break;//drv_adc_ConvOnce(ADC_Channel_C0, ADC_Resolution_8b);break;
+			case SENSOR_M: Car.Sensor[SENSOR_M].FIFO[Car.Sensor[SENSOR_M].Write++] = adc_once(8);break;//drv_adc_ConvOnce(ADC_Channel_C0, ADC_Resolution_8b);break;
 		}
 		if(Car.Sensor[cnt].Write >= SENSOR_FIFO_SIZE) Car.Sensor[cnt].Write = 0;	/*  环形队列  */
 		
@@ -169,16 +171,64 @@ void bsp_sensor_DataProcess(void)
 																				 (Car.Sensor[cnt].CalibrationMax - Car.Sensor[cnt].CalibrationMin);
 	}
 	
-	/*  计算水平差比和,扩大100倍  */
-	Car.HorizontalAE = 100 * ((Car.Sensor[SENSOR_H_R].NormalizedValue - Car.Sensor[SENSOR_H_L].NormalizedValue) / 
-														(Car.Sensor[SENSOR_H_R].NormalizedValue + Car.Sensor[SENSOR_H_L].NormalizedValue));
-	
-	/*  计算垂直和比差,扩大100倍  */
-	Car.VecticalAE = 100 * ((Car.Sensor[SENSOR_V_R].NormalizedValue - Car.Sensor[SENSOR_V_L].NormalizedValue) / 
-														(Car.Sensor[SENSOR_V_R].NormalizedValue + Car.Sensor[SENSOR_V_L].NormalizedValue));
-	
+//	if(Car.Sensor[SENSOR_H_L].Average - Car.Sensor[SENSOR_H_R].Average > 60)
+//	{
+//		/*  计算水平差比和,扩大100倍  */
+//		Car.HorizontalAE = 100 * ((Car.Sensor[SENSOR_H_R].NormalizedValue - Car.Sensor[SENSOR_H_L].NormalizedValue) / 
+//															(Car.Sensor[SENSOR_H_R].NormalizedValue + Car.Sensor[SENSOR_H_L].NormalizedValue)) + 20;
+//		
+//		/*  计算垂直和比差,扩大100倍  */
+//		Car.VecticalAE = 100 * ((Car.Sensor[SENSOR_V_R].NormalizedValue - Car.Sensor[SENSOR_V_L].NormalizedValue) / 
+//															(Car.Sensor[SENSOR_V_R].NormalizedValue + Car.Sensor[SENSOR_V_L].NormalizedValue)) + 20;
+//	}else if(Car.Sensor[SENSOR_H_R].Average - Car.Sensor[SENSOR_H_L].Average > 60)
+//	{		
+//		/*  计算水平差比和,扩大100倍  */
+//		Car.HorizontalAE = 100 * ((Car.Sensor[SENSOR_H_R].NormalizedValue - Car.Sensor[SENSOR_H_L].NormalizedValue) / 
+//															(Car.Sensor[SENSOR_H_R].NormalizedValue + Car.Sensor[SENSOR_H_L].NormalizedValue)) - 20;
+//		
+//		/*  计算垂直和比差,扩大100倍  */
+//		Car.VecticalAE = 100 * ((Car.Sensor[SENSOR_V_R].NormalizedValue - Car.Sensor[SENSOR_V_L].NormalizedValue) / 
+//															(Car.Sensor[SENSOR_V_R].NormalizedValue + Car.Sensor[SENSOR_V_L].NormalizedValue)) - 20;
+//		
+//	}
+//	else
+//	{
+				/*  计算水平差比和,扩大100倍  */
+		Car.HorizontalAE = 100 * ((Car.Sensor[SENSOR_H_R].NormalizedValue - Car.Sensor[SENSOR_H_L].NormalizedValue) / 
+															(Car.Sensor[SENSOR_H_R].NormalizedValue + Car.Sensor[SENSOR_H_L].NormalizedValue)) + 0;
+		
+		/*  计算垂直和比差,扩大100倍  */
+		Car.VecticalAE = 100 * ((Car.Sensor[SENSOR_V_R].NormalizedValue - Car.Sensor[SENSOR_V_L].NormalizedValue) / 
+															(Car.Sensor[SENSOR_V_R].NormalizedValue + Car.Sensor[SENSOR_V_L].NormalizedValue)) + 0;
+//	}
 	/*  计算和差比  */
 	Car.AE = Car.HorizontalAE - Car.VecticalAE;
+	
+	if(Car.Sensor[SENSOR_M].Average > 105) 
+	{
+		flag = 70;
+		first = 1;
+		bsp_beep_ON();
+		g_CircleSpeedError += 60;
+	}
+	else 
+	{
+		g_CircleSpeedError = 0;
+//	
+	}
+	
+	if(flag>0)
+	{
+		flag -- ;
+		Car.HorizontalAE = 100 * ((Car.Sensor[SENSOR_H_R].NormalizedValue - Car.Sensor[SENSOR_H_L].NormalizedValue) / 
+															(Car.Sensor[SENSOR_H_R].NormalizedValue + Car.Sensor[SENSOR_H_L].NormalizedValue)) - 50;
+		
+		/*  计算垂直和比差,扩大100倍  */
+		Car.VecticalAE = 100 * ((Car.Sensor[SENSOR_V_R].NormalizedValue - Car.Sensor[SENSOR_V_L].NormalizedValue) / 
+															(Car.Sensor[SENSOR_V_R].NormalizedValue + Car.Sensor[SENSOR_V_L].NormalizedValue)) - 50;
+	}
+	else
+			bsp_beep_OFF();
 }
 
 /*

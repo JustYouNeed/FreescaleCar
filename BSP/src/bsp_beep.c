@@ -1,9 +1,9 @@
 /**
   *******************************************************************************************************
-  * File Name: 
-  * Author: 
-  * Version: 
-  * Date: 
+  * File Name: bsp_beep.h
+  * Author: Vector
+  * Version: V1.0.0
+  * Date: 2018-4-18
   * Brief: 
   *******************************************************************************************************
   * History
@@ -12,15 +12,12 @@
   *******************************************************************************************************
   */	
 
-
 /*
   *******************************************************************************************************
   *                              INCLUDE FILES
   *******************************************************************************************************
 */
-
-# include "bsp_battery.h"
-
+# include "bsp_beep.h"
 
 /*
 *********************************************************************************************************
@@ -35,23 +32,22 @@
 * Note(s)    : 
 *********************************************************************************************************
 */
-void bsp_bat_Config(void)
+void bsp_beep_Config(void)
 {
-	ADC_InitTypeDef ADC_InitStruct;
+	GPIO_InitTypeDef GPIO_InitStruct;
 	
-	ADC_InitStruct.ADC_Channel = BAT_CHANNEL;
-	ADC_InitStruct.ADC_Resolution = ADC_Resolution_8b;
-	ADC_InitStruct.ADC_ChannelCount = 1;
-	ADC_InitStruct.ADC_ClockSource = ADC_ClockSource_BusClock;
-	ADC_InitStruct.ADC_ContinuousConvMode = DISABLE;
-	ADC_InitStruct.ADC_IRQCmd = DISABLE;
-	ADC_InitStruct.ADC_Prescaler = ADC_Prescaler_Div2;
-	ADC_InitStruct.ADC_RefSource = ADC_RefSource_VDD;
-	ADC_InitStruct.ADC_ScanConvMode = DISABLE;
-	drv_adc_Init(&ADC_InitStruct);
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_B0;
+	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
+	GPIO_InitStruct.GPIO_PuPd = ENABLE;
+	drv_gpio_Init(&GPIO_InitStruct);
+	
+	drv_gpio_WritePin(GPIO_Pin_B0, GPIO_PIN_SET);
+	
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_B1;
+	drv_gpio_Init(&GPIO_InitStruct);
+	bsp_beep_OFF();
 }
 
-extern uint16_t adc_once(uint8_t channel);
 /*
 *********************************************************************************************************
 *                                          
@@ -65,16 +61,26 @@ extern uint16_t adc_once(uint8_t channel);
 * Note(s)    : 
 *********************************************************************************************************
 */
-float bsp_bat_GetVol(void)
+void bsp_beep_ON(void)
 {
-	uint8_t adc = 0;
-	float vol = 0.0f;
-	
-//	adc = adc_once(1);
-	adc = drv_adc_ConvOnce(BAT_CHANNEL, ADC_Resolution_8b);
-	vol = (adc* 5.0f/ 255) / (R2 / (R1 + R2)) ;
-	
-	return vol;
+	drv_gpio_WritePin(BEEP_PIN, GPIO_PIN_RESET);
 }
 
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
+void bsp_beep_OFF(void)
+{
+	drv_gpio_WritePin(BEEP_PIN, GPIO_PIN_SET);
+}
 /********************************************  END OF FILE  *******************************************/

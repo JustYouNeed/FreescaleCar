@@ -79,3 +79,4 @@
 .\objects\app_sort.o: ..\MPU\inc\inv_mpu.h
 .\objects\app_sort.o: ..\MPU\inc\inv_mpu_dmp_motion_driver.h
 .\objects\app_sort.o: ..\BSP\inc\bsp_battery.h
+.\objects\app_sort.o: ..\BSP\inc\bsp_beep.h

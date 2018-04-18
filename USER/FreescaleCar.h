@@ -31,7 +31,7 @@
 /*  编码器每圈输出脉冲数  */
 # define ENCONDER_LINES			512
 
-/*  速度控制周期,50ms  */
+/*  速度控制周期*/
 # define SPEED_CONTROL_PERIOD	10	
 
 # define DIRCTION_CONTROL_PERIOD	5

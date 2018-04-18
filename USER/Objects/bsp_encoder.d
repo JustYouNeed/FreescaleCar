@@ -79,6 +79,7 @@
 .\objects\bsp_encoder.o: ..\MPU\inc\inv_mpu.h
 .\objects\bsp_encoder.o: ..\MPU\inc\inv_mpu_dmp_motion_driver.h
 .\objects\bsp_encoder.o: ..\BSP\inc\bsp_battery.h
+.\objects\bsp_encoder.o: ..\BSP\inc\bsp_beep.h
 .\objects\bsp_encoder.o: ..\APP\inc\app.h
 .\objects\bsp_encoder.o: ..\APP\inc\app_debug.h
 .\objects\bsp_encoder.o: ..\APP\inc\app_filter.h

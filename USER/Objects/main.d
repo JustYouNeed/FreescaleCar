@@ -79,6 +79,7 @@
 .\objects\main.o: ..\MPU\inc\inv_mpu.h
 .\objects\main.o: ..\MPU\inc\inv_mpu_dmp_motion_driver.h
 .\objects\main.o: ..\BSP\inc\bsp_battery.h
+.\objects\main.o: ..\BSP\inc\bsp_beep.h
 .\objects\main.o: ..\APP\inc\app.h
 .\objects\main.o: ..\APP\inc\app_debug.h
 .\objects\main.o: ..\APP\inc\app_filter.h

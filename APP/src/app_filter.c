@@ -2,7 +2,7 @@
   *******************************************************************************************************
   * File Name: app_filter.c
   * Author: Vector
-  * Version: V1.0.0
+  * Version: V1.1.0
   * Date: 2018-3-2
   * Brief: 本文件提供了各种滤波函数
   *******************************************************************************************************
@@ -10,6 +10,10 @@
   *		1.Author: Vector
 	*			Date:	2018-3-2
 	*			Mod: 建立文件
+	*
+	*		2.Author: Vector
+	*			Data: 2018-4-20
+	*			Mod: 增加卡尔曼滤波函数
   *
   *******************************************************************************************************
   */	
@@ -53,6 +57,52 @@ void filter_SildingAverage(uint16_t Array[], uint16_t *Average, uint16_t Length)
 	}
 	*Average = (uint16_t)(sum / Length);
 }
+/*
+*********************************************************************************************************
+*                                   filter_Kalman1Dim_Init       
+*
+* Description: 初始化卡尔曼结构体参数
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
+void filter_Kalman1Dim_Init(Kalman1Dim_TypeDef *Kalam_struct, double Q, double R)
+{
+	Kalam_struct->Kg = 0;
+	Kalam_struct->Output = 0;
+	Kalam_struct->P = 0;
+	Kalam_struct->Q = Q;
+	Kalam_struct->R = R;
+}
+
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
+void filter_Kalman1Dim(Kalman1Dim_TypeDef *Kalam_Struct, double input)
+{
+	Kalam_Struct->P += Kalam_Struct->Q;
+	
+	Kalam_Struct->Output += Kalam_Struct->Kg*(input - Kalam_Struct->Output);
+	
+	Kalam_Struct->Kg = Kalam_Struct->P/(Kalam_Struct->P + Kalam_Struct->R);
+	Kalam_Struct->P *= (1-Kalam_Struct->Kg);
+}
+
+
 
 /********************************************  END OF FILE  *******************************************/
 

@@ -242,7 +242,7 @@ void debug_PIDParaReport(void)
 	Buff[8] = BYTE2(temp);
 	Buff[9] = BYTE1(temp);
 	
-	temp = (short)(Car.PID.SpeedKd * 100);
+	temp = (short)(Car.PID.SpeedKd * 10);
 	Buff[10] = BYTE2(temp);
 	Buff[11] = BYTE1(temp);
 	
@@ -286,7 +286,7 @@ void debug_PIDDownload(void)
 	cnt += 2;
 	Car.PID.SpeedKi = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / 10;
 	cnt += 2;
-	Car.PID.SpeedKd = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float)/100;
+	Car.PID.SpeedKd = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float)/10;
 	cnt += 2;
 
 	pid_StorePara();	/*  将PID参数保存到Flash中  */
@@ -370,21 +370,57 @@ void debug_MotorDataReport(void)
 	SendBuff[cnt++] = BYTE2(Car.Motor.RightPwm);
 	SendBuff[cnt++] = BYTE1(Car.Motor.RightPwm);
 	
-	SendBuff[cnt++] = BYTE4(Car.Motor.LeftEncoder);
-	SendBuff[cnt++] = BYTE3(Car.Motor.LeftEncoder);
-	SendBuff[cnt++] = BYTE2(Car.Motor.LeftEncoder);
-	SendBuff[cnt++] = BYTE1(Car.Motor.LeftEncoder);
+//	SendBuff[cnt++] = BYTE4(Car.Motor.LeftEncoder);
+//	SendBuff[cnt++] = BYTE3(Car.Motor.LeftEncoder);
+//	SendBuff[cnt++] = BYTE2(Car.Motor.LeftEncoder);
+//	SendBuff[cnt++] = BYTE1(Car.Motor.LeftEncoder);
+//	
+//	SendBuff[cnt++] = BYTE4(Car.Motor.RightEncoder);
+//	SendBuff[cnt++] = BYTE3(Car.Motor.RightEncoder);
+//	SendBuff[cnt++] = BYTE2(Car.Motor.RightEncoder);
+//	SendBuff[cnt++] = BYTE1(Car.Motor.RightEncoder);
 	
-	SendBuff[cnt++] = BYTE4(Car.Motor.RightEncoder);
-	SendBuff[cnt++] = BYTE3(Car.Motor.RightEncoder);
-	SendBuff[cnt++] = BYTE2(Car.Motor.RightEncoder);
-	SendBuff[cnt++] = BYTE1(Car.Motor.RightEncoder);
+	SendBuff[cnt++] = BYTE2((int16_t)(Car.Motor.LeftSpeed));
+	SendBuff[cnt++] = BYTE1((int16_t)(Car.Motor.LeftSpeed));
 	
-	SendBuff[cnt++] = BYTE2((int16_t)(Car.Motor.LeftSpeed*10));
-	SendBuff[cnt++] = BYTE1((int16_t)(Car.Motor.LeftSpeed*10));
+	SendBuff[cnt++] = BYTE2((int16_t)(Car.Motor.RightSpeed));
+	SendBuff[cnt++] = BYTE1((int16_t)(Car.Motor.RightSpeed));
 	
-	SendBuff[cnt++] = BYTE2((int16_t)(Car.Motor.RightSpeed*10));
-	SendBuff[cnt++] = BYTE1((int16_t)(Car.Motor.RightSpeed*10));
+//	SendBuff[cnt++] = BYTE2((int16_t)(Car.MPU.Gryoz));
+//	SendBuff[cnt++] = BYTE1((int16_t)(Car.MPU.Gryoz));
+	
+//	SendBuff[cnt++] = BYTE2((int16_t)(Kalman_Gryoz.Output));
+//	SendBuff[cnt++] = BYTE1((int16_t)(Kalman_Gryoz.Output));
+	
+//	SendBuff[cnt++] = BYTE2((int16_t)(Car.PID.DirectionKp));
+//	SendBuff[cnt++] = BYTE1((int16_t)(Car.PID.DirectionKp));
+//	
+//	SendBuff[cnt++] = BYTE2((int16_t)(Car.PID.DirectionKd));
+//	SendBuff[cnt++] = BYTE1((int16_t)(Car.PID.DirectionKd));
+	
+	SendBuff[cnt++] = BYTE2((int16_t)(Car.DirFuzzy.KP));
+	SendBuff[cnt++] = BYTE1((int16_t)(Car.DirFuzzy.KP));
+	
+	SendBuff[cnt++] = BYTE2((int16_t)(Car.DirFuzzy.KD));
+	SendBuff[cnt++] = BYTE1((int16_t)(Car.DirFuzzy.KD));
+//	
+//	SendBuff[cnt++] = BYTE2((int16_t)(Car.LVFuzzy.KP));
+//	SendBuff[cnt++] = BYTE1((int16_t)(Car.LVFuzzy.KP));
+//	
+//	SendBuff[cnt++] = BYTE2((int16_t)(Car.LVFuzzy.KI*100));
+//	SendBuff[cnt++] = BYTE1((int16_t)(Car.LVFuzzy.KI*100));
+//	
+//	SendBuff[cnt++] = BYTE2((int16_t)(Car.LVFuzzy.KD));
+//	SendBuff[cnt++] = BYTE1((int16_t)(Car.LVFuzzy.KD));
+//	
+//	SendBuff[cnt++] = BYTE2((int16_t)(Car.RVFuzzy.KP));
+//	SendBuff[cnt++] = BYTE1((int16_t)(Car.RVFuzzy.KP));
+//	
+//	SendBuff[cnt++] = BYTE2((int16_t)(Car.RVFuzzy.KI*100));
+//	SendBuff[cnt++] = BYTE1((int16_t)(Car.RVFuzzy.KI*100));
+//	
+//	SendBuff[cnt++] = BYTE2((int16_t)(Car.RVFuzzy.KD));
+//	SendBuff[cnt++] = BYTE1((int16_t)(Car.RVFuzzy.KD));
 	
 	debug_DataUpload(SendBuff, 0xf1, cnt);
 }

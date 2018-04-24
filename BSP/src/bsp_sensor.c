@@ -37,7 +37,7 @@
 # include "FreescaleCar.h"
 # include "app_debug.h"
 
-
+extern uint8_t batteryVol;
 /*
 *********************************************************************************************************
 *                         bsp_sensor_Config                 
@@ -55,7 +55,7 @@ void bsp_sensor_Config(void)
 {
 	ADC_InitTypeDef ADC_InitStruct;
 	
-	ADC_InitStruct.ADC_Channel = ADC_Channel_C2 | ADC_Channel_C3 | ADC_Channel_F6 | ADC_Channel_F7 | ADC_Channel_C0;
+	ADC_InitStruct.ADC_Channel = ADC_Channel_C2 | ADC_Channel_C3 | ADC_Channel_F6 | ADC_Channel_F7 | ADC_Channel_C0 | ADC_Channel_A1;
 //	ADC_InitStruct.ADC_Resolution = ADC_Resolution_8b;
 	ADC_InitStruct.ADC_ChannelCount = 1;
 	ADC_InitStruct.ADC_ClockSource = ADC_ClockSource_BusClock;
@@ -153,6 +153,7 @@ void bsp_sensor_DataProcess(void)
 	/*  循环处理每一个传感器的值  */
 	for(; cnt < SENSOR_COUNT; cnt ++)
 	{
+		batteryVol = drv_adc_ConvOnce(ADC_Channel_A1, ADC_Resolution_8b);
 		switch(cnt)
 		{
 			case SENSOR_H_L: Car.Sensor[SENSOR_H_L].FIFO[Car.Sensor[SENSOR_H_L].Write++] = drv_adc_ConvOnce(ADC_Channel_F6, ADC_Resolution_8b);break;
@@ -204,31 +205,42 @@ void bsp_sensor_DataProcess(void)
 	/*  计算和差比  */
 	Car.AE = Car.HorizontalAE - Car.VecticalAE;
 	
-	if(Car.Sensor[SENSOR_M].Average > 105) 
-	{
-		flag = 70;
-		first = 1;
-		bsp_beep_ON();
-		g_CircleSpeedError += 60;
-	}
-	else 
-	{
-		g_CircleSpeedError = 0;
+//	if(Car.AE > 20 && Car.Sensor[SENSOR_H_L].Average < 100 && Car.Sensor[SENSOR_H_R].Average < 100)
+//	{
+//		Car.HorizontalAE += 20;
+//		Car.VecticalAE += 20;
+//	}
+//	else if(Car.AE < -20 && Car.Sensor[SENSOR_H_L].Average < 100 && Car.Sensor[SENSOR_H_R].Average < 100)
+//	{
+//		Car.HorizontalAE -= 20;
+//		Car.VecticalAE -= 20;
+//	}
 //	
-	}
-	
-	if(flag>0)
-	{
-		flag -- ;
-		Car.HorizontalAE = 100 * ((Car.Sensor[SENSOR_H_R].NormalizedValue - Car.Sensor[SENSOR_H_L].NormalizedValue) / 
-															(Car.Sensor[SENSOR_H_R].NormalizedValue + Car.Sensor[SENSOR_H_L].NormalizedValue)) - 50;
-		
-		/*  计算垂直和比差,扩大100倍  */
-		Car.VecticalAE = 100 * ((Car.Sensor[SENSOR_V_R].NormalizedValue - Car.Sensor[SENSOR_V_L].NormalizedValue) / 
-															(Car.Sensor[SENSOR_V_R].NormalizedValue + Car.Sensor[SENSOR_V_L].NormalizedValue)) - 50;
-	}
-	else
-			bsp_beep_OFF();
+//	if(Car.Sensor[SENSOR_M].Average > 105) 
+//	{
+//		flag = 70;
+//		first = 1;
+//		bsp_beep_ON();
+//		g_CircleSpeedError += 60;
+//	}
+//	else 
+//	{
+//		g_CircleSpeedError = 0;
+//	
+//	}
+//	
+//	if(flag>0)
+//	{
+//		flag -- ;
+//		Car.HorizontalAE = 100 * ((Car.Sensor[SENSOR_H_R].NormalizedValue - Car.Sensor[SENSOR_H_L].NormalizedValue) / 
+//															(Car.Sensor[SENSOR_H_R].NormalizedValue + Car.Sensor[SENSOR_H_L].NormalizedValue)) - 50;
+//		
+//		/*  计算垂直和比差,扩大100倍  */
+//		Car.VecticalAE = 100 * ((Car.Sensor[SENSOR_V_R].NormalizedValue - Car.Sensor[SENSOR_V_L].NormalizedValue) / 
+//															(Car.Sensor[SENSOR_V_R].NormalizedValue + Car.Sensor[SENSOR_V_L].NormalizedValue)) - 50;
+//	}
+//	else
+//			bsp_beep_OFF();
 }
 
 /*

@@ -54,8 +54,7 @@
 .\objects\app_filter.o: ..\USER\derivative.h
 .\objects\app_filter.o: D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
 .\objects\app_filter.o: ..\BSP\inc\bsp_key.h
-.\objects\app_filter.o: ..\USER\derivative.h
-.\objects\app_filter.o: D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
+.\objects\app_filter.o: ..\BSP\inc\bsp.h
 .\objects\app_filter.o: ..\BSP\inc\bsp_oled.h
 .\objects\app_filter.o: ..\USER\derivative.h
 .\objects\app_filter.o: D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
@@ -75,7 +74,6 @@
 .\objects\app_filter.o: ..\USER\derivative.h
 .\objects\app_filter.o: D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
 .\objects\app_filter.o: ..\BSP\inc\bsp_mpu.h
-.\objects\app_filter.o: ..\BSP\inc\bsp.h
 .\objects\app_filter.o: ..\MPU\inc\inv_mpu.h
 .\objects\app_filter.o: ..\MPU\inc\inv_mpu_dmp_motion_driver.h
 .\objects\app_filter.o: ..\BSP\inc\bsp_battery.h

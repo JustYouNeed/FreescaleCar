@@ -57,8 +57,7 @@
 .\objects\bsp_encoder.o: ..\USER\derivative.h
 .\objects\bsp_encoder.o: D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
 .\objects\bsp_encoder.o: ..\BSP\inc\bsp_key.h
-.\objects\bsp_encoder.o: ..\USER\derivative.h
-.\objects\bsp_encoder.o: D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
+.\objects\bsp_encoder.o: ..\BSP\inc\bsp.h
 .\objects\bsp_encoder.o: ..\BSP\inc\bsp_oled.h
 .\objects\bsp_encoder.o: ..\USER\derivative.h
 .\objects\bsp_encoder.o: D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
@@ -75,7 +74,6 @@
 .\objects\bsp_encoder.o: ..\USER\derivative.h
 .\objects\bsp_encoder.o: D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
 .\objects\bsp_encoder.o: ..\BSP\inc\bsp_mpu.h
-.\objects\bsp_encoder.o: ..\BSP\inc\bsp.h
 .\objects\bsp_encoder.o: ..\MPU\inc\inv_mpu.h
 .\objects\bsp_encoder.o: ..\MPU\inc\inv_mpu_dmp_motion_driver.h
 .\objects\bsp_encoder.o: ..\BSP\inc\bsp_battery.h

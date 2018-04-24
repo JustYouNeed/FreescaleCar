@@ -9,8 +9,11 @@
 # include "display.h"
 
 extern uint8_t key;
-static int8_t showFlag = 0;
+static int8_t showPage = 0;
 static bool isWindowChange = true;
+
+static int16_t HAEFifo[128];
+static uint8_t fifocnt = 0;
 WINDOWS DebugWindow={
 .x = 0,
 .y = 0,	
@@ -42,33 +45,42 @@ void Para_ShowRefresh(void)
 void Para_Show_UI(void)
 {
 	Para_ShowRefresh();
-	if(showFlag == 0)
+	
+	/*  第一页显示电感参数  */
+	if(showPage == 0)
 	{
-		/*  显示电感值  */
-		oled_showString(3,15,"H_L:", 6, 12);
+		/*  前排左边水平电感  */
+		oled_showString(3,15,"HFL:", 6, 12);
 		oled_showNum(27, 15, Car.Sensor[SENSOR_H_L].Average, 3, 6, 12);
 		
-		oled_showString(65,15,"H_R:", 6, 12);
+		/*  前排右边水平电感  */
+		oled_showString(65,15,"HFR:", 6, 12);
 		oled_showNum(95, 15, Car.Sensor[SENSOR_H_R].Average, 3, 6, 12);
 		
-		oled_showString(3,33,"V_L:", 6, 12);
+		oled_showString(3,33,"HBL:", 6, 12);
 		oled_showNum(27, 33, Car.Sensor[SENSOR_V_L].Average, 3, 6, 12);
 		
-		oled_showString(65,33,"V_R:", 6, 12);
+		oled_showString(65,33,"HBR:", 6, 12);
 		oled_showNum(95, 33, Car.Sensor[SENSOR_V_R].Average, 3, 6, 12);
 		
 		oled_showString(3,50,"HAE:", 6, 12);
 		if(Car.HorizontalAE < 0)
 		{
-			oled_showChar(27, 50, '-', 3, 6, 12);
-			oled_showNum(33, 50, (int16_t)(Car.HorizontalAE), 3, 6, 12);
+			oled_showChar(27, 50, '-', 6, 12, 1);
+			oled_showNum(33, 50, (int16_t)(-Car.HorizontalAE), 3, 6, 12);
 		}else
 			oled_showNum(27, 50, (int16_t)(Car.HorizontalAE), 3, 6, 12);
 		
 		oled_showString(65,50,"VAE:", 6, 12);
-		oled_showNum(95, 50, (int16_t)(Car.VecticalAE), 3, 6, 12);
+		if(Car.VecticalAE < 0)
+		{
+			oled_showChar(90, 50, '-', 6, 12, 1);
+			oled_showNum(90+6, 50, (int16_t)(-Car.VecticalAE), 3, 6, 12);
+		}else
+		oled_showNum(90, 50, (int16_t)(Car.VecticalAE), 3, 6, 12);
 	}
-	else if(showFlag == 1)
+	/*  第二页显示电机参数  */
+	else if(showPage == 1)
 	{
 		/*  电机编码器  */
 		oled_showString(3, 15, "L_E:", 6, 12);
@@ -80,16 +92,16 @@ void Para_Show_UI(void)
 		oled_showString(3, 33, "L_P:", 6, 12);
 		if(Car.Motor.LeftPwm<0)
 		{
-			oled_showChar(27, 50, '-', 3, 6, 12);
-			oled_showNum(33, 50, Car.Motor.LeftPwm, 3, 6, 12);
+			oled_showChar(27, 50, '-', 6, 12, 1);
+			oled_showNum(33, 50, -Car.Motor.LeftPwm, 3, 6, 12);
 		}else
 			oled_showNum(27, 33, Car.Motor.LeftPwm, 4, 6, 12);
 		
 		oled_showString(55, 33, "R_P:", 6, 12);
 		if(Car.Motor.RightPwm<0)
 		{
-			oled_showChar(85, 50, '-', 3, 6, 12);
-			oled_showNum(91, 50, Car.Motor.RightPwm, 3, 6, 12);
+			oled_showChar(85, 50, '-', 6, 12, 1);
+			oled_showNum(91, 50, -Car.Motor.RightPwm, 3, 6, 12);
 		}else
 			oled_showNum(85, 33, Car.Motor.RightPwm, 4, 6, 12);
 		
@@ -98,7 +110,9 @@ void Para_Show_UI(void)
 		
 		oled_showString(55,50,"Nor:", 6, 12);
 		oled_showNum(85, 50, (Car.Sensor[0].CalibrationMax), 3, 6, 12);
-	}else if(showFlag == 2)
+	}
+	/*  第三页显示PID参数  */
+	else if(showPage == 2)
 	{
 		oled_showString(3, 15, "SKP:", 6, 12);
 		oled_showNum(27, 15, Car.PID.SpeedKp*10, 4, 6, 12);
@@ -113,19 +127,19 @@ void Para_Show_UI(void)
 		oled_showNum(85, 33, Car.PID.DirectionKd, 4, 6, 12);
 		
 		oled_showString(3,50,"LT:", 6, 12);
-		oled_showNum(27, 50, (Car.LeftTargetSpeed), 2, 6, 12);
+		oled_showNum(27, 50, (Car.LeftTargetSpeed), 3, 6, 12);
 		
 		oled_showString(55,50,"RT:", 6, 12);
-		oled_showNum(85, 50, (Car.RightTargetSpeed), 2, 6, 12);
+		oled_showNum(85, 50, (Car.RightTargetSpeed), 3, 6, 12);
 	}
 	
 	if(key == KEY_DOWN_PRESS)
 	{
-		showFlag--;
+		showPage--;
 		isWindowChange = true;
-		if(showFlag < 0)
-			showFlag = 2;
-		switch(showFlag)
+		if(showPage < 0)
+			showPage = 2;
+		switch(showPage)
 		{
 			case 0: DebugWindow.title = "Motor Parameters";break;
 			case 1: DebugWindow.title = "Sensor Parameters";break;
@@ -134,12 +148,12 @@ void Para_Show_UI(void)
 		}
 	}else if(key == KEY_UP_PRESS)
 	{
-		showFlag++;
+		showPage++;
 		isWindowChange = true;
-		if(showFlag>2)
-			showFlag = 0;
+		if(showPage>2)
+			showPage = 0;
 		
-		switch(showFlag)
+		switch(showPage)
 		{
 			case 0: DebugWindow.title = "Motor Parameters";break;
 			case 1: DebugWindow.title = "Sensor Parameters";break;

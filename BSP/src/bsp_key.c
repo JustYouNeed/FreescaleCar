@@ -3,18 +3,21 @@
   * File Name: bsp_key.c
   * Author: Vector
   * Version: V1.0.0
-  * Date: 2018-2-12
-  * Brief: 本文件为开发板上的按键驱动函数
+  * Date: 2018-4-23
+  * Brief: 本文件提供了有关操作按键的函数,支持按键的多种状态检测
+	*					1.按键按下检测
+	*					2.按键长按检测
+	*					3.按键弹起检测
+	*					4.按键长按自动连发
   *******************************************************************************************************
   * History
-  *		1.Author:	Vector
-	* 		Date: 2018-2-12
-	*			Mod: 建立文件
+  *		1.Author: Vector
+	*			Date: 2018-4-23
+	*			Mod: 建立本文件
   *
   *******************************************************************************************************
   */	
-
-
+	
 /*
   *******************************************************************************************************
   *                              INCLUDE FILES
@@ -22,52 +25,54 @@
 */
 # include "bsp_key.h"
 
-static KeyFIFO_TypeDef		 bsp_key_fifo;   /* 按键FIFO结构体 */
-static Key_TypeDef		     bsp_key[BSP_KEY_COUNT];  /* 单个按键控制结构体 */
+/*  检测按键是否按键的函数  */
+static uint8_t IsKeyUpPress(void) { return (drv_gpio_ReadPin(KEY_UP_PIN) == 1)?0:1;}
+static uint8_t IsKeyOkPress(void) { return (drv_gpio_ReadPin(KEY_OK_PIN) == 1)?0:1;}
+static uint8_t IsKeyDownPress(void) { return (drv_gpio_ReadPin(KEY_DOWN_PIN) == 1)?0:1;}
 
 
-static uint8_t IsKeyUpPress(void) { return drv_gpio_ReadPin(KEY_UP_PIN);}
-static uint8_t IsKeyOkPress(void) { return drv_gpio_ReadPin(KEY_OK_PIN);}
-static uint8_t IsKeyDownPress(void) { return drv_gpio_ReadPin(KEY_DOWN_PIN);}
+/*  按键FIFO  */
+static KeyFIFO_TypeDef		 bsp_key_fifo;   /* the key fifo struct */
+
+/*  按键结构体组,对应板子上的三个按键  */
+static Key_TypeDef		     bsp_key[KEY_COUNT];  /* struct of each key */
+
 
 /*
 *********************************************************************************************************
-*                               bsp_key_GPIOInit           
+*                           bsp_key_GPIOConfig               
 *
-* Description: 初始化按键功能的GPIO引脚
+* Description: 初始化按键引脚
 *             
 * Arguments  : None.
 *
 * Reutrn     : None.
 *
-* Note(s)    : 此函数为本文件的私有函数,外部禁止调用
+* Note(s)    : None.
 *********************************************************************************************************
 */
-static void bsp_key_GPIOInit(void)
+void bsp_key_GPIOConfig(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	
-	GPIO_InitStructure.GPIO_Pin = KEY_UP_PIN;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
 	GPIO_InitStructure.GPIO_HDrv = DISABLE;
-	
-	drv_gpio_Init(&GPIO_InitStructure);
-	drv_gpio_WritePin(KEY_UP_PIN, GPIO_PIN_SET);
+	GPIO_InitStructure.GPIO_PuPd = DISABLE;
+
+	GPIO_InitStructure.GPIO_Pin = KEY_UP_PIN;
+	drv_gpio_Init(&GPIO_InitStructure);	
 	
 	GPIO_InitStructure.GPIO_Pin = KEY_OK_PIN;
-	drv_gpio_Init(&GPIO_InitStructure);
-	drv_gpio_WritePin(KEY_OK_PIN, GPIO_PIN_SET);
+	drv_gpio_Init(&GPIO_InitStructure);	
 	
 	GPIO_InitStructure.GPIO_Pin = KEY_DOWN_PIN;
-	drv_gpio_Init(&GPIO_InitStructure);
-	drv_gpio_WritePin(KEY_DOWN_PIN, GPIO_PIN_SET);
+	drv_gpio_Init(&GPIO_InitStructure);	
 }
 
 
 /*
 *********************************************************************************************************
-*                              bsp_key_FIFOInit            
+*                        bsp_key_FifoConfig                  
 *
 * Description: 初始化按键FIFO
 *             
@@ -75,25 +80,25 @@ static void bsp_key_GPIOInit(void)
 *
 * Reutrn     : None.
 *
-* Note(s)    : 此函数为本文件的私有函数,外部禁止调用
+* Note(s)    : None.
 *********************************************************************************************************
 */
-static void bsp_key_FIFOInit(void)
+void bsp_key_FifoConfig(void)
 {
-		uint8_t i = 0;
+	uint8_t i = 0;
 	
+	/*  清空按键FIFO  */
 	bsp_key_fifo.Read = 0;  
-	bsp_key_fifo.Write = 0;
-	bsp_key_fifo.Fifo[0] = 0;
-	bsp_key_fifo.IsConfig = 1;  
+	bsp_key_fifo.Write = 0; 
 	
-	for(i = 0; i < BSP_KEY_COUNT; i++)
+	/*  循环初始化每一个按键FIFO  */
+	for(i = 0; i < KEY_COUNT; i++)
 	{
 		bsp_key[i].LongTime = KEY_LONG_TIME;
-		bsp_key[i].Count = KEY_FILTER_TIME / 2;
-		bsp_key[i].State = KEY_UNPRESS;
+		bsp_key[i].FilterCount = KEY_FILTER_TIME / 2;
+		bsp_key[i].State = KEY_NONE;
 		bsp_key[i].RepeatCount = 0;
-		bsp_key[i].RepeatSpeed = 0;
+		bsp_key[i].RepeatSpeed = 10;
 	}
 	
 	bsp_key[KEY_ID_UP].IsKeyPressFunc = IsKeyUpPress;
@@ -101,12 +106,11 @@ static void bsp_key_FIFOInit(void)
 	bsp_key[KEY_ID_DOWN].IsKeyPressFunc = IsKeyDownPress;
 }
 
-
 /*
 *********************************************************************************************************
-*                                    bsp_key_Config      
+*                          bsp_key_Config                
 *
-* Description: 初始化按键功能
+* Description: 初始化按键
 *             
 * Arguments  : None.
 *
@@ -117,36 +121,106 @@ static void bsp_key_FIFOInit(void)
 */
 void bsp_key_Config(void)
 {
-	bsp_key_GPIOInit();
-	bsp_key_FIFOInit();
+	bsp_key_GPIOConfig();
+	bsp_key_FifoConfig();
 }
 
 /*
 *********************************************************************************************************
-*                                       bsp_key_PutKeyToFIFO   
+*                          bsp_key_SetPara                
 *
-* Description: put一个按键值到按键FIFO里
+* Description: 设置按键参数
 *             
-* Arguments  : 1> KeyValue:按键值
+* Arguments  : 1> KeyID: 按键ID,在bsp_key.h中定义
+*							 2> LongTime: 长按事件时间
+*							 3> RepeatSpeed: 按键连发速度
 *
-* Reutrn     : None
+* Reutrn     : None.
 *
-* Note(s)    : KeyValue的值应该小于等于9，因为默认按键只有3个，每个按键三种状态
+* Note(s)    : None.
 *********************************************************************************************************
 */
-void bsp_key_PutKeyToFIFO(uint8_t KeyValue)
+void bsp_key_SetPara(uint8_t KeyID, uint16_t LongTime, uint16_t RepeatSpeed)
 {
-	if(KeyValue > 9) return ;
+	bsp_key[KeyID].LongTime = LongTime;
+	bsp_key[KeyID].LongCount = 0;
 	
-	bsp_key_fifo.Fifo[bsp_key_fifo.Write++] = KeyValue;  /*  将按键值写入FIFO  */
+	bsp_key[KeyID].RepeatSpeed = RepeatSpeed;
+	bsp_key[KeyID].RepeatCount = 0;
+}
+
+
+/*
+*********************************************************************************************************
+*                          bsp_GetKey                
+*
+* Description: 从按键FIFO中获取一个按键值
+*             
+* Arguments  : None.
+*
+* Reutrn     : 按键值,其值在bsp_key.h中定义
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
+uint8_t bsp_key_GetKey(void)
+{
+	uint8_t key;
+	if(bsp_key_fifo.Read == bsp_key_fifo.Write) 
+	{
+		return KEY_NONE;
+	}
+	else
+	{
+		key = bsp_key_fifo.Fifo[bsp_key_fifo.Read];
+		if( ++bsp_key_fifo.Read >= KEY_FIFO_SIZE) bsp_key_fifo.Read = 0;
+		return key;
+	}
+}
+
+/*
+*********************************************************************************************************
+*                        bsp_PutKey                  
+*
+* Description: 推送一个按键值到按键FIFO中
+*             
+* Arguments  : 1.> KeyValue: 按键值
+*
+* Reutrn     : None.
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
+void bsp_key_PutKey(uint8_t KeyValue)
+{
+	bsp_key_fifo.Fifo[bsp_key_fifo.Write] = KeyValue;
 	
-	if(bsp_key_fifo.Write >= KEY_FIFO_SIZE)   /*  如果FIFO写满了，则从头开始  */
+	if(++bsp_key_fifo.Write >= KEY_FIFO_SIZE)
 		bsp_key_fifo.Write = 0;
 }
 
+
 /*
 *********************************************************************************************************
-*                                bsp_key_ClearFIFO          
+*                          bsp_GetKeyState                
+*
+* Description: 获取一个按键的状态
+*             
+* Arguments  : 1> KeyId: 按键ID,其值在bsp_key.h中定义
+*
+* Reutrn     : 对应按键的状态
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
+uint8_t bsp_key_GetState(KEYID_EnumTypeDef KeyId)
+{
+	return bsp_key[KeyId].State;
+}
+
+/*
+*********************************************************************************************************
+*                         bsp_key_Clear                 
 *
 * Description: 清空按键FIFO
 *             
@@ -157,131 +231,88 @@ void bsp_key_PutKeyToFIFO(uint8_t KeyValue)
 * Note(s)    : None.
 *********************************************************************************************************
 */
-void bsp_key_ClearFIFO(void)
+void bsp_key_Clear(void)
 {
-	uint8_t i = 0;
-	for(i = 0; i < KEY_FIFO_SIZE; i++)
-	{
-		bsp_key_fifo.Fifo[i] = KEY_NONE;
-	}
-	bsp_key_fifo.Read = bsp_key_fifo.Write = 0;
+	bsp_key_fifo.Read = bsp_key_fifo.Write;
 }
 
 /*
 *********************************************************************************************************
-*                               bsp_key_GetKey           
+*                        bsp_key_Detect                  
 *
-* Description: 从按键FIFO中读取一个按键状态
+* Description: 检测按键,非阻塞
 *             
 * Arguments  : None.
 *
-* Reutrn     : 按键值
-*
-* Note(s)    : None.
-*********************************************************************************************************
-*/
-uint8_t bsp_key_GetKey(void)
-{
-	uint8_t key;	
-	if(bsp_key_fifo.Read == bsp_key_fifo.Write) /*  FIFO为空  */
-	{
-		key = KEY_NONE;
-	}
-	else
-	{
-		key = bsp_key_fifo.Fifo[bsp_key_fifo.Read];
-		if( ++bsp_key_fifo.Read >= KEY_FIFO_SIZE) 		/*  环形队列  */
-			bsp_key_fifo.Read = 0;
-	}
-	return key;
-}
-
-/*
-*********************************************************************************************************
-*                                          
-*
-* Description: 获取按键的状态
-*             
-* Arguments  : 1> KeyId:按键ID
-*
-* Reutrn     : 按键状态
-*
-* Note(s)    : KeyId在bsp_key.h中定义
-*********************************************************************************************************
-*/
-uint8_t bsp_key_GetKeyState(KEY_ID_ENUM KeyId)
-{
-	return bsp_key[KeyId].State;
-}
-
-
-/*
-*********************************************************************************************************
-*                                    bsp_key_Detect      
-*
-* Description: 检测按键状态
-*             
-* Arguments  : 1> Id:想检测的按键ID
-*
 * Reutrn     : None.
 *
-* Note(s)    : None.
+* Note(s)    : 该函数为本文件内部函数,外部禁止调用
 *********************************************************************************************************
 */
 void bsp_key_Detect(uint8_t Id)
 {
-	Key_TypeDef *pKey;   /*  先声明一个按键结构体  */
+	Key_TypeDef *pKey;
 	
-	pKey = &bsp_key[Id];		/*  获取相应ID的按键结构体  */
+	pKey = &bsp_key[Id];	/*  先获取到按键的结构体  */
 	
-	if(pKey->IsKeyPressFunc() == KEY_PRESS)   /*  如果按键状态有改变  */
+	/*  判断是否按下  */
+	if(pKey->IsKeyPressFunc())
 	{
 		
-		if(pKey->Count < KEY_FILTER_TIME) 	/*  软件消抖  */
-			pKey->Count  = KEY_FILTER_TIME;
-		else if(pKey->Count < 2 * KEY_FILTER_TIME) 
-			pKey->Count ++;
-		else									/*  软件消抖完成  */
-		{
-			if(pKey->State == KEY_UNPRESS)	/*  改变按键状态,同时更新FIFO  */
-			{
-				
-				pKey->State = KEY_PRESS;
-				bsp_key_PutKeyToFIFO((uint8_t)(3 * Id + 1));
-			}
-			
-			if(pKey->LongTime > 0)		/*  该变量大于0时说明了开启了长按检测  */
-			{
-				if(++pKey->LongCount == pKey->LongTime)	/*  发送了长按事件  */
-				{
-					bsp_key_PutKeyToFIFO((uint8_t)(3 * Id + 3));	/*  推送按键值到按键FIFO  */
-				}
-			}
-			else  
-			{
-				if(pKey->RepeatSpeed > 0)
-				{
-					if( ++ pKey->RepeatCount >= pKey->RepeatSpeed)
-					{
-						pKey->RepeatCount = 0;
-						bsp_key_PutKeyToFIFO((uint8_t)(3 * Id + 1));
-					}
-				} /*  end if(pKey->RepeatSpeed > 0)  */
-			} /*  end (pKey->LongTime > 0) else  */
-		} /*  end else  */
-	}
-	else		/*  按键没有被按下  */
-	{
-		if(pKey->Count > KEY_FILTER_TIME)
-			pKey->Count  = KEY_FILTER_TIME;
-		else if(pKey->Count != 0)
-			pKey->Count -- ;
+		if(pKey->FilterCount < KEY_FILTER_TIME) 
+			pKey->FilterCount  = KEY_FILTER_TIME;
+		else if(pKey->FilterCount < 2 * KEY_FILTER_TIME) 
+			pKey->FilterCount ++;
 		else
 		{
-			if(pKey->State == KEY_PRESS)	/*  改变按键状态,同时更新FIFO  */
+			if(pKey->State == 0)	/*  如果上个时刻的按键状态为弹起状态  */
 			{
-				pKey->State = KEY_UNPRESS;
-				bsp_key_PutKeyToFIFO((uint8_t)(3 * Id + 2));
+				/*  按键被按下  */				
+				pKey->State = 1;
+				
+				/*  推送按键值到按键FIFO  */
+				bsp_key_PutKey((uint8_t)(3 * Id + 1));
+			}
+			
+			/*  长按时间大于零,说明开启了长按检测功能  */
+			if(pKey->LongTime > 0)
+			{
+				/*  检测到了长按  */
+				if(pKey->LongCount < pKey->LongTime)
+				{
+					if(++pKey->LongCount == pKey->LongTime)
+					{
+						/*  推送长按消息到按键FIFO  */
+						bsp_key_PutKey((uint8_t)(3 * Id + 3));
+					}
+				}
+				else	/*  如果已经超过了长按时间,则看看是否开启了按键连发  */
+				{
+					/*  开启了按键连发功能  */
+					if(pKey->RepeatSpeed > 0)
+					{
+						if(++pKey->RepeatCount >= pKey->RepeatSpeed)
+						{
+							pKey->RepeatCount = 0;
+							bsp_key_PutKey((uint8_t)(3 * Id + 1));
+						}
+					}
+				}
+			}
+		}
+	}
+	else	/*  没有被按下则将按键状态设置为弹起状态,并推送到FIFO  */
+	{
+		if(pKey->FilterCount > KEY_FILTER_TIME)
+			pKey->FilterCount  = KEY_FILTER_TIME;
+		else if(pKey->FilterCount != 0)
+			pKey->FilterCount -- ;
+		else
+		{
+			if(pKey->State == 1)
+			{
+				pKey->State = 0;
+				bsp_key_PutKey((uint8_t)(3 * Id + 2));
 			}
 		}
 		
@@ -292,35 +323,33 @@ void bsp_key_Detect(uint8_t Id)
 
 /*
 *********************************************************************************************************
-*                                 bsp_key_Scan         
+*                            bsp_key_Scan              
 *
-* Description: 按键状态扫描函数，扫描按键状态
+* Description: 按键扫描函数
 *             
 * Arguments  : None.
 *
 * Reutrn     : None.
 *
-* Note(s)    : None.
+* Note(s)    : 本函数为按键扫描函数,在使用bsp_key_GetKey之前应先调用本函数,或者可以周期性调用,然后调用
+*								bsp_key_GetKey从按键FIFO中获取扫描到的按键
 *********************************************************************************************************
 */
-extern uint8_t TimerTaskRunMutexSignal;
-# include "bsp_led.h"
 void bsp_key_Scan(void)
 {
 	uint8_t i = 0;
-	uint8_t key = 0;
 	
-	drv_gpio_WritePin(KEY_UP_PIN, GPIO_PIN_SET);
-	drv_gpio_WritePin(KEY_OK_PIN, GPIO_PIN_SET);
-	drv_gpio_WritePin(KEY_DOWN_PIN, GPIO_PIN_SET);
-	for(i = 0; i < BSP_KEY_COUNT; i++)
+	/*  循环扫描每一个按键  */
+	for(i = 0; i < KEY_COUNT; i++)
 	{
 		bsp_key_Detect(i);
 	}
-	
 }
 
-
 /********************************************  END OF FILE  *******************************************/
+
+
+
+
 
 

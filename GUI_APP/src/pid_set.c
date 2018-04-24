@@ -89,33 +89,11 @@ void SpeedKp_Set(void)
 	{
 		GUI_Button_Selected(&bt_add, 0);
 		kp_temp += 0.5;
-	}else if(key == KEY_UP_LONG)
-	{
-		GUI_Button_Selected(&bt_add, 0);
-		while(drv_gpio_ReadPin(KEY_UP_PIN) == 0)
-		{
-			kp_temp += 0.5;
-			bsp_tim_DelayMs(10);
-			oled_showNum(58,16,(uint32_t)(kp_temp*10), 4,12,24);
-			GUI_Refresh();
-		}
-	}
-	else if(KEY_DOWN_PRESS == key)
+	}else if(KEY_DOWN_PRESS == key)
 	{
 		GUI_Button_Selected(&bt_mines, 0);
 		kp_temp -= 0.5;
-	}else if(key == KEY_DOWN_LONG)
-	{
-		GUI_Button_Selected(&bt_mines, 0);
-		while(drv_gpio_ReadPin(KEY_DOWN_PIN) == 0)
-		{
-			kp_temp -= 0.5;
-			bsp_tim_DelayMs(10);
-			oled_showNum(58,16,(uint32_t)(kp_temp*10), 4,12,24);
-			GUI_Refresh();
-		}
-	}
-	else if(key == KEY_OK_PRESS)
+	}else if(key == KEY_OK_PRESS)
 	{
 		Car.PID.SpeedKp = kp_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
@@ -165,33 +143,11 @@ void SpeedKi_Set(void)
 	{
 		GUI_Button_Selected(&bt_add, 0);
 		ki_temp += 0.5;
-	}else if(key == KEY_UP_LONG)
-	{
-		GUI_Button_Selected(&bt_add, 0);
-		while(drv_gpio_ReadPin(KEY_UP_PIN) == 0)
-		{
-			ki_temp += 0.5;
-			bsp_tim_DelayMs(10);
-			oled_showNum(58,16,(uint32_t)(ki_temp*10), 4,12,24);
-			GUI_Refresh();
-		}
-	}
-	else if(KEY_DOWN_PRESS == key)
+	}	else if(KEY_DOWN_PRESS == key)
 	{
 		GUI_Button_Selected(&bt_mines, 0);
 		ki_temp -= 0.5;
-	}else if(key == KEY_DOWN_LONG)
-	{
-		GUI_Button_Selected(&bt_mines, 0);
-		while(drv_gpio_ReadPin(KEY_DOWN_PIN) == 0)
-		{
-			ki_temp -= 0.5;
-			bsp_tim_DelayMs(10);
-			oled_showNum(58,16,(uint32_t)(ki_temp*10), 4,12,24);
-			GUI_Refresh();
-		}
-	}
-	else if(key == KEY_OK_PRESS)
+	}	else if(key == KEY_OK_PRESS)
 	{
 		Car.PID.SpeedKi = ki_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
@@ -241,33 +197,11 @@ void SpeedKd_Set(void)
 	{
 		GUI_Button_Selected(&bt_add, 0);
 		kd_temp += 0.5;
-	}else if(key == KEY_UP_LONG)
-	{
-		GUI_Button_Selected(&bt_add, 0);
-		while(drv_gpio_ReadPin(KEY_UP_PIN) == 0)
-		{
-			kd_temp += 0.5;
-			bsp_tim_DelayMs(10);
-			oled_showNum(58,16,(uint32_t)(kd_temp*10), 4,12,24);
-			GUI_Refresh();
-		}
-	}
-	else if(KEY_DOWN_PRESS == key)
+	}else if(KEY_DOWN_PRESS == key)
 	{
 		GUI_Button_Selected(&bt_mines, 0);
 		kd_temp -= 0.5;
-	}else if(key == KEY_DOWN_LONG)
-	{
-		GUI_Button_Selected(&bt_mines, 0);
-		while(drv_gpio_ReadPin(KEY_DOWN_PIN) == 0)
-		{
-			kd_temp -= 0.5;
-			bsp_tim_DelayMs(10);
-			oled_showNum(58,16,(uint32_t)(kd_temp*10), 4,12,24);
-			GUI_Refresh();
-		}
-	}
-	else if(key == KEY_OK_PRESS)
+	}else if(key == KEY_OK_PRESS)
 	{
 		Car.PID.SpeedKd = kd_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
@@ -316,33 +250,11 @@ void DirectionKp_Set(void)
 	{
 		GUI_Button_Selected(&bt_add, 0);
 		kp_temp += 0.5;
-	}else if(key == KEY_UP_LONG)
-	{
-		GUI_Button_Selected(&bt_add, 0);
-		while(drv_gpio_ReadPin(KEY_UP_PIN) == 0)
-		{
-			kp_temp += 0.5;
-			bsp_tim_DelayMs(10);
-			oled_showNum(58,16,(uint32_t)(kp_temp*10), 4,12,24);
-			GUI_Refresh();
-		}
-	}
-	else if(KEY_DOWN_PRESS == key)
+	}else if(KEY_DOWN_PRESS == key)
 	{
 		GUI_Button_Selected(&bt_mines, 0);
 		kp_temp -= 0.5;
-	}else if(key == KEY_DOWN_LONG)
-	{
-		GUI_Button_Selected(&bt_mines, 0);
-		while(drv_gpio_ReadPin(KEY_DOWN_PIN) == 0)
-		{
-			kp_temp -= 0.5;
-			bsp_tim_DelayMs(10);
-			oled_showNum(58,16,(uint32_t)(kp_temp*10), 4,12,24);
-			GUI_Refresh();
-		}
-	}
-	else if(key == KEY_OK_PRESS)
+	}else if(key == KEY_OK_PRESS)
 	{
 		Car.PID.DirectionKp = kp_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
@@ -392,33 +304,11 @@ void DirectionKi_Set(void)
 	{
 		GUI_Button_Selected(&bt_add, 0);
 		ki_temp += 0.5;
-	}else if(key == KEY_UP_LONG)
-	{
-		GUI_Button_Selected(&bt_add, 0);
-		while(drv_gpio_ReadPin(KEY_UP_PIN) == 0)
-		{
-			ki_temp += 0.5;
-			bsp_tim_DelayMs(10);
-			oled_showNum(58,16,(uint32_t)(ki_temp*10), 4,12,24);
-			GUI_Refresh();
-		}
-	}
-	else if(KEY_DOWN_PRESS == key)
+	}else if(KEY_DOWN_PRESS == key)
 	{
 		GUI_Button_Selected(&bt_mines, 0);
 		ki_temp -= 0.5;
-	}else if(key == KEY_DOWN_LONG)
-	{
-		GUI_Button_Selected(&bt_mines, 0);
-		while(drv_gpio_ReadPin(KEY_DOWN_PIN) == 0)
-		{
-			ki_temp -= 0.5;
-			bsp_tim_DelayMs(10);
-			oled_showNum(58,16,(uint32_t)(ki_temp*10), 4,12,24);
-			GUI_Refresh();
-		}
-	}
-	else if(key == KEY_OK_PRESS)
+	}else if(key == KEY_OK_PRESS)
 	{
 		Car.PID.DirectionKi = ki_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
@@ -468,33 +358,11 @@ void DirectionKd_Set(void)
 	{
 		GUI_Button_Selected(&bt_add, 0);
 		kd_temp += 5;
-	}else if(key == KEY_UP_LONG)
-	{
-		GUI_Button_Selected(&bt_add, 0);
-		while(drv_gpio_ReadPin(KEY_UP_PIN) == 0)
-		{
-			kd_temp += 5;
-			bsp_tim_DelayMs(10);
-			oled_showNum(58,16,(uint32_t)(kd_temp), 4,12,24);
-			GUI_Refresh();
-		}
-	}
-	else if(KEY_DOWN_PRESS == key)
+	}else if(KEY_DOWN_PRESS == key)
 	{
 		GUI_Button_Selected(&bt_mines, 0);
 		kd_temp -= 5;
-	}else if(key == KEY_DOWN_LONG)
-	{
-		GUI_Button_Selected(&bt_mines, 0);
-		while(drv_gpio_ReadPin(KEY_DOWN_PIN) == 0)
-		{
-			kd_temp -= 5;
-			bsp_tim_DelayMs(10);
-			oled_showNum(58,16,(uint32_t)(kd_temp), 4,12,24);
-			GUI_Refresh();
-		}
-	}
-	else if(key == KEY_OK_PRESS)
+	}else if(key == KEY_OK_PRESS)
 	{
 		Car.PID.DirectionKd = kd_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
@@ -538,33 +406,11 @@ void Car_SetTarSpeed(void)
 	{
 		GUI_Button_Selected(&bt_add, 0);
 		speed += 1;
-	}else if(key == KEY_UP_LONG)
-	{
-		GUI_Button_Selected(&bt_add, 0);
-		while(drv_gpio_ReadPin(KEY_UP_PIN) == 0)
-		{
-			speed += 1;
-			bsp_tim_DelayMs(10);
-			oled_showNum(88,16,(speed), 2,12,24);
-			GUI_Refresh();
-		}
-	}
-	else if(KEY_DOWN_PRESS == key)
+	}else if(KEY_DOWN_PRESS == key)
 	{
 		GUI_Button_Selected(&bt_mines, 0);
 		speed -= 1;
-	}else if(key == KEY_DOWN_LONG)
-	{
-		GUI_Button_Selected(&bt_mines, 0);
-		while(drv_gpio_ReadPin(KEY_DOWN_PIN) == 0)
-		{
-			speed -= 1;
-			bsp_tim_DelayMs(10);
-			oled_showNum(88,16,(speed), 2,12,24);
-			GUI_Refresh();
-		}
-	}
-	else if(key == KEY_OK_PRESS)
+	}else if(key == KEY_OK_PRESS)
 	{
 		Car.TargetSpeed = speed;
 

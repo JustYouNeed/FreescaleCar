@@ -21,7 +21,7 @@
 
 # include "bsp_battery.h"
 
-
+uint8_t batteryVol = 0;
 /*
 *********************************************************************************************************
 *                                          
@@ -71,8 +71,8 @@ float bsp_bat_GetVol(void)
 	float vol = 0.0f;
 	
 //	adc = adc_once(1);
-	adc = drv_adc_ConvOnce(BAT_CHANNEL, ADC_Resolution_8b);
-	vol = (adc* 5.0f/ 255) / (R2 / (R1 + R2)) ;
+//	adc = drv_adc_ConvOnce(BAT_CHANNEL, ADC_Resolution_8b);
+	vol = (batteryVol* 5.0f/ 255) / (R2 / (R1 + R2)) ;
 	
 	return vol;
 }

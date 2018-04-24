@@ -1,6 +1,8 @@
 # include "FreescaleCar.h"
 # include "display.h"
+# include "app_pid.h"
 
+FuzzyPID_TypeDef Fuzzy;
 /*
 *********************************************************************************************************
 *                                          

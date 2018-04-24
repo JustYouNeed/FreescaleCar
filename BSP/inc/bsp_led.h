@@ -32,15 +32,15 @@
 # define LED_ON					GPIO_PIN_SET
 
 /*  LED灯引脚定义  */
-# define LED1_PIN			GPIO_Pin_D0
-# define LED2_PIN			GPIO_Pin_D1
+# define LED_RED_PIN			GPIO_Pin_D0
+# define LED_BLUE_PIN			GPIO_Pin_D1
 
 /*  LED ID枚举变量  */
 typedef enum
 {
 	LED_ALL = 0x0,
-	LED1,
-	LED2,
+	LED_RED,
+	LED_BLUE,
 }LED_IDType;
 
 

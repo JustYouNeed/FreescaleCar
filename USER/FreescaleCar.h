@@ -31,10 +31,7 @@
 /*  编码器每圈输出脉冲数  */
 # define ENCONDER_LINES			512
 
-/*  速度控制周期*/
-# define SPEED_CONTROL_PERIOD	10	
 
-# define DIRCTION_CONTROL_PERIOD	5
 
 /*  车轮周长,单位 米  */
 # define WHEEL_GIRTH				0.2
@@ -62,6 +59,9 @@
 typedef struct
 {
 	PID_TypeDef PID;											/*  PID参数  */
+	FuzzyPID_TypeDef DirFuzzy;						/*  转向控制模糊PID  */
+	FuzzyPID_TypeDef LVFuzzy;   				  /*  左边速度控制模糊PID  */
+	FuzzyPID_TypeDef RVFuzzy;							/*  右边速度控制模糊PID  */
 	Sensor_TypeDef Sensor[SENSOR_COUNT];	/*  传感器  */
 	Motor_TypeDef Motor;									/*  电机  */
 	MPU_TypeDef MPU;											/*  MPU参数  */
@@ -72,6 +72,8 @@ typedef struct
 }Car_TypeDef;
 
 extern Car_TypeDef Car;
+extern Kalman1Dim_TypeDef Kalman_Gryoz;
+
 
 void Car_ParaInit(void);
 void Car_Control(void);

@@ -110,7 +110,7 @@ const static float g_GryoZ_Kd = 0.08f;
 static uint16_t g_OutCounter = 0;
 
 static float g_SpeedFactor = 0.15;
-static float g_HAEFactor = 10;
+static float g_HAEFactor = 0.350;
 
 uint16_t g_CircleSpeedError = 0;
 
@@ -144,11 +144,11 @@ void Car_ParaInit(void)
 	Car.PID.DirectionKd = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 20, float);
 	
 	/*  初始化方向模糊PID参数  */
-	Car.DirFuzzy.DeltaKdMax = 15;
+	Car.DirFuzzy.DeltaKdMax = 25;
 	Car.DirFuzzy.DeltaKiMax = 0;
-	Car.DirFuzzy.DeltaKpMax = 3;
+	Car.DirFuzzy.DeltaKpMax = 10;
 	Car.DirFuzzy.DErrMax = 10;
-	Car.DirFuzzy.ErrMax = 70;
+	Car.DirFuzzy.ErrMax = 90;
 	Car.DirFuzzy.KP = 12;
 	Car.DirFuzzy.KD = 180;
 	Car.DirFuzzy.KPMax = Car.PID.DirectionKp;
@@ -213,7 +213,7 @@ void Car_ParaInit(void)
 	
 	
 	/*  小车目标速度  */
-	Car.TargetSpeed = 35;
+	Car.TargetSpeed = 30;
 		
 	Car.MaxPWM = 950;
 	
@@ -366,7 +366,7 @@ int16_t Car_LeftVelocityPIDCalc(int16_t LeftSpeed)
 	SpeedFilter *= 0.7;
 	SpeedFilter += (SpeedError * 0.3);
 	
-	if(SpeedError < 100 || SpeedError >= -100)
+	if(SpeedError < 10 && SpeedError >= -10)
 		SpeedIntegal += SpeedFilter;
 	
 	/*  积分限幅  */
@@ -386,7 +386,7 @@ int16_t Car_LeftVelocityPIDCalc(int16_t LeftSpeed)
 	Ki = Car.PID.SpeedKi;
 	Kd = Car.PID.SpeedKd;
 	
-	if(SpeedError > 10) Kp *= 1.1;
+	if(SpeedError > 5) Kp *= 1.5;
 	
 	/*  速度环 */
 	Velocity = (int16_t)(SpeedFilter * -Kp +	SpeedIntegal * -Ki + SpeedDError * Kd);
@@ -423,7 +423,7 @@ int16_t Car_RightVelocityPIDCalc(int16_t RightSpeed)
 	SpeedFilter *= 0.7;
 	SpeedFilter += (SpeedError * 0.3);
 	
-	if(SpeedError < 100 || SpeedError >= -100)
+	if(SpeedError < 10 && SpeedError >= -10)
 		SpeedIntegal += SpeedFilter;
 	
 	SpeedDError = LastSpeedError - SpeedFilter;
@@ -444,7 +444,7 @@ int16_t Car_RightVelocityPIDCalc(int16_t RightSpeed)
 	Ki = Car.PID.SpeedKi;
 	Kd = Car.PID.SpeedKd;
 	
-	if(SpeedError > 10) Kp *= 1.1;
+	if(SpeedError > 5) Kp *= 1.5;
 	/*  速度环 */
 	Velocity = (int16_t)(SpeedFilter * -Kp +	SpeedIntegal * -Ki + SpeedDError * Kd);
 		
@@ -473,33 +473,31 @@ void Car_SpeedControl(void)
 //	}	else 
 		if(Car.Sensor[SENSOR_H_L].Average - Car.Sensor[SENSOR_H_R].Average > 20 )
 		{
-			g_LeftSpeedDalta = g_HAEFactor * Car.HorizontalAE;
-			g_RightSpeedDalta = 0;
+			Car.LeftTargetSpeed = 35 + (g_SpeedCounter++ / 10) * 10 + g_HAEFactor * Car.AE;
+			Car.RightTargetSpeed = 25 + (g_SpeedCounter++ / 10) * 10 - g_HAEFactor * Car.AE;
 		}	else		
 		if(Car.Sensor[SENSOR_H_R].Average - Car.Sensor[SENSOR_H_L].Average > 20)
 		{
-			g_RightSpeedDalta = g_HAEFactor * Car.HorizontalAE;
-			g_LeftSpeedDalta = 0;
+			Car.LeftTargetSpeed = 25 + (g_SpeedCounter++ / 10) * 5 + g_HAEFactor * Car.AE;
+			Car.RightTargetSpeed = 35 + (g_SpeedCounter++ / 10) * 5 - g_HAEFactor * Car.AE;
 		}
 //	{
 		/*  由当前误差来动态计算左右电机目标速度  */
-//		Car.LeftTargetSpeed = Car.TargetSpeed + g_HAEFactor * Car.HorizontalAE;
-//		Car.RightTargetSpeed = Car.TargetSpeed - g_HAEFactor * Car.HorizontalAE;
+		if(g_SpeedCounter >= 10) g_SpeedCounter = 10;
 //		g_LeftSpeedDalta = g_HAEFactor * Car.HorizontalAE;
 	}
 	else
 	{
-		g_LeftSpeedDalta = 0;
-		g_RightSpeedDalta = 0;
-		Car.LeftTargetSpeed = Car.TargetSpeed;
-		Car.RightTargetSpeed = Car.TargetSpeed;
+		g_SpeedCounter = 0;
+		Car.LeftTargetSpeed = 45;
+		Car.RightTargetSpeed = 45;
 	}
 
 	/*  用于防止圆环有速度偏差  */
-	if(Car.Sensor[SENSOR_H_L].Average > 90 && Car.Sensor[SENSOR_H_R].Average > 90)
+	if(Car.Sensor[SENSOR_H_L].Average > 85 && Car.Sensor[SENSOR_H_R].Average > 85)
 	{
-		Car.LeftTargetSpeed = Car.TargetSpeed;
-		Car.RightTargetSpeed = Car.TargetSpeed;
+		Car.LeftTargetSpeed = 45;
+		Car.RightTargetSpeed = 45;
 	}
 	
 	

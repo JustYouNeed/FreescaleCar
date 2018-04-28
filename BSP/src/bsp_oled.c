@@ -336,9 +336,9 @@ void bsp_oled_Config(void)
 	oled_wr_byte(0x8D,OLED_CMD); //电荷泵设置
 	oled_wr_byte(0x14,OLED_CMD); //bit2，开启/关闭
 	oled_wr_byte(0x20,OLED_CMD); //设置内存地址模式
-	oled_wr_byte(0x02,OLED_CMD); //[1:0],00，列地址模式;01，行地址模式;10,页地址模式;默认10;
-	oled_wr_byte(0xA1,OLED_CMD); //段重定义设置,bit0:0,0->0;1,0->127;
-	oled_wr_byte(0xC0,OLED_CMD); //设置COM扫描方向;bit3:0,普通模式;1,重定义模式 COM[N-1]->COM0;N:驱动路数
+	oled_wr_byte(0x00,OLED_CMD); //[1:0],00，列地址模式;01，行地址模式;10,页地址模式;默认10;
+	oled_wr_byte(0xA0,OLED_CMD); //段重定义设置,bit0:0,0->0;1,0->127;
+	oled_wr_byte(0xCF,OLED_CMD); //设置COM扫描方向;bit3:0,普通模式;1,重定义模式 COM[N-1]->COM0;N:驱动路数
 	oled_wr_byte(0xDA,OLED_CMD); //设置COM硬件引脚配置
 	oled_wr_byte(0x12,OLED_CMD); //[5:4]配置
 		 

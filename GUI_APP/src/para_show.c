@@ -69,7 +69,7 @@ void Para_Show_UI(void)
 			oled_showChar(27, 50, '-', 6, 12, 1);
 			oled_showNum(33, 50, (int16_t)(-Car.HorizontalAE), 3, 6, 12);
 		}else
-			oled_showNum(27, 50, (int16_t)(Car.HorizontalAE), 3, 6, 12);
+			oled_showNum(27, 50, (int16_t)(Car.HorizontalAE), 4, 6, 12);
 		
 		oled_showString(65,50,"VAE:", 6, 12);
 		if(Car.VecticalAE < 0)
@@ -77,7 +77,7 @@ void Para_Show_UI(void)
 			oled_showChar(90, 50, '-', 6, 12, 1);
 			oled_showNum(90+6, 50, (int16_t)(-Car.VecticalAE), 3, 6, 12);
 		}else
-		oled_showNum(90, 50, (int16_t)(Car.VecticalAE), 3, 6, 12);
+		oled_showNum(90, 50, (int16_t)(Car.VecticalAE), 4, 6, 12);
 	}
 	/*  第二页显示电机参数  */
 	else if(showPage == 1)

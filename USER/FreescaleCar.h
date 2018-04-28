@@ -30,7 +30,8 @@
 
 /*  编码器每圈输出脉冲数  */
 # define ENCONDER_LINES			512
-
+# define ENCONDER_TEETH			29
+# define WHEEL_TEETH				68
 
 
 /*  车轮周长,单位 米  */
@@ -52,7 +53,7 @@
 
 
 /*  速度转换比例因子,计算完成后速度单位为 转速  */
-# define CAR_SPEED_CONSTANT	(1000.0/SPEED_CONTROL_PERIOD/ENCONDER_LINES)
+# define CAR_SPEED_CONSTANT	(1000.0/SPEED_CONTROL_PERIOD/ENCONDER_LINES)*ENCONDER_TEETH/WHEEL_TEETH
 
 
 /*  车子整体参数结构体定义  */

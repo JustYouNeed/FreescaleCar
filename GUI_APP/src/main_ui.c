@@ -33,6 +33,13 @@ void main_ui(void)
 	oled_showPicture(0,0,bmp_rssi[5],24,22);
 	oled_showString(26,30,"Vector", 12, 24);
 	
+	oled_showNum(26+8, 6, SysTime.Hours, 2, 6, 12);
+	oled_showChar(38+8, 6, ':', 6, 12, 1);
+	oled_showNum(44+8, 6, SysTime.Minutes, 2, 6, 12);
+	oled_showChar(56+8, 6, ':', 6, 12, 1);
+	oled_showNum(62+8, 6, SysTime.Seconds, 2, 6, 12);
+	
+	
 	vol = bsp_bat_GetVol();
 	batPercent = (vol - BAT_LOW_VOL) / (BAT_FULL_VOL - BAT_LOW_VOL) * 100;
 	if(batPercent >= 99) batPercent = 99;

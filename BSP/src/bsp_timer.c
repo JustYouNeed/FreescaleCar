@@ -41,23 +41,23 @@ static volatile uint8_t s_ucTimeOutFlag = 0;	/*  该文件私有变量,用于统计运行时间
 __IO int32_t g_iRunTime = 0;		/*  该文件私有变量,运行时间  */
 
 
-SoftTimer_Str SoftTimer[SOFT_TIMER_COUNT];	/*  软件定时器组  */
-HardTimer_Str HardTimer[2];									/*  由于采用PIT定时器,因此硬件定时器最多只能有两个  */
-
+SoftTimer_TypeDef SoftTimer[SOFT_TIMER_COUNT];	/*  软件定时器组  */
+HardTimer_TypeDef HardTimer[2];									/*  由于采用PIT定时器,因此硬件定时器最多只能有两个  */
+Time_TypeDef SysTime;
 /*
 *********************************************************************************************************
 *                               bsp_tim_SoftDec           
 *
 * Description: 递减每个软件定时器的计数器
 *             
-* Arguments  : 1> pTimer:SoftTimer_Str结构体指针，指向一个软件定时器
+* Arguments  : 1> pTimer:SoftTimer_TypeDef结构体指针，指向一个软件定时器
 *
 * Reutrn     : None.
 *
 * Note(s)    : 该函数为本文件私有函数
 *********************************************************************************************************
 */
-void bsp_tim_SoftDec(SoftTimer_Str * pTimer)
+void bsp_tim_SoftDec(SoftTimer_TypeDef * pTimer)
 {
 	if(pTimer->v_uiCount >0)		/*  只有在计数器的值大于零才需要递减  */
 	{
@@ -108,6 +108,24 @@ void SysTick_ISR(void)
 	g_iRunTime ++;				/*  运行时间计数器  */
 	if(g_iRunTime == 0x7fffffff) g_iRunTime = 0;			/*  运行时间计数器为32位，最大值为 0x7fffffff */
 	
+	if(g_iRunTime % 1000 == 0)
+		SysTime.Seconds++;
+
+	if(SysTime.Seconds > 59) 
+	{
+		SysTime.Seconds = 0;
+		SysTime.Minutes ++;
+	}
+	
+	if(SysTime.Minutes > 59)
+	{
+		SysTime.Minutes = 0;
+		SysTime.Hours++;
+	}
+	if(SysTime.Hours > 23)
+	{
+		SysTime.Hours = 0;
+	}
 # if OS_SUPPORT > 0u			/*  如果需要支持操作系统  */
 	if(OS_RUNNING == 1)
 	{
@@ -169,6 +187,9 @@ void bsp_tim_SoftConfig(void)
 		SoftTimer[i]._cbTimer = 0;
 		SoftTimer[i].ucUsed = 0;
 	}
+	SysTime.Hours = 0;
+	SysTime.Minutes = 0;
+	SysTime.Seconds = 0;
 	
 	SysTick_Config(SystemCoreClock / 1000);
 }

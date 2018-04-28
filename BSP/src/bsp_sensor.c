@@ -145,6 +145,7 @@ uint16_t adc_once(uint8_t channel)
 *********************************************************************************************************
 */
 extern uint16_t g_CircleSpeedError;
+int8_t g_CircleLine = 0;
 void bsp_sensor_DataProcess(void)
 {	
 	uint8_t cnt = 0;
@@ -215,32 +216,73 @@ void bsp_sensor_DataProcess(void)
 //		Car.HorizontalAE -= 20;
 //		Car.VecticalAE -= 20;
 //	}
-//	
-//	if(Car.Sensor[SENSOR_M].Average > 105) 
+	
+//	if(Car.Sensor[SENSOR_M].Average > 90) 
 //	{
-//		flag = 70;
-//		first = 1;
+//		flag = 50;
+////		first = 1;
 //		bsp_beep_ON();
-//		g_CircleSpeedError += 60;
+//		if(Car.Sensor[SENSOR_V_L].Average - Car.Sensor[SENSOR_V_R].Average > 50)
+//		{
+//			g_CircleSpeedError += 20;
+//			g_CircleLine = -20;
+//		}
+//		else if(Car.Sensor[SENSOR_V_R].Average - Car.Sensor[SENSOR_V_L].Average > 50)
+//		{
+//			g_CircleSpeedError -= 20;
+//			g_CircleLine = 20;
+//		}
+//		
+////		if(Car.HorizontalAE  > 50 && Car.VecticalAE > 50)
+////		{
+////			g_CircleSpeedError = -180;
+////			g_CircleLine = 60;
+////		}
+////		else if(Car.HorizontalAE  < -50 && Car.VecticalAE < -50)
+////		{
+////			g_CircleSpeedError = 180;
+////			g_CircleLine = -60;
+////		}
+//	}	else if(Car.Sensor[SENSOR_M].Average > 70)
+//	{
+//				flag = 40;
+////		first = 1;
+//		bsp_beep_ON();
+//		if(Car.Sensor[SENSOR_V_L].Average - Car.Sensor[SENSOR_V_R].Average > 50)
+//		{
+//			g_CircleSpeedError += 80;
+//			g_CircleLine = -60;
+//		}
+//		else if(Car.Sensor[SENSOR_V_R].Average - Car.Sensor[SENSOR_V_L].Average > 50)
+//		{
+//			g_CircleSpeedError -= 80;
+//			g_CircleLine = 60;
+//		}
 //	}
-//	else 
+//	else if(flag == 0)
 //	{
 //		g_CircleSpeedError = 0;
-//	
+//		g_CircleLine = 0;
 //	}
 //	
 //	if(flag>0)
 //	{
 //		flag -- ;
+//		if(g_CircleLine > 0) g_CircleSpeedError+=80;
+//		else if(g_CircleLine < 0) g_CircleSpeedError -= 80;
 //		Car.HorizontalAE = 100 * ((Car.Sensor[SENSOR_H_R].NormalizedValue - Car.Sensor[SENSOR_H_L].NormalizedValue) / 
-//															(Car.Sensor[SENSOR_H_R].NormalizedValue + Car.Sensor[SENSOR_H_L].NormalizedValue)) - 50;
+//															(Car.Sensor[SENSOR_H_R].NormalizedValue + Car.Sensor[SENSOR_H_L].NormalizedValue)) - g_CircleLine;
 //		
 //		/*  计算垂直和比差,扩大100倍  */
 //		Car.VecticalAE = 100 * ((Car.Sensor[SENSOR_V_R].NormalizedValue - Car.Sensor[SENSOR_V_L].NormalizedValue) / 
-//															(Car.Sensor[SENSOR_V_R].NormalizedValue + Car.Sensor[SENSOR_V_L].NormalizedValue)) - 50;
+//															(Car.Sensor[SENSOR_V_R].NormalizedValue + Car.Sensor[SENSOR_V_L].NormalizedValue)) - g_CircleLine;
 //	}
 //	else
-//			bsp_beep_OFF();
+//	{
+//		bsp_beep_OFF();
+//		g_CircleSpeedError = 0;
+//		g_CircleLine = 0;
+//	}
 }
 
 /*

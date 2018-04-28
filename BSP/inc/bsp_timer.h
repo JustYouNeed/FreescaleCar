@@ -41,13 +41,20 @@ typedef struct
 	uint8_t ucUsed;					/*  是否已经使用  */
 	_cbTimerCallBack _cbTimer;	/*  回调函数  */
 	
-}SoftTimer_Str;
+}SoftTimer_TypeDef;
 
 typedef struct
 {
 	uint8_t ucUsed;							/*  是否已经使用  */
 	_cbTimerCallBack _cbTimer;	/*  回调函数  */
-}HardTimer_Str;
+}HardTimer_TypeDef;
+
+
+typedef struct
+{
+	uint16_t Hours, Minutes, Seconds;
+	uint8_t Years, Months, Days;
+}Time_TypeDef;
 
 /*  软件定时器模式枚举变量  */
 typedef enum
@@ -55,6 +62,8 @@ typedef enum
 	TIMER_MODE_ONCE = 0x00,
 	TIMER_MODE_AUTO
 }TIMER_MODE_ENUM;
+
+extern Time_TypeDef SysTime;
 
 void bsp_tim_SoftConfig(void);  /* 初始化软件定时器 */
 int8_t bsp_tim_CreateSoftTimer(uint8_t ucTimerId, uint32_t uiPeriod, _cbTimerCallBack  _cbTimer, TIMER_MODE_ENUM eMode);

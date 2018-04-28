@@ -234,15 +234,15 @@ void debug_PIDParaReport(void)
 	Buff[5] = BYTE1(temp);
 	
 	
-	temp = (short)(Car.PID.SpeedKp * ANO_PID_TRAN_FAC_P);
+	temp = (short)(Car.PID.SpeedKp * 100);
 	Buff[6] = BYTE2(temp);
 	Buff[7] = BYTE1(temp);
 	
-	temp = (short)(Car.PID.SpeedKi * ANO_PID_TRAN_FAC_I);
+	temp = (short)(Car.PID.SpeedKi * 100);
 	Buff[8] = BYTE2(temp);
 	Buff[9] = BYTE1(temp);
 	
-	temp = (short)(Car.PID.SpeedKd * 10);
+	temp = (short)(Car.PID.SpeedKd * 100);
 	Buff[10] = BYTE2(temp);
 	Buff[11] = BYTE1(temp);
 	
@@ -282,11 +282,11 @@ void debug_PIDDownload(void)
 //	Car.PID.Kd_Curved = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_D;
 //	cnt += 2;
 	
-	Car.PID.SpeedKp = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float)/10;
+	Car.PID.SpeedKp = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float)/100;
 	cnt += 2;
-	Car.PID.SpeedKi = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / 10;
+	Car.PID.SpeedKi = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / 100;
 	cnt += 2;
-	Car.PID.SpeedKd = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float)/10;
+	Car.PID.SpeedKd = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float)/100;
 	cnt += 2;
 
 	pid_StorePara();	/*  将PID参数保存到Flash中  */
@@ -331,8 +331,8 @@ void debug_SensorDataReport(void)
 	Buff[cnt++] = BYTE2((int16_t)(Car.VecticalAE));
 	Buff[cnt++] = BYTE1((int16_t)(Car.VecticalAE));
 	
-	Buff[cnt++] = BYTE2((int16_t)(Car.HorizontalAE - Car.VecticalAE));
-	Buff[cnt++] = BYTE1((int16_t)(Car.HorizontalAE - Car.VecticalAE));
+//	Buff[cnt++] = BYTE2((int16_t)(Car.HorizontalAE - Car.VecticalAE));
+//	Buff[cnt++] = BYTE1((int16_t)(Car.HorizontalAE - Car.VecticalAE));
 	
 	Buff[cnt++] = BYTE2((int16_t)(Car.AE));
 	Buff[cnt++] = BYTE1((int16_t)(Car.AE));
@@ -380,11 +380,11 @@ void debug_MotorDataReport(void)
 //	SendBuff[cnt++] = BYTE2(Car.Motor.RightEncoder);
 //	SendBuff[cnt++] = BYTE1(Car.Motor.RightEncoder);
 	
-	SendBuff[cnt++] = BYTE2((int16_t)(Car.Motor.LeftSpeed));
-	SendBuff[cnt++] = BYTE1((int16_t)(Car.Motor.LeftSpeed));
-	
-	SendBuff[cnt++] = BYTE2((int16_t)(Car.Motor.RightSpeed));
-	SendBuff[cnt++] = BYTE1((int16_t)(Car.Motor.RightSpeed));
+	SendBuff[cnt++] = BYTE2((int16_t)(Car.CarSpeed * 100));
+	SendBuff[cnt++] = BYTE1((int16_t)(Car.CarSpeed * 100));
+//	
+//	SendBuff[cnt++] = BYTE2((int16_t)(Car.Motor.RightSpeed));
+//	SendBuff[cnt++] = BYTE1((int16_t)(Car.Motor.RightSpeed));
 	
 //	SendBuff[cnt++] = BYTE2((int16_t)(Car.MPU.Gryoz));
 //	SendBuff[cnt++] = BYTE1((int16_t)(Car.MPU.Gryoz));

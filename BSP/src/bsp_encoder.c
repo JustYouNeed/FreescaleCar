@@ -2,7 +2,7 @@
   *******************************************************************************************************
   * File Name: bsp_encoder.c
   * Author: Vector
-  * Version: V2.1.0
+  * Version: V2.1.1
   * Date: 2018-2-28
   * Brief: 本文件提供了有关编码器的基本操作函数,如初始化、读取编码器值等,编码器采用中断方式计数
   *******************************************************************************************************
@@ -20,6 +20,10 @@
 	*			Mod: 1.将编码器计数方式由KBI中断改为FTM计数器
 	*					 2.删除电机编码器中断回调函数
 	*				   3.修改电机速度计算方式,由计算两次数值差改为读取计数器后清零方式
+	*
+	*		4.Author: Vector
+	*			Date: 2018-5-4
+	*			Mod: 去除速度计算功能,只读取编码器的值
   *
   *******************************************************************************************************
   */	
@@ -69,9 +73,6 @@ void bsp_encoder_Config(void)
 	FTM1->CNT = 0;
 	
 	
-//	drv_gpio_PullCmd(GPIO_Pin_E0, ENABLE);
-//	drv_gpio_PullCmd(GPIO_Pin_E7, ENABLE);
-	
 	/*  初始化编码器方向引脚  */
 	GPIO_InitStruct.GPIO_HDrv = DISABLE;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
@@ -94,23 +95,18 @@ void bsp_encoder_Config(void)
 *
 * Reutrn     : None.
 *
-* Note(s)    : 该函数应该定时调用,以提高速度计算精度,同时该函数计算出来的值只能作为参考值,不是很精确
+* Note(s)    : None.
 *********************************************************************************************************
 */
 void bsp_encoder_ReadCounter(void)
 {	
 	/*  读取FTM计数器值  */
-	Car.Motor.RightEncoder += (uint16_t)FTM0->CNT;
-	Car.Motor.LeftEncoder += (uint16_t)FTM1->CNT;
+	Car.Motor.RightEncoder += (uint32_t)FTM0->CNT;
+	Car.Motor.LeftEncoder += (uint32_t)FTM1->CNT;
 	
 	/*  清空计数器  */
 	FTM0->CNT = 0;
 	FTM1->CNT = 0;
-	
-
-//	/*  由方向电平来判断电机速度方向,左右两边电机由于旋转了180度,所以方向有180度相位差  */
-//	if(drv_gpio_ReadPin(LEFTENCONDER_DIR_PIN) == 0) Car.Motor.LeftSpeed = -Car.Motor.LeftSpeed;
-//	if(drv_gpio_ReadPin(RIGHTENCONDER_DIR_PIN) == 1) Car.Motor.RightSpeed = -Car.Motor.RightSpeed;
 }
 
 /********************************************  END OF FILE  *******************************************/

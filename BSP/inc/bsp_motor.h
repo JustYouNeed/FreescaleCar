@@ -43,8 +43,8 @@ typedef struct
  	int16_t LeftPwm;				/*  左边电机PWM  */
 	int16_t RightPwm;				/*  右边电机PWM  */
 	
-	int16_t LeftEncoder;		/*  左边电机编码器  */
-	int16_t RightEncoder;		/*  右边电机编码器  */
+	int32_t LeftEncoder;		/*  左边电机编码器  */
+	int32_t RightEncoder;		/*  右边电机编码器  */
 	
 	float LeftSpeed;			/*  左边电机转速  */
 	float RightSpeed;			/*  右边电机转速  */

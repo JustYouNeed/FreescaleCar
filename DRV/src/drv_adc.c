@@ -2,14 +2,18 @@
   *******************************************************************************************************
   * File Name: drv_adc.c
   * Author: Vector
-  * Version: V1.0.0
+  * Version: V1.1.0
   * Date: 2018-3-1
   * Brief: KEA128芯片ADC底层驱动函数
   *******************************************************************************************************
   * History
-  *		1.Data: 2018-3-1
+  *		1.Date: 2018-3-1
 	*     Author: Vector
 	*     Mod: 建立文件,添加基本函数
+	*
+	*		2.Date: 2018-5-3
+	*			Author: Vector
+	*			Mod: 修复ADC通道配置错误,以及不能二次配置错误
   *
   *******************************************************************************************************
   */
@@ -51,13 +55,23 @@ static uint32_t   ADC_Order[24] = {0};		/*  ADC通道顺序,用来获取单个ADC转换结果 
 void drv_adc_Init(ADC_InitTypeDef *ADC_InitStruct)
 {
 	uint32_t posbit = 0, channel = 0, reg_tmp = 0;
+	uint16_t apc_temp = 0;
 	uint8_t reg = 0;
 	uint8_t i = 0, cnt = 0;
 	
 	drv_rcc_ClockCmd(RCC_PeriphClock_ADC, ENABLE);  /*  开启ADC时钟  */
 	
-	ADC->APCTL1 |= (uint16_t)ADC_InitStruct->ADC_Channel;     /*  设置ADC采样通道  */
-	reg_tmp |= ADC_InitStruct->ADC_Resolution;			/*  设置ADC采样位数  */
+	apc_temp = ADC->APCTL1;						/*  读取当前配置  */
+	if(apc_temp != 0x0000)						/*  如果该寄存器为0,则说明为第一次配置,则不需要另外处理  */
+		apc_temp = ~(uint16_t)(apc_temp);		/*  因为该芯片为写0使能,所以先要取反一次  */
+	apc_temp |= (uint16_t)ADC_InitStruct->ADC_Channel;	/*  与当前通道相或  */
+	apc_temp = ~apc_temp;			/*  再次取反,需要开启的ADC通道由置位改为复位,使能该通道  */
+	
+	ADC_APCTL1 = 0XFFFF;	
+	ADC->APCTL1 = apc_temp;     /*  设置ADC采样通道  */
+	
+	reg_tmp = 0;
+	reg_tmp |= ADC_InitStruct->ADC_Resolution << 1;			/*  设置ADC采样位数  */
 	reg_tmp |= ADC_InitStruct->ADC_Prescaler;			/*  时钟分频  */
 	reg_tmp |= ADC_InitStruct->ADC_ClockSource;		/*  时钟源  */
 	ADC->SC3 = reg_tmp;
@@ -208,25 +222,25 @@ uint16_t drv_adc_ConvOnce(uint32_t ADC_Channel, uint8_t ADC_Resolution)
 	uint16_t channel = 0;
 	uint16_t result = 0;
 	
-	for(; channel < 16; channel++)		/*  得到通道  */
+	if(ADC_Channel & ADC_Channel_VSS) channel = 16;
+	if(ADC_Channel & ADC_Channel_Temperature) channel = 22;
+	
+	for(channel = 0; channel < 16; channel++)		/*  得到通道  */
 	{
 		if((ADC_Channel >> channel) & 0x01) break;
 	}
 	
-	if(ADC_Channel & ADC_Channel_VSS) channel = 16;
-	if(ADC_Channel & ADC_Channel_Temperature) channel = 22;
-	
-	ADC->SC3 |= ADC_Resolution;			/*  设置转换位数  */
-	ADC->SC3 |= ADC_SC3_ADIV(0);		/*  不分频  */
-	ADC->SC3 |= ADC_SC3_ADICLK(0);	/*  使用总线时钟  */
+//	ADC->SC3 |= (ADC_Resolution << 1)			/*  设置转换位数  */
+//							| ADC_SC3_ADIV(1)		/*  不分频  */
+//							| ADC_SC3_ADICLK(0);	/*  使用总线时钟  */
 
-	ADC->SC2 |= ADC_SC2_REFSEL(0);	/*  外部参考电压  */
+//	ADC->SC2 |= ADC_SC2_REFSEL(0);	/*  外部参考电压  */
 	
 	ADC->SC1 = ADC_SC1_ADCH(channel);				/*  启动转换  */
 	while(!(ADC->SC1 & ADC_SC1_COCO_MASK));	/*  等待转换完成  */
-	result = ADC->R;
-	ADC_SC1 &= ~ADC_SC1_COCO_MASK;	/*  清除转换完成标志  */
-	return (result);       /*  返回转换结果  */
+//	result = ADC->R;
+//	ADC_SC1 &= ~ADC_SC1_COCO_MASK;				/*  清除转换完成标志  */
+	return (ADC->R & ADC_R_ADR_MASK);       /*  返回转换结果  */
 } 
 
 

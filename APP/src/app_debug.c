@@ -331,8 +331,6 @@ void debug_SensorDataReport(void)
 	Buff[cnt++] = BYTE2((int16_t)(Car.VecticalAE));
 	Buff[cnt++] = BYTE1((int16_t)(Car.VecticalAE));
 	
-//	Buff[cnt++] = BYTE2((int16_t)(Car.HorizontalAE - Car.VecticalAE));
-//	Buff[cnt++] = BYTE1((int16_t)(Car.HorizontalAE - Car.VecticalAE));
 	
 	Buff[cnt++] = BYTE2((int16_t)(Car.AE));
 	Buff[cnt++] = BYTE1((int16_t)(Car.AE));
@@ -370,59 +368,56 @@ void debug_MotorDataReport(void)
 	SendBuff[cnt++] = BYTE2(Car.Motor.RightPwm);
 	SendBuff[cnt++] = BYTE1(Car.Motor.RightPwm);
 	
-//	SendBuff[cnt++] = BYTE4(Car.Motor.LeftEncoder);
-//	SendBuff[cnt++] = BYTE3(Car.Motor.LeftEncoder);
-//	SendBuff[cnt++] = BYTE2(Car.Motor.LeftEncoder);
-//	SendBuff[cnt++] = BYTE1(Car.Motor.LeftEncoder);
-//	
-//	SendBuff[cnt++] = BYTE4(Car.Motor.RightEncoder);
-//	SendBuff[cnt++] = BYTE3(Car.Motor.RightEncoder);
-//	SendBuff[cnt++] = BYTE2(Car.Motor.RightEncoder);
-//	SendBuff[cnt++] = BYTE1(Car.Motor.RightEncoder);
+	SendBuff[cnt++] = BYTE4(Car.Motor.LeftEncoder);
+	SendBuff[cnt++] = BYTE3(Car.Motor.LeftEncoder);
+	SendBuff[cnt++] = BYTE2(Car.Motor.LeftEncoder);
+	SendBuff[cnt++] = BYTE1(Car.Motor.LeftEncoder);
+	
+	SendBuff[cnt++] = BYTE4(Car.Motor.RightEncoder);
+	SendBuff[cnt++] = BYTE3(Car.Motor.RightEncoder);
+	SendBuff[cnt++] = BYTE2(Car.Motor.RightEncoder);
+	SendBuff[cnt++] = BYTE1(Car.Motor.RightEncoder);
 	
 	SendBuff[cnt++] = BYTE2((int16_t)(Car.CarSpeed * 100));
 	SendBuff[cnt++] = BYTE1((int16_t)(Car.CarSpeed * 100));
-//	
-//	SendBuff[cnt++] = BYTE2((int16_t)(Car.Motor.RightSpeed));
-//	SendBuff[cnt++] = BYTE1((int16_t)(Car.Motor.RightSpeed));
-	
-//	SendBuff[cnt++] = BYTE2((int16_t)(Car.MPU.Gryoz));
-//	SendBuff[cnt++] = BYTE1((int16_t)(Car.MPU.Gryoz));
-	
-//	SendBuff[cnt++] = BYTE2((int16_t)(Kalman_Gryoz.Output));
-//	SendBuff[cnt++] = BYTE1((int16_t)(Kalman_Gryoz.Output));
-	
-//	SendBuff[cnt++] = BYTE2((int16_t)(Car.PID.DirectionKp));
-//	SendBuff[cnt++] = BYTE1((int16_t)(Car.PID.DirectionKp));
-//	
-//	SendBuff[cnt++] = BYTE2((int16_t)(Car.PID.DirectionKd));
-//	SendBuff[cnt++] = BYTE1((int16_t)(Car.PID.DirectionKd));
 	
 	SendBuff[cnt++] = BYTE2((int16_t)(Car.DirFuzzy.KP));
 	SendBuff[cnt++] = BYTE1((int16_t)(Car.DirFuzzy.KP));
 	
 	SendBuff[cnt++] = BYTE2((int16_t)(Car.DirFuzzy.KD));
 	SendBuff[cnt++] = BYTE1((int16_t)(Car.DirFuzzy.KD));
-//	
-//	SendBuff[cnt++] = BYTE2((int16_t)(Car.LVFuzzy.KP));
-//	SendBuff[cnt++] = BYTE1((int16_t)(Car.LVFuzzy.KP));
-//	
-//	SendBuff[cnt++] = BYTE2((int16_t)(Car.LVFuzzy.KI*100));
-//	SendBuff[cnt++] = BYTE1((int16_t)(Car.LVFuzzy.KI*100));
-//	
-//	SendBuff[cnt++] = BYTE2((int16_t)(Car.LVFuzzy.KD));
-//	SendBuff[cnt++] = BYTE1((int16_t)(Car.LVFuzzy.KD));
-//	
-//	SendBuff[cnt++] = BYTE2((int16_t)(Car.RVFuzzy.KP));
-//	SendBuff[cnt++] = BYTE1((int16_t)(Car.RVFuzzy.KP));
-//	
-//	SendBuff[cnt++] = BYTE2((int16_t)(Car.RVFuzzy.KI*100));
-//	SendBuff[cnt++] = BYTE1((int16_t)(Car.RVFuzzy.KI*100));
-//	
-//	SendBuff[cnt++] = BYTE2((int16_t)(Car.RVFuzzy.KD));
-//	SendBuff[cnt++] = BYTE1((int16_t)(Car.RVFuzzy.KD));
+
 	
 	debug_DataUpload(SendBuff, 0xf1, cnt);
+}
+
+void debug_MPUDataReport(void)
+{
+	uint8_t SendBuff[32] = {0};
+	uint8_t cnt = 0;
+	
+	SendBuff[cnt ++] = BYTE2(Car.MPU.Accx);
+	SendBuff[cnt ++] = BYTE1(Car.MPU.Accx);
+	
+	SendBuff[cnt ++] = BYTE2(Car.MPU.Accy);
+	SendBuff[cnt ++] = BYTE1(Car.MPU.Accy);
+	
+	SendBuff[cnt ++] = BYTE2(Car.MPU.Accz);
+	SendBuff[cnt ++] = BYTE1(Car.MPU.Accz);
+	
+	SendBuff[cnt ++] = BYTE2(Car.MPU.Gryox);
+	SendBuff[cnt ++] = BYTE1(Car.MPU.Gryox);
+	
+	SendBuff[cnt ++] = BYTE2(Car.MPU.Gryoy);
+	SendBuff[cnt ++] = BYTE1(Car.MPU.Gryoy);
+	
+	SendBuff[cnt ++] = BYTE2(Car.MPU.Gryoz);
+	SendBuff[cnt ++] = BYTE1(Car.MPU.Gryoz);
+	
+	SendBuff[cnt ++] = BYTE2(Car.Kalman.Gyro);
+	SendBuff[cnt ++] = BYTE1(Car.Kalman.Gyro);
+	
+	debug_DataUpload(SendBuff, 0x02, 18);
 }
 /*
 *********************************************************************************************************
@@ -438,10 +433,7 @@ void debug_MotorDataReport(void)
 *********************************************************************************************************
 */
 void debug_CarDataReport(void)
-{
-	if(TimerTaskRunMutexSignal == 1) return ;
-	TimerTaskRunMutexSignal = 1;
-	
+{	
 	/*  先处理收到的数据  */
 	debug_DataProcess();
 	
@@ -451,7 +443,8 @@ void debug_CarDataReport(void)
 	/*  上传电机数据  */
 	debug_MotorDataReport();
 	
-	TimerTaskRunMutexSignal = 0;
+	debug_MPUDataReport();
+	
 }
 
 

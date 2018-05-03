@@ -1,3 +1,24 @@
+/**
+  *******************************************************************************************************
+  * File Name: para_show.c
+  * Author: Vector
+  * Version: V1.0.0
+  * Date: 2018-3-24
+  * Brief: 用于显示小车的各种参数
+  *******************************************************************************************************
+  * History
+  *		1.Author: Vector
+	*			Date: 2018-3-24
+	*			Mod: 建立本文件
+  *
+  *******************************************************************************************************
+  */	
+
+/*
+  *******************************************************************************************************
+  *                              INCLUDE FILES
+  *******************************************************************************************************
+*/
 # include "para_show.h"
 # include "gui_menu.h"
 # include "lcmdrv.h"
@@ -12,8 +33,7 @@ extern uint8_t key;
 static int8_t showPage = 0;
 static bool isWindowChange = true;
 
-static int16_t HAEFifo[128];
-static uint8_t fifocnt = 0;
+/*  定义一个窗口  */
 WINDOWS DebugWindow={
 .x = 0,
 .y = 0,	
@@ -24,6 +44,7 @@ WINDOWS DebugWindow={
 .title = "Sensor Parameters",
 };
 
+/*  定义一个滚动条  */
 Scrollbar_Typedef DebugScrollbar={
 .x = 118,
 .y = 14,
@@ -34,14 +55,40 @@ Scrollbar_Typedef DebugScrollbar={
 .scbbarlen = 0,
 };
 
+/*
+*********************************************************************************************************
+*                             Para_ShowRefresh             
+*
+* Description: 用于改变参数显示后刷新窗口标题
+*             
+* Arguments  : None.
+*
+* Reutrn     : None.
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
 void Para_ShowRefresh(void)
 {
-	if(isWindowChange == false) return;
+	if(isWindowChange == false) return;		/*  只有在窗口被改变的情况下才需要刷新  */
 	GUI_WindowsDraw(&DebugWindow);
 	GUI_ScrollbarDraw(&DebugScrollbar);
 	isWindowChange = false;
 }
 
+/*
+*********************************************************************************************************
+*                             Para_Show_UI             
+*
+* Description: 用于显示调试期间的各种参数
+*             
+* Arguments  : None.
+*
+* Reutrn     : None.
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
 void Para_Show_UI(void)
 {
 	Para_ShowRefresh();
@@ -57,27 +104,41 @@ void Para_Show_UI(void)
 		oled_showString(65,15,"HFR:", 6, 12);
 		oled_showNum(95, 15, Car.Sensor[SENSOR_H_R].Average, 3, 6, 12);
 		
-		oled_showString(3,33,"HBL:", 6, 12);
-		oled_showNum(27, 33, Car.Sensor[SENSOR_V_L].Average, 3, 6, 12);
+		oled_showString(3,27,"HBL:", 6, 12);
+		oled_showNum(27, 27, Car.Sensor[SENSOR_V_L].Average, 3, 6, 12);
 		
-		oled_showString(65,33,"HBR:", 6, 12);
-		oled_showNum(95, 33, Car.Sensor[SENSOR_V_R].Average, 3, 6, 12);
+		oled_showString(65,27,"HBR:", 6, 12);
+		oled_showNum(95, 27, Car.Sensor[SENSOR_V_R].Average, 3, 6, 12);
 		
-		oled_showString(3,50,"HAE:", 6, 12);
+		oled_showString(3,39,"HAE:", 6, 12);
 		if(Car.HorizontalAE < 0)
 		{
-			oled_showChar(27, 50, '-', 6, 12, 1);
-			oled_showNum(33, 50, (int16_t)(-Car.HorizontalAE), 3, 6, 12);
+			oled_showChar(27, 39, '-', 6, 12, 1);
+			oled_showNum(33, 39, (int16_t)(-Car.HorizontalAE), 3, 6, 12);
 		}else
-			oled_showNum(27, 50, (int16_t)(Car.HorizontalAE), 4, 6, 12);
+			oled_showNum(27, 39, (int16_t)(Car.HorizontalAE), 4, 6, 12);
 		
-		oled_showString(65,50,"VAE:", 6, 12);
+		oled_showString(65,39,"VAE:", 6, 12);
 		if(Car.VecticalAE < 0)
 		{
-			oled_showChar(90, 50, '-', 6, 12, 1);
-			oled_showNum(90+6, 50, (int16_t)(-Car.VecticalAE), 3, 6, 12);
+			oled_showChar(90, 39, '-', 6, 12, 1);
+			oled_showNum(90+6, 39, (int16_t)(-Car.VecticalAE), 3, 6, 12);
 		}else
-		oled_showNum(90, 50, (int16_t)(Car.VecticalAE), 4, 6, 12);
+		oled_showNum(90, 39, (int16_t)(Car.VecticalAE), 4, 6, 12);
+		
+		oled_showString(3,51,"HM:", 6, 12);
+		oled_showNum(27, 51, (int16_t)(Car.Sensor[SENSOR_M].Average), 3, 6, 12);
+		
+		oled_showString(65,51,"AE:", 6, 12);
+		if(Car.AE < 0)
+		{
+			oled_showChar(90, 51, '-', 6, 12, 1);
+			oled_showNum(90+6, 51, (int16_t)(-Car.AE), 3, 6, 12);
+		}else
+		{
+			oled_showChar(90, 51, ' ', 6, 12, 1);
+			oled_showNum(90+6, 51, (int16_t)(Car.AE), 3, 6, 12);
+		}
 	}
 	/*  第二页显示电机参数  */
 	else if(showPage == 1)
@@ -131,33 +192,51 @@ void Para_Show_UI(void)
 		
 		oled_showString(55,50,"RT:", 6, 12);
 		oled_showNum(85, 50, (Car.RightTargetSpeed), 3, 6, 12);
+	} 
+	else if(showPage == 3)
+	{
+		oled_showString(20,20,"AE:",6, 12);
+		if(Car.AE < 0)
+		{
+			oled_showChar(38, 20, '-', 6, 12, 1);
+			oled_showNum(44, 20, -Car.AE, 2, 6, 12);
+		}
+		else
+		{
+			oled_showChar(38, 20, ' ', 6, 12, 1);
+			oled_showNum(44, 20, Car.AE, 2, 6, 12);
+		}
+		oled_showNum(30,30, Car.NowRoad, 1, 12, 24);
 	}
 	
+	/*  进行翻页  */
 	if(key == KEY_DOWN_PRESS)
 	{
 		showPage--;
 		isWindowChange = true;
 		if(showPage < 0)
-			showPage = 2;
+			showPage = 3;
 		switch(showPage)
 		{
 			case 0: DebugWindow.title = "Motor Parameters";break;
 			case 1: DebugWindow.title = "Sensor Parameters";break;
-			case 2: DebugWindow.title = "PID Parameters";
+			case 2: DebugWindow.title = "PID Parameters";break;
+			case 3: DebugWindow.title = "Road Detect";break;
 			default: break;
 		}
 	}else if(key == KEY_UP_PRESS)
 	{
 		showPage++;
 		isWindowChange = true;
-		if(showPage>2)
+		if(showPage>3)
 			showPage = 0;
 		
 		switch(showPage)
 		{
 			case 0: DebugWindow.title = "Motor Parameters";break;
 			case 1: DebugWindow.title = "Sensor Parameters";break;
-			case 2: DebugWindow.title = "PID Parameters";
+			case 2: DebugWindow.title = "PID Parameters"; break;
+			case 3: DebugWindow.title = "Road Detect";break;
 			default: break;
 		}
 	}
@@ -168,5 +247,7 @@ void Para_Show_UI(void)
 	}
 
 }
+
+/********************************************  END OF FILE  *******************************************/
 
 

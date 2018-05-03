@@ -30,7 +30,7 @@
 # define BAT_LOW_VOL		6.8f
 
 # define R1 2.2f
-# define R2 2.0f
+# define R2 1.92f
 
 void bsp_bat_Config(void);
 float bsp_bat_GetVol(void);

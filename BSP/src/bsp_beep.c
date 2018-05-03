@@ -38,7 +38,7 @@ void bsp_beep_Config(void)
 	
 	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_B0;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
-	GPIO_InitStruct.GPIO_PuPd = ENABLE;
+	GPIO_InitStruct.GPIO_PuPd = DISABLE;
 	drv_gpio_Init(&GPIO_InitStruct);
 	
 	drv_gpio_WritePin(GPIO_Pin_B0, GPIO_PIN_SET);

@@ -30,14 +30,25 @@
 
 /*  编码器每圈输出脉冲数  */
 # define ENCONDER_LINES			512
+
+/*  编码器齿轮齿数  */
 # define ENCONDER_TEETH			29
+
+/*  轮子齿轮齿数  */
 # define WHEEL_TEETH				68
 
 
 /*  车轮周长,单位 米  */
 # define WHEEL_GIRTH				0.2
+
+/*  两轮轮心距  */
 # define WHEEL_LEN					0.16
+
+/*  轮子半径,单位米  */
 # define WHEEL_D						0.06
+
+
+
 
 /*  小车走走道时的目标速度  */
 # define STRAIGHT_SPEED		15
@@ -51,29 +62,35 @@
 
 # define DEFAULT_SPEED  20
 
-
-/*  速度转换比例因子,计算完成后速度单位为 转速  */
-# define CAR_SPEED_CONSTANT	(1000.0/SPEED_CONTROL_PERIOD/ENCONDER_LINES)*ENCONDER_TEETH/WHEEL_TEETH
-
+/*  道路类型枚举变量  */
+typedef enum
+{
+	STRAIGHT = 0x0,			/*  直道  */
+	LEFT_CURVE,					/*  左转弯  */
+	RIGHT_CURVE,				/*  右转弯  */
+	LEFT_ISLAND,				/*  环岛  */
+	RIGHT_ISLAND,
+	
+}Road_TypeDef;
 
 /*  车子整体参数结构体定义  */
 typedef struct
 {
 	PID_TypeDef PID;											/*  PID参数  */
 	FuzzyPID_TypeDef DirFuzzy;						/*  转向控制模糊PID  */
-	FuzzyPID_TypeDef LVFuzzy;   				  /*  左边速度控制模糊PID  */
-	FuzzyPID_TypeDef RVFuzzy;							/*  右边速度控制模糊PID  */
 	Sensor_TypeDef Sensor[SENSOR_COUNT];	/*  传感器  */
 	Motor_TypeDef Motor;									/*  电机  */
 	MPU_TypeDef MPU;											/*  MPU参数  */
+	Road_TypeDef NowRoad;
+	Kalman_TypeDef Kalman;
 	
 	float HorizontalAE, VecticalAE, AE;				/*  传感器水平、垂直和差比  */
 	float CarSpeed, TargetSpeed, LeftTargetSpeed, RightTargetSpeed;	/*  当前车速,整体目标速度,左右轮目标速度  */
 	int16_t MaxPWM;												/*  最大PWM  */
+	float Voltage;
 }Car_TypeDef;
 
 extern Car_TypeDef Car;
-extern Kalman1Dim_TypeDef Kalman_Gryoz;
 
 
 void Car_ParaInit(void);
@@ -83,6 +100,7 @@ void Car_Reset(void);
 void Car_Running(void);
 void Car_ControlStop(void);
 void Car_ControlStart(void);
+void Car_GetVoltage(void);
 # endif
 
 /********************************************  END OF FILE  *******************************************/

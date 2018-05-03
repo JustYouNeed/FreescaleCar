@@ -72,11 +72,11 @@ void filter_SildingAverage(uint16_t Array[], uint16_t *Average, uint16_t Length)
 */
 void filter_Kalman1Dim_Init(Kalman1Dim_TypeDef *Kalam_struct, double Q, double R)
 {
-	Kalam_struct->Kg = 0;
-	Kalam_struct->Output = 0;
-	Kalam_struct->P = 0;
-	Kalam_struct->Q = Q;
-	Kalam_struct->R = R;
+	Kalam_struct->Kg = 0;              //卡尔曼增益
+	Kalam_struct->Output = 0;          //输出量
+	Kalam_struct->P = 0;               //协方差
+	Kalam_struct->Q = Q;               //系统过程噪声的协方差/预测值置信度
+	Kalam_struct->R = R;               //系统测量噪声的协方差/测量值置信度
 }
 
 /*
@@ -99,10 +99,100 @@ void filter_Kalman1Dim(Kalman1Dim_TypeDef *Kalam_Struct, double input)
 	Kalam_Struct->Output += Kalam_Struct->Kg*(input - Kalam_Struct->Output);
 	
 	Kalam_Struct->Kg = Kalam_Struct->P/(Kalam_Struct->P + Kalam_Struct->R);
+	
 	Kalam_Struct->P *= (1-Kalam_Struct->Kg);
 }
 
+/*
+*********************************************************************************************************
+*                       filter_KanlmanInit                   
+*
+* Description: 初始化卡尔曼滤波结构体
+*             
+* Arguments  : None.
+*
+* Reutrn     : None.
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
+void filter_KanlmanInit(Kalman_TypeDef *Kalman)
+{
+	/*  初始化滤波器输出为0  */
+	Kalman->X[0] = 0;
+	Kalman->X[1] = 0;
+	
+	/*  滤波器采样周期  */
+	Kalman->dt = 0.005;
+	
+	/*  滤波器状态转移矩阵  */
+	Kalman->A[0][0] = 1;
+	Kalman->A[0][1] = -Kalman->dt;
+	Kalman->A[1][0] = 0;
+	Kalman->A[1][1] = 1;
+	
+	/*  控制输入转移矩阵  */
+	Kalman->B[0] = Kalman->dt;
+	Kalman->B[1] = 0;
+	
+	/*  协方差矩阵  */
+	Kalman->P[0][0] = 1;
+	Kalman->P[0][1] = 0;
+	Kalman->P[1][0] = 0;
+	Kalman->P[1][1] = 1;
+	
+	/*  预测值的置信度  */
+	Kalman->Q[0][0] = 0.001;
+	Kalman->Q[0][1] = 0;
+	Kalman->Q[1][0] = 0;
+	Kalman->Q[1][1] = 0.003;
+	
+	/*  测量过程噪声  */
+	Kalman->R = 0.5;
+}
 
+/*
+*********************************************************************************************************
+*                       filter_KalmanFilter                   
+*
+* Description: 卡尔曼滤波函数
+*             
+* Arguments  : 1.Kalman: Kalman控制结构体
+*							 2.Gryo: 测量到的角速度
+*							 3.Acc: 测量到的加速度
+*
+* Reutrn     : None.
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
+void filter_KalmanFilter(Kalman_TypeDef *Kalman, double Gryo, double Acc)
+{	
+	/*  公式1,X(k|k-1) = AX(k-1|k-1) + BU(k)  X, A, B, 都为矩阵, 进行先验估计  */
+	Kalman->X[0] = (Kalman->A[0][0] * Kalman->X[0] + Kalman->A[0][1] * Kalman->X[1]) + Gryo * Kalman->B[0];
+	Kalman->X[1] = (Kalman->A[1][0] * Kalman->X[0] + Kalman->A[1][1] * Kalman->X[1]) + Gryo * Kalman->B[1];
+	
+	/*  公式2, P(k|k-1) = AP(k-1|k-1)A_T + Q */
+	Kalman->P[0][0] = Kalman->P[0][0] - Kalman->P[1][0]*Kalman->dt - Kalman->P[0][1]*Kalman->dt + Kalman->P[0][0] * Kalman->dt * Kalman->dt + Kalman->Q[0][0];
+	Kalman->P[0][1] = Kalman->P[0][1] - Kalman->P[1][1] * Kalman->dt + Kalman->Q[0][1];
+	Kalman->P[1][0] = Kalman->P[1][0] - Kalman->P[1][1] * Kalman->dt + Kalman->Q[1][0];
+	Kalman->P[1][1] = Kalman->P[1][1] + Kalman->Q[1][1];
+	
+	/*  公式3, Kg(k) = P(k|k-1)H_T/(HP(k|k-1)H_T + R), H为系数矩阵 H = | 1 0 |  */
+	Kalman->Kg[0] = Kalman->P[0][0] / (Kalman->P[0][0] + Kalman->R);
+	Kalman->Kg[1] = Kalman->P[1][0] / (Kalman->P[0][0] + Kalman->R);
+	
+	/*  公式4, X(k|k) = X(k|k-1) + Kg(k)(Z(k) - H*X(k|k-1)), Z(k)为系统测量输入  */
+	Kalman->X[0] = Kalman->X[0] + Kalman->Kg[0] * (Acc - Kalman->X[0]);
+	Kalman->X[1] = Kalman->X[1] + Kalman->Kg[1] * (Gryo - Kalman->X[0]);
+	Kalman->Gyro = Gryo - Kalman->X[0];
+	
+	/*  公式5, P(k|k) = (I - Kg(k)*H)P(k|k-1)  */
+	Kalman->P[0][0] = Kalman->P[0][0] * (1 - Kalman->Kg[0]);
+	Kalman->P[0][1] = Kalman->P[0][1] * (1 - Kalman->Kg[0]);
+	Kalman->P[1][0] = Kalman->P[1][0] - Kalman->P[0][0] * Kalman->Kg[1];
+	Kalman->P[1][1] = Kalman->P[1][1] - Kalman->P[0][1] * Kalman->Kg[1];
+}
 
 /********************************************  END OF FILE  *******************************************/
 

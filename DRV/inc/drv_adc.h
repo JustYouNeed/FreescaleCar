@@ -2,7 +2,7 @@
   *******************************************************************************************************
   * File Name: drv_adc.h
   * Author: Vector
-  * Version: V1.0.0
+  * Version: V1.1.0
   * Date: 2018-3-1
   * Brief: 本文件为ADC外设提供了底层驱动函数.初始化函数等,同时定义了有关ADC的变量类型,宏定义
   *******************************************************************************************************
@@ -11,6 +11,10 @@
 	*			Date: 2018-3-1
 	*			Mod: 建立文件
   *
+	*		2.Author:Vector
+	*			Date:2018-5-3
+	*			Mod: 修复ADC通道8命名错误
+	*
   *******************************************************************************************************
   */	
 
@@ -33,8 +37,8 @@
 # define ADC_Channel_B1                               ((uint32_t)0x00000020)
 # define ADC_Channel_B2                               ((uint32_t)0x00000040)
 # define ADC_Channel_B3                               ((uint32_t)0x00000080)
-# define ADC_Channel_C1                               ((uint32_t)0x00000100)
-# define ADC_Channel_C0                               ((uint32_t)0x00000200)
+# define ADC_Channel_C0                               ((uint32_t)0x00000100)
+# define ADC_Channel_C1                               ((uint32_t)0x00000200)
 # define ADC_Channel_C2                               ((uint32_t)0x00000400)
 # define ADC_Channel_C3                               ((uint32_t)0x00000800)
 # define ADC_Channel_F4                               ((uint32_t)0x00001000)
@@ -53,8 +57,8 @@
 # define ADC_Prescaler_Div4                         ((uint8_t)0x60)
 
 /*  ADC采样位宽  */
-# define ADC_Resolution_12b                         ((uint8_t)0x08)
-# define ADC_Resolution_10b                         ((uint8_t)0x04)
+# define ADC_Resolution_12b                         ((uint8_t)0x02)
+# define ADC_Resolution_10b                         ((uint8_t)0x01)
 # define ADC_Resolution_8b                          ((uint8_t)0x00)
 
 /*  ADC时钟源  */

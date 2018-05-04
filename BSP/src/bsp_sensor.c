@@ -57,10 +57,10 @@ void bsp_sensor_Config(void)
 	ADC_InitStruct.ADC_Channel = ADC_Channel_A1 | ADC_Channel_C0 | ADC_Channel_C1 | ADC_Channel_C2 | ADC_Channel_C3 | ADC_Channel_F6 | ADC_Channel_F7;
 	ADC_InitStruct.ADC_Resolution = ADC_Resolution_8b;
 	ADC_InitStruct.ADC_ChannelCount = 1;
-	ADC_InitStruct.ADC_ClockSource = ADC_ClockSource_BusClockDiv2;
+	ADC_InitStruct.ADC_ClockSource = ADC_ClockSource_BusClock;
 	ADC_InitStruct.ADC_ContinuousConvMode = DISABLE;
 	ADC_InitStruct.ADC_IRQCmd = DISABLE;
-	ADC_InitStruct.ADC_Prescaler = ADC_Prescaler_Div4;
+	ADC_InitStruct.ADC_Prescaler = ADC_Prescaler_Div2;
 	ADC_InitStruct.ADC_RefSource = ADC_RefSource_VDD;
 	ADC_InitStruct.ADC_ScanConvMode = DISABLE;
 	drv_adc_Init(&ADC_InitStruct);

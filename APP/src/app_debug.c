@@ -221,28 +221,28 @@ void debug_PIDParaReport(void)
 	uint8_t Buff[18] = {0};
 	short temp = 0;
 	
-	temp = (short)(Car.PID.DirectionKp * ANO_PID_TRAN_FAC_P);
-	Buff[0] = BYTE2(temp);
-	Buff[1] = BYTE1(temp);
+//	temp = (short)(Car.PID.DirectionKp * ANO_PID_TRAN_FAC_P);
+//	Buff[0] = BYTE2(temp);
+//	Buff[1] = BYTE1(temp);
+//	
+//	temp = (short)(Car.PID.DirectionKi * ANO_PID_TRAN_FAC_I);
+//	Buff[2] = BYTE2(temp);
+//	Buff[3] = BYTE1(temp);
+//	
+//	temp = (short)(Car.PID.DirectionKd * ANO_PID_TRAN_FAC_D);
+//	Buff[4] = BYTE2(temp);
+//	Buff[5] = BYTE1(temp);
 	
-	temp = (short)(Car.PID.DirectionKi * ANO_PID_TRAN_FAC_I);
-	Buff[2] = BYTE2(temp);
-	Buff[3] = BYTE1(temp);
 	
-	temp = (short)(Car.PID.DirectionKd * ANO_PID_TRAN_FAC_D);
-	Buff[4] = BYTE2(temp);
-	Buff[5] = BYTE1(temp);
-	
-	
-	temp = (short)(Car.PID.SpeedKp * 100);
+	temp = (short)(Car.VelPID.Kp * 100);
 	Buff[6] = BYTE2(temp);
 	Buff[7] = BYTE1(temp);
 	
-	temp = (short)(Car.PID.SpeedKi * 100);
+	temp = (short)(Car.VelPID.Ki * 100);
 	Buff[8] = BYTE2(temp);
 	Buff[9] = BYTE1(temp);
 	
-	temp = (short)(Car.PID.SpeedKd * 100);
+	temp = (short)(Car.VelPID.Kd * 100);
 	Buff[10] = BYTE2(temp);
 	Buff[11] = BYTE1(temp);
 	
@@ -268,12 +268,12 @@ void debug_PIDDownload(void)
 	//转换完成后除以相应的传输因子
 	uint8_t cnt = 4;
 	
-	Car.PID.DirectionKp = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_P;
-	cnt += 2;
-	Car.PID.DirectionKi = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_I;
-	cnt += 2;
-	Car.PID.DirectionKd = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_D;
-	cnt += 2;
+//	Car.PID.DirectionKp = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_P;
+//	cnt += 2;
+//	Car.PID.DirectionKi = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_I;
+//	cnt += 2;
+//	Car.PID.DirectionKd = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_D;
+//	cnt += 2;
 	
 //	Car.PID.Kp_Curved = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_P;
 //	cnt += 2;
@@ -282,11 +282,11 @@ void debug_PIDDownload(void)
 //	Car.PID.Kd_Curved = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_D;
 //	cnt += 2;
 	
-	Car.PID.SpeedKp = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float)/100;
+	Car.VelPID.Kp = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float)/100;
 	cnt += 2;
-	Car.PID.SpeedKi = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / 100;
+	Car.VelPID.Ki = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / 100;
 	cnt += 2;
-	Car.PID.SpeedKd = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float)/100;
+	Car.VelPID.Kd = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float)/100;
 	cnt += 2;
 
 	pid_StorePara();	/*  将PID参数保存到Flash中  */
@@ -414,8 +414,6 @@ void debug_MPUDataReport(void)
 	SendBuff[cnt ++] = BYTE2(Car.MPU.Gryoz);
 	SendBuff[cnt ++] = BYTE1(Car.MPU.Gryoz);
 	
-	SendBuff[cnt ++] = BYTE2(Car.Kalman.Gyro);
-	SendBuff[cnt ++] = BYTE1(Car.Kalman.Gyro);
 	
 	debug_DataUpload(SendBuff, 0x02, 18);
 }

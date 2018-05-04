@@ -27,11 +27,22 @@ Project File Date:  04/28/2018
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 3 (build 300)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'FreescaleCar'
-compiling app_filter.c...
+compiling FreescaleCar.c...
+FreescaleCar.c(463): warning:  #177-D: variable "temp" was declared but never referenced
+  	static float temp = 0;
+FreescaleCar.c(671): warning:  #111-D: statement is unreachable
+  		}break;
+FreescaleCar.c(107): warning:  #550-D: variable "g_NeedOutCurve" was set but never used
+  static uint8_t g_NeedOutCurve = 0;
+FreescaleCar.c(115): warning:  #177-D: variable "g_SpeedFactor" was declared but never referenced
+  static float g_SpeedFactor = 0.16;//0.48;
+FreescaleCar.c(116): warning:  #177-D: variable "g_HAEFactor" was declared but never referenced
+  static float g_HAEFactor = 0.09;
+FreescaleCar.c: 5 warnings, 0 errors
 linking...
-Program Size: Code=25084 RO-data=11064 RW-data=1228 ZI-data=4612  
+Program Size: Code=25132 RO-data=11064 RW-data=1224 ZI-data=4440  
 FromELF: creating hex file...
-".\Objects\FreescaleCar.axf" - 0 Error(s), 0 Warning(s).
+".\Objects\FreescaleCar.axf" - 0 Error(s), 5 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
   E:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE

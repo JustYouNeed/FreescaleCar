@@ -103,7 +103,7 @@
 # define MPU_SCL_PIN			GPIO_Pin_F5
 
 
-# define MPU_GRYOZ_ZERO		-24
+# define MPU_GRYOZ_ZERO		-42
 
 typedef struct
 {

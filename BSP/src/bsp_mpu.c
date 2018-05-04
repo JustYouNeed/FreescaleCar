@@ -575,7 +575,6 @@ uint8_t bsp_mpu_ReadAcc(short* ax, short*ay, short*az)
 void ReadGryo(void)
 {
 	bsp_mpu_ReadGyro(&Car.MPU.Gryox, &Car.MPU.Gryoy, &Car.MPU.Gryoz);
-//	bsp_mpu_ReadAcc(&Car.MPU.Accx, &Car.MPU.Accy, &Car.MPU.Accz);e
 }
 
 /********************************************  END OF FILE  *******************************************/

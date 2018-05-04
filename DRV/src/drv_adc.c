@@ -2,7 +2,7 @@
   *******************************************************************************************************
   * File Name: drv_adc.c
   * Author: Vector
-  * Version: V1.1.0
+  * Version: V1.2.0
   * Date: 2018-3-1
   * Brief: KEA128芯片ADC底层驱动函数
   *******************************************************************************************************
@@ -14,6 +14,10 @@
 	*		2.Date: 2018-5-3
 	*			Author: Vector
 	*			Mod: 修复ADC通道配置错误,以及不能二次配置错误
+	*
+	*		3.Author: Vector
+	*			Date: 2018-5-4
+	*			Mod: 修复莫名BUG
   *
   *******************************************************************************************************
   */
@@ -55,7 +59,7 @@ static uint32_t   ADC_Order[24] = {0};		/*  ADC通道顺序,用来获取单个ADC转换结果 
 void drv_adc_Init(ADC_InitTypeDef *ADC_InitStruct)
 {
 	uint32_t posbit = 0, channel = 0, reg_tmp = 0;
-	uint16_t apc_temp = 0;
+	volatile uint16_t apc_temp = 0;
 	uint8_t reg = 0;
 	uint8_t i = 0, cnt = 0;
 	
@@ -67,8 +71,7 @@ void drv_adc_Init(ADC_InitTypeDef *ADC_InitStruct)
 	apc_temp |= (uint16_t)ADC_InitStruct->ADC_Channel;	/*  与当前通道相或  */
 	apc_temp = ~apc_temp;			/*  再次取反,需要开启的ADC通道由置位改为复位,使能该通道  */
 	
-	ADC_APCTL1 = 0XFFFF;	
-	ADC->APCTL1 = apc_temp;     /*  设置ADC采样通道  */
+	ADC->APCTL1 &= 0XFFFF&apc_temp;     /*  设置ADC采样通道  */
 	
 	reg_tmp = 0;
 	reg_tmp |= ADC_InitStruct->ADC_Resolution << 1;			/*  设置ADC采样位数  */

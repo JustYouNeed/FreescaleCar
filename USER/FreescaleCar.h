@@ -76,18 +76,17 @@ typedef enum
 /*  车子整体参数结构体定义  */
 typedef struct
 {
-	PID_TypeDef PID;											/*  PID参数  */
+	PID_TypeDef VelPID;										/*  速度环PID  */
 	FuzzyPID_TypeDef DirFuzzy;						/*  转向控制模糊PID  */
 	Sensor_TypeDef Sensor[SENSOR_COUNT];	/*  传感器  */
 	Motor_TypeDef Motor;									/*  电机  */
 	MPU_TypeDef MPU;											/*  MPU参数  */
 	Road_TypeDef NowRoad;
-	Kalman_TypeDef Kalman;
 	
 	float HorizontalAE, VecticalAE, AE;				/*  传感器水平、垂直和差比  */
-	float CarSpeed, TargetSpeed, LeftTargetSpeed, RightTargetSpeed;	/*  当前车速,整体目标速度,左右轮目标速度  */
+	float CarSpeed, TargetSpeed;	/*  当前车速,整体目标速度  */
 	int16_t MaxPWM;												/*  最大PWM  */
-	float Voltage;
+	float Voltage;												/*  电池电压  */
 }Car_TypeDef;
 
 extern Car_TypeDef Car;

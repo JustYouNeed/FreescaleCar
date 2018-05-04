@@ -105,13 +105,13 @@ static float TriMF_Table[7][3] =
 */
 void pid_ReadPara(void)
 {
-	Car.PID.DirectionKp = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 0, float);
-	Car.PID.DirectionKi = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 4, float);
-	Car.PID.DirectionKd = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 8, float);
-	
-	Car.PID.SpeedKp = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 12, float);
-	Car.PID.SpeedKi = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 16, float);
-	Car.PID.SpeedKd = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 20, float);
+//	Car.PID.DirectionKp = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 0, float);
+//	Car.PID.DirectionKi = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 4, float);
+//	Car.PID.DirectionKd = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 8, float);
+//	
+//	Car.PID.SpeedKp = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 12, float);
+//	Car.PID.SpeedKi = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 16, float);
+//	Car.PID.SpeedKd = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 20, float);
 }
 
 /*
@@ -129,9 +129,127 @@ void pid_ReadPara(void)
 */
 void pid_StorePara(void)
 {	
+	uint32_t temp[32] = {0};
+	
+	temp[0] = Car.VelPID.Kp;
+	temp[1] = Car.VelPID.Ki;
+	temp[2] = Car.VelPID.Kd;
+	
+	temp[3] = Car.DirFuzzy.KPMax;
+	temp[4] = Car.DirFuzzy.KIMax;
+	temp[5] = Car.DirFuzzy.KDMax;
+	
+	
 	drv_flash_EraseSector(PID_PARA_FLASH_ADDR);	/*  先擦除一遍,不然无法写入  */
-	drv_flash_WriteSector(PID_PARA_FLASH_ADDR, (const uint8_t*)&Car.PID, 48, 0);
+	drv_flash_WriteSector(PID_PARA_FLASH_ADDR, (const uint8_t*)&temp, 48, 0);
 }
+
+/*
+*********************************************************************************************************
+*                             pid_PIDInit             
+*
+* Description: 初始化PID控制结构体
+*             
+* Arguments  : 1.Kp,Ki,Kd: PID初始系数
+*							 2.IntMax: 积分最大值
+*							 3.IntRange: 积分区间
+*
+* Reutrn     : None.
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
+void pid_PIDInit(PID_TypeDef *PID, float Kp, float Ki, float Kd, float IntMax, float IntRange)
+{
+	PID->IntMax = IntMax;
+	PID->IntRange = IntRange;
+	
+	PID->Kp = Kp;
+	PID->Ki = Ki;
+	PID->Kd = Kd;
+	
+	PID->ErrorK = 0;
+	PID->ErrorK_1 = 0;
+	PID->ErrorK_2 = 0;
+	PID->Integral = 0;
+}
+
+/*
+*********************************************************************************************************
+*                           pid_IncrementalCalc               
+*
+* Description: 增量式PID计算
+*             
+* Arguments  : 1.PID: PID控制结构体
+*							 2.Error: 系统偏差
+*
+* Reutrn     : 1.系统输出增量
+*
+* Note(s)    : 调试增量式PID时,应该首先调节积分系数Ki
+*********************************************************************************************************
+*/
+float pid_IncrementalCalc(PID_TypeDef *PID, float Error)
+{
+	float OutputInc = 0;
+	
+	PID->ErrorK = Error;
+	
+	OutputInc = PID->Kp * (PID->ErrorK - PID->ErrorK_1) + 
+							PID->Ki * PID->ErrorK + 
+							PID->Kd * (PID->ErrorK - 2 * PID->ErrorK_1 + PID->ErrorK_2);
+	
+	PID->ErrorK_2 = PID->ErrorK_1;
+	PID->ErrorK_1 = PID->ErrorK;
+	
+	return OutputInc;
+}
+
+/*
+*********************************************************************************************************
+*                          pid_PositionalCalc                
+*
+* Description: 位置式PID计算
+*             
+* Arguments  : 1.PID: PID控制结构体
+*
+* Reutrn     : 1.PID计算结果
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
+float pid_PositionalCalc(PID_TypeDef *PID, float Error)
+{
+	float Output = 0;
+	float ErrorDirr = 0;
+	
+	PID->ErrorK = Error;
+	ErrorDirr = PID->ErrorK - PID->ErrorK_1;
+	
+	/*  如果设置了积分区间,则只在该区间积分  */
+	if(PID->IntRange != 0)
+	{
+		if(PID->ErrorK > -PID->IntRange && PID->ErrorK < PID->IntRange)
+			PID->Integral += PID->ErrorK;
+	}
+	else
+	{
+		PID->Integral += PID->ErrorK;
+	}
+	
+	/*  如果设置了积分最大值  */
+	if(PID->IntMax != 0)
+	{
+		if(PID->Integral > PID->IntMax ) PID->Integral = PID->IntMax;
+		else if(PID->Integral < -PID->IntMax) PID->Integral = -PID->IntMax;
+	}
+	
+	Output = PID->Kp * PID->ErrorK + PID->Ki * PID->Integral + PID->Kd * ErrorDirr;
+	
+	PID->ErrorK_1 = PID->ErrorK;
+	
+	return Output;
+}
+
 
 /*
 *********************************************************************************************************
@@ -254,7 +372,7 @@ float fuzzy_TraMF(float x, float a, float b, float c, float d)
 *
 * Reutrn     : None.
 *
-* Note(s)    : 由模糊PID计算后的KP,KI,KD存到负值的情况,因为输入有负的,但是这三个参数的极性应该是确定下来的
+* Note(s)    : 由模糊PID计算后的KP,KI,KD存在负值的情况,因为输入有负的,但是这三个参数的极性应该是确定下来的,
 *							 因此在使用的时候需要做一下极性处理,否则会出错
 *********************************************************************************************************
 */
@@ -333,6 +451,9 @@ void fuzzy_PIDClac(FuzzyPID_TypeDef *Fuzzy, float Error, float DError)
 	if(Fuzzy->KP > Fuzzy->KPMax) Fuzzy->KP = Fuzzy->KPMax;
 /********************************************  END  *******************************************/
 	
+	den = 0; 
+	num = 0;
+	
 /********************************************  KI  *******************************************/
 	/*  重心法解模糊KI  */
 	for(i = 0; i < 7; i ++)
@@ -360,11 +481,11 @@ void fuzzy_PIDClac(FuzzyPID_TypeDef *Fuzzy, float Error, float DError)
 	if(Fuzzy->KI < -Fuzzy->KIMax) Fuzzy->KI = -Fuzzy->KIMax;
 	if(Fuzzy->KI > Fuzzy->KIMax) Fuzzy->KI = Fuzzy->KIMax;
 /********************************************  END  *******************************************/	
-
-/********************************************   KD   *******************************************/
+	
 	den = 0; 
 	num = 0;
 	
+/********************************************   KD   *******************************************/	
 	/*  解模糊,求解KD,采用重心法解模糊  */
 	for(i = 0; i < 7; i++)
 	{

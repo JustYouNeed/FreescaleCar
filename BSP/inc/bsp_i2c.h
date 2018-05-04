@@ -47,13 +47,13 @@ typedef struct{
 }IIC_TypeDef, *pIIC_TypeDef;
 
 
-void bsp_i2c_Start(IIC_TypeDef i2c_structure);
-void bsp_i2c_Stop(IIC_TypeDef i2c_structure);
-void bsp_i2c_Ack(IIC_TypeDef i2c_structure);
-void bsp_i2c_NoAck(IIC_TypeDef i2c_structure);
-uint8_t bsp_i2c_WaitAck(IIC_TypeDef i2c_structure);
-void bsp_i2c_SendByte(IIC_TypeDef i2c_structure, uint8_t byte);
-uint8_t bsp_i2c_ReadByte(IIC_TypeDef i2c_structure, uint8_t ack);
+void bsp_i2c_Start(IIC_TypeDef IIC);
+void bsp_i2c_Stop(IIC_TypeDef IIC);
+void bsp_i2c_Ack(IIC_TypeDef IIC);
+void bsp_i2c_NoAck(IIC_TypeDef IIC);
+uint8_t bsp_i2c_WaitAck(IIC_TypeDef IIC);
+void bsp_i2c_SendByte(IIC_TypeDef IIC, uint8_t byte);
+uint8_t bsp_i2c_ReadByte(IIC_TypeDef IIC, uint8_t ack);
 
 
 # endif

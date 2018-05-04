@@ -77,7 +77,7 @@ void SpeedKp_Set(void)
 	if(cnt == 0)
 	{
 		MenuWindow.title = "Speed Kp";
-		kp_temp = (Car.PID.SpeedKp);
+		kp_temp = (Car.VelPID.Kp);
 		GUI_WindowsDraw(&MenuWindow);
 		GUI_DrawButton(&bt_add);
 		GUI_DrawButton(&bt_mines);
@@ -95,7 +95,7 @@ void SpeedKp_Set(void)
 		kp_temp -= 0.5;
 	}else if(key == KEY_OK_PRESS)
 	{
-		Car.PID.SpeedKp = kp_temp;
+		Car.VelPID.Kp = kp_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
 		cnt = 0;
 		displayInit();
@@ -131,7 +131,7 @@ void SpeedKi_Set(void)
 	if(cnt == 0)
 	{
 		MenuWindow.title = "Speed Ki";
-		ki_temp = (Car.PID.SpeedKi);
+		ki_temp = (Car.VelPID.Ki);
 		GUI_WindowsDraw(&MenuWindow);
 		GUI_DrawButton(&bt_add);
 		GUI_DrawButton(&bt_mines);
@@ -149,7 +149,7 @@ void SpeedKi_Set(void)
 		ki_temp -= 0.5;
 	}	else if(key == KEY_OK_PRESS)
 	{
-		Car.PID.SpeedKi = ki_temp;
+		Car.VelPID.Ki = ki_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
 		cnt = 0;
 		displayInit();
@@ -185,7 +185,7 @@ void SpeedKd_Set(void)
 	if(cnt == 0)
 	{
 		MenuWindow.title = "Speed Kd";
-		kd_temp = (Car.PID.SpeedKd);
+		kd_temp = (Car.VelPID.Kd);
 		GUI_WindowsDraw(&MenuWindow);
 		GUI_DrawButton(&bt_add);
 		GUI_DrawButton(&bt_mines);
@@ -203,7 +203,7 @@ void SpeedKd_Set(void)
 		kd_temp -= 0.5;
 	}else if(key == KEY_OK_PRESS)
 	{
-		Car.PID.SpeedKd = kd_temp;
+		Car.VelPID.Kd = kd_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
 		cnt = 0;
 		displayInit();
@@ -238,7 +238,7 @@ void DirectionKp_Set(void)
 	if(cnt == 0)
 	{
 		MenuWindow.title = "Direction Kp";
-		kp_temp = (Car.PID.DirectionKp);
+		kp_temp = (Car.DirFuzzy.KPMax);
 		GUI_WindowsDraw(&MenuWindow);
 		GUI_DrawButton(&bt_add);
 		GUI_DrawButton(&bt_mines);
@@ -256,7 +256,7 @@ void DirectionKp_Set(void)
 		kp_temp -= 0.5;
 	}else if(key == KEY_OK_PRESS)
 	{
-		Car.PID.DirectionKp = kp_temp;
+		Car.DirFuzzy.KPMax = kp_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
 		cnt = 0;
 		displayInit();
@@ -292,7 +292,7 @@ void DirectionKi_Set(void)
 	if(cnt == 0)
 	{
 		MenuWindow.title = "Direction Ki";
-		ki_temp = (Car.PID.DirectionKi);
+		ki_temp = Car.DirFuzzy.KIMax;
 		GUI_WindowsDraw(&MenuWindow);
 		GUI_DrawButton(&bt_add);
 		GUI_DrawButton(&bt_mines);
@@ -310,7 +310,7 @@ void DirectionKi_Set(void)
 		ki_temp -= 0.5;
 	}else if(key == KEY_OK_PRESS)
 	{
-		Car.PID.DirectionKi = ki_temp;
+		Car.DirFuzzy.KIMax = ki_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
 		cnt = 0;
 		displayInit();
@@ -346,7 +346,7 @@ void DirectionKd_Set(void)
 	if(cnt == 0)
 	{
 		MenuWindow.title = "Direction Kd";
-		kd_temp = (Car.PID.DirectionKd);
+		kd_temp = Car.DirFuzzy.KDMax;
 		GUI_WindowsDraw(&MenuWindow);
 		GUI_DrawButton(&bt_add);
 		GUI_DrawButton(&bt_mines);
@@ -364,7 +364,7 @@ void DirectionKd_Set(void)
 		kd_temp -= 5;
 	}else if(key == KEY_OK_PRESS)
 	{
-		Car.PID.DirectionKd = kd_temp;
+		Car.DirFuzzy.KDMax = kd_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
 		cnt = 0;
 		displayInit();

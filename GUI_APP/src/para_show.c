@@ -176,22 +176,17 @@ void Para_Show_UI(void)
 	else if(showPage == 2)
 	{
 		oled_showString(3, 15, "SKP:", 6, 12);
-		oled_showNum(27, 15, Car.PID.SpeedKp*10, 4, 6, 12);
+		oled_showNum(27, 15, Car.VelPID.Kp*10, 4, 6, 12);
 		
 		oled_showString(55, 15, "SKI:", 6, 12);
-		oled_showNum(85, 15, Car.PID.SpeedKi*10, 4, 6, 12);
+		oled_showNum(85, 15, Car.VelPID.Ki*10, 4, 6, 12);
 		
 		oled_showString(3, 33, "DKP:", 6, 12);
-		oled_showNum(27, 33, Car.PID.DirectionKp, 4, 6, 12);
+		oled_showNum(27, 33, Car.DirFuzzy.KPMax, 4, 6, 12);
 		
 		oled_showString(55, 33, "DKD:", 6, 12);
-		oled_showNum(85, 33, Car.PID.DirectionKd, 4, 6, 12);
+		oled_showNum(85, 33, Car.DirFuzzy.KDMax, 4, 6, 12);
 		
-		oled_showString(3,50,"LT:", 6, 12);
-		oled_showNum(27, 50, (Car.LeftTargetSpeed), 3, 6, 12);
-		
-		oled_showString(55,50,"RT:", 6, 12);
-		oled_showNum(85, 50, (Car.RightTargetSpeed), 3, 6, 12);
 	} 
 	else if(showPage == 3)
 	{

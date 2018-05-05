@@ -1,3 +1,22 @@
+/**
+  *******************************************************************************************************
+  * File Name: menu.c
+  * Author: Vector
+  * Version: 
+  * Date: 
+  * Brief: 
+  *******************************************************************************************************
+  * History
+  *
+  *
+  *******************************************************************************************************
+  */	
+	
+/*
+  *******************************************************************************************************
+  *                              INCLUDE FILES
+  *******************************************************************************************************
+*/
 # include "menu.h"
 # include "windows.h"
 # include "scrollbar.h"
@@ -7,6 +26,17 @@
 # include "stdio.h"
 # include "messagebox.h"
 
+
+//菜单的位置
+#define   MEMU_POSX_1    30
+#define   MEMU_POSY_1    19
+
+
+/*
+  *******************************************************************************************************
+  *                              LOCAL VARIABLE
+  *******************************************************************************************************
+*/
 /****** 手指按钮图标 阴码 逐列式 顺向(高位在前) *****/
 const uint8_t finger_img[32]={
 0x07,0xF0,0x04,0x10,0x04,0x10,0x08,0x08,0x08,0x08,0x08,0x08,0x10,0x04,0x20,0x04,
@@ -22,6 +52,8 @@ MenuItem_Typedef PIDAdjMenu[9];
 MenuItem_Typedef*  CurMenu = MainMenu;
 MenuItem_Typedef*  CurItem;
 extern uint8_t key;
+
+/*  PID参数调节界面标题  */
 const uint8_t *PIDParaAdjMenuTitle[7] = 
 {
 	"1.SpeedKp",
@@ -30,6 +62,8 @@ const uint8_t *PIDParaAdjMenuTitle[7] =
 	"4.DirctionKd",
 	"5.Exit",
 };
+
+/*  主界面标题  */
 const uint8_t* MainMenuTitle[5]=
 {
 	"1.Para View",
@@ -38,18 +72,13 @@ const uint8_t* MainMenuTitle[5]=
 	"4.Reset",
 };
 
+/*  参数调节界面标题  */
 const uint8_t *ParaAdjMenuTitle[3] = 
 {
 	"1.PID",
 	"2.TargetSpeed",
 	"3.Exit",
 };
-
-
-
-//菜单的位置
-#define   MEMU_POSX_1    30
-#define   MEMU_POSY_1    19
 
 
 
@@ -60,37 +89,50 @@ const uint8_t* defaultTitle = "Vector Car";
 
 //窗体
 WINDOWS MenuWindow={
-.x = 0,
-.y = 0,	
-.width = 128,
-.height = 64,
-.itemsperpage = 3,
-.topitem = 0,
-.title = "Vector",
+	.x = 0,
+	.y = 0,	
+	.width = 128,
+	.height = 64,
+	.itemsperpage = 3,
+	.topitem = 0,
+	.title = "Vector",
 };
 
 //主窗体滚动条
 Scrollbar_Typedef MenuScrollbar={
-.x = 118,
-.y = 14,
-.width = 10,
-.height = 50,
-.itemsperpage = 3,
-.topitem = 0,
-.scbbarlen = 0,
+	.x = 118,
+	.y = 14,
+	.width = 10,
+	.height = 50,
+	.itemsperpage = 3,
+	.topitem = 0,
+	.scbbarlen = 0,
 };
 
 MessageBox_Typedef MessageBox={
-0,
-0,	
-128,
-64,
-"Car Reset",	
-"reset system?",
-"OK",
-"Cancel"
+	0,
+	0,	
+	128,
+	64,
+	"Car Reset",	
+	"reset system?",
+	"OK",
+	"Cancel"
 };
 
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
 uint8_t getMenuSelectitem(MenuItem_Typedef menu[])
 {
 	int i;
@@ -101,7 +143,19 @@ uint8_t getMenuSelectitem(MenuItem_Typedef menu[])
 	}
 	return i;
 }
-
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
 void exitMenu(void)
 {
 	CurMenu = MainMenu;
@@ -109,7 +163,19 @@ void exitMenu(void)
 	setShow_ui(MAIN_UI);
 	isChangeMenu = true;
 }
-
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
 void gotoNextMenu(void)	
 {
 	if(CurItem->childrenMenu != NULL)
@@ -123,7 +189,19 @@ void gotoNextMenu(void)
 		CurItem->Function();
 	}
 }
-
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
 void gotoLastMenu(void)
 {
 	if(CurItem->parentMenu != NULL)
@@ -146,13 +224,38 @@ void gotoLastMenu(void)
 	}
 }
 
-
+/*
+*********************************************************************************************************
+*                          gotoParaShow                
+*
+* Description: 跳转到参数显示界面
+*             
+* Arguments  : None.
+*
+* Reutrn     : None.
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
 void gotoParaShow(void)
 {
 	setShow_ui(DEBUG_UI);
 	isChangeMenu = true;
 }
 
+/*
+*********************************************************************************************************
+*                            gotoSetSpeedKp              
+*
+* Description: 跳转到速度Kp设置界面
+*             
+* Arguments  : None.
+*
+* Reutrn     : None.
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
 void gotoSetSpeedKp(void)
 {
 	Car_ControlStop();
@@ -160,6 +263,19 @@ void gotoSetSpeedKp(void)
 	isChangeMenu = true;
 }
 
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
 void gotoSetSpeedKi(void)
 {
 	Car_ControlStop();
@@ -167,7 +283,19 @@ void gotoSetSpeedKi(void)
 	isChangeMenu = true;
 }
 
-
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
 void gotoSetDirctionKp(void)
 {
 	Car_ControlStop();
@@ -175,6 +303,19 @@ void gotoSetDirctionKp(void)
 	isChangeMenu = true;
 }
 
+/*
+*********************************************************************************************************
+*                          gotoCarParaReset                
+*
+* Description: 跳转到车子系统复位界面
+*             
+* Arguments  : None.
+*
+* Reutrn     : None.
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
 void gotoCarParaReset(void)
 {
 	Car_ControlStop();
@@ -182,6 +323,19 @@ void gotoCarParaReset(void)
 	isChangeMenu = true;
 }
 
+/*
+*********************************************************************************************************
+*                            SystemReset              
+*
+* Description: 系统复位
+*             
+* Arguments  : None.
+*
+* Reutrn     : None.
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
 void SystemReset(void)
 {
 	static uint8_t flag = 0;
@@ -247,6 +401,19 @@ void gotoSetDirctionKd(void)
 }
 
 
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
 void gotoSetTargetSpeed(void)
 {
 //	Car_ControlStop();
@@ -254,7 +421,39 @@ void gotoSetTargetSpeed(void)
 	isChangeMenu = true;
 }
 
-/*显示菜单*/
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
+void gotoMainUI(void)
+{
+	setShow_ui(MAIN_UI);
+	key = KEY_NONE;
+	isChangeMenu = true;
+}
+
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
 void DisplayMenuInit(MenuItem_Typedef* menu)
 {
 	uint8_t topitem;
@@ -316,7 +515,7 @@ void Menu_Run(void)
 	
 	switch(key)
 	{
-		case KEY_DOWN_PRESS:	//PITCH向后
+		case KEY_UP_PRESS:	//PITCH向后
 			//清除窗口内容
 			GUI_RectangleFill(1, 18, 117, 62, 0);
 			CurItem = CurMenu + cur_sequence;
@@ -356,7 +555,7 @@ void Menu_Run(void)
 			GUI_Scrollbar_SetPos(&MenuScrollbar);	      					
 			break;
 					
-		case KEY_UP_PRESS:	//PITCH向前
+		case KEY_DOWN_PRESS:	//PITCH向前
 			//清除窗口内容
 			GUI_RectangleFill(1, 18, 117, 62, 0);
 			CurItem = CurMenu + cur_sequence;
@@ -398,7 +597,7 @@ void Menu_Run(void)
 		default :break;
 	}
 	
-	/*按下摇杆键执行菜单对应的动作*/
+	/*  按下按键执行相应动作  */
 	if(key == KEY_OK_PRESS)
 	{	
 		if(CurItem->Function != NULL)
@@ -421,12 +620,6 @@ void Menu_Run(void)
 	}
 }
 
-void gotoMainUI(void)
-{
-	setShow_ui(MAIN_UI);
-	key = KEY_NONE;
-	isChangeMenu = true;
-}
 
 /*
 *********************************************************************************************************
@@ -550,4 +743,6 @@ void ParaSetMenu_Init(void)
 	ParaAdjMenu[2].childrenMenu = MainMenu;
 	ParaAdjMenu[2].Function = gotoNextMenu;
 }
+
+/********************************************  END OF FILE  *******************************************/
 

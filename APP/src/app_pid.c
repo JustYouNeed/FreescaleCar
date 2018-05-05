@@ -2,7 +2,7 @@
   *******************************************************************************************************
   * File Name: app_pid.c
   * Author: Vector
-  * Version: V2.0.1
+  * Version: V3.0.1
   * Date: 2018-3-2
   * Brief: 本文件提供了PID算法函数,以及PID参数的读取、存储功能
   *******************************************************************************************************
@@ -19,6 +19,10 @@
 	*			Date: 2018-4-23
 	*			Mod: 1.修正模糊PID规则表错误
 	*					 2.修改模糊PID计算函数,由PD,改为PID
+	*
+	*		4.Author: Vector
+	*			Date: 2018-5-5
+	*			Mod: 增加经典PID的计算函数,位置式以及增量式
 	*
   *******************************************************************************************************
   */	
@@ -44,7 +48,7 @@
 # define N	7
 
 /*  P的模糊规则表  */
-static int KP_Rule[7][7] = 
+static int KP_Rule[N][N] = 
 {
 	{PB, PB, PM, PM, PS, ZO, ZO},
 	{PB, PB, PM, PS, PS, ZO, NS},
@@ -56,7 +60,7 @@ static int KP_Rule[7][7] =
 };
 
 /*  I的模糊规则表  */
-static int KI_Rule[7][7] = 
+static int KI_Rule[N][N] = 
 {
 	{NB, NB, NM, NM, NS, ZO, ZO},
 	{NB, NB, NM, NS, NS, ZO, ZO},
@@ -68,7 +72,7 @@ static int KI_Rule[7][7] =
 };
 
 /*  D的模糊规则表  */
-static int KD_Rule[7][7] = 
+static int KD_Rule[N][N] = 
 {
 	{PS, NS, NB, NB, NB, NM, PS},
 	{PS, NS, NB, NM, NM, NS, ZO},
@@ -185,7 +189,7 @@ void pid_PIDInit(PID_TypeDef *PID, float Kp, float Ki, float Kd, float IntMax, f
 *
 * Reutrn     : 1.系统输出增量
 *
-* Note(s)    : 调试增量式PID时,应该首先调节积分系数Ki
+* Note(s)    : 调试增量式PID时,应该首先调节积分系数Ki,因为相对于位置式PID,Ki等效于Kp
 *********************************************************************************************************
 */
 float pid_IncrementalCalc(PID_TypeDef *PID, float Error)

@@ -80,8 +80,8 @@ void bsp_uart_Config(void)
 {
 	UART_InitTypeDef UART_InitStruct;
 	
-	drv_gpio_PullCmd(GPIO_Pin_A2, ENABLE);
-	drv_gpio_PullCmd(GPIO_Pin_A3, ENABLE);
+//	drv_gpio_PullCmd(GPIO_Pin_A2, ENABLE);
+//	drv_gpio_PullCmd(GPIO_Pin_A3, ENABLE);
 	
 	bsp_uart_ParaInit();		/*  结构体初始化  */
 	

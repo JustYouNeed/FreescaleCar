@@ -213,8 +213,8 @@ void Para_Show_UI(void)
 			showPage = 3;
 		switch(showPage)
 		{
-			case 0: DebugWindow.title = "Motor Parameters";break;
-			case 1: DebugWindow.title = "Sensor Parameters";break;
+			case 1: DebugWindow.title = "Motor Parameters";break;
+			case 0: DebugWindow.title = "Sensor Parameters";break;
 			case 2: DebugWindow.title = "PID Parameters";break;
 			case 3: DebugWindow.title = "Road Detect";break;
 			default: break;
@@ -228,8 +228,8 @@ void Para_Show_UI(void)
 		
 		switch(showPage)
 		{
-			case 0: DebugWindow.title = "Motor Parameters";break;
-			case 1: DebugWindow.title = "Sensor Parameters";break;
+			case 1: DebugWindow.title = "Motor Parameters";break;
+			case 0: DebugWindow.title = "Sensor Parameters";break;
 			case 2: DebugWindow.title = "PID Parameters"; break;
 			case 3: DebugWindow.title = "Road Detect";break;
 			default: break;

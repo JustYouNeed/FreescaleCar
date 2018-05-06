@@ -409,7 +409,8 @@ void Car_SetTarSpeed(void)
 	}else if(KEY_DOWN_PRESS == key)
 	{
 		GUI_Button_Selected(&bt_mines, 0);
-		speed -= 1;
+		if(speed > 0 )
+			speed -= 1;
 	}else if(key == KEY_OK_PRESS)
 	{
 		Car.TargetSpeed = speed;

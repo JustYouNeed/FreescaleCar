@@ -69,8 +69,12 @@ const uint8_t* MainMenuTitle[5]=
 	"1.Para View",
 	"2.Para Adjust",
 	"3.Calibration",
-	"4.Reset",
+	"4.Speed ON",
+	"5.Reset",
 };
+
+const char * SpeedControlON = "4.Speed ON";
+const char * SpeedControlOFF = "4.Speed OFF";
 
 /*  参数调节界面标题  */
 const uint8_t *ParaAdjMenuTitle[3] = 
@@ -421,6 +425,24 @@ void gotoSetTargetSpeed(void)
 	isChangeMenu = true;
 }
 
+extern uint8_t g_SpeedControlON;		/*  速度控制开关  */
+
+void setSpeedControl(void)
+{
+	if(g_SpeedControlON == 0)
+	{
+		g_SpeedControlON = 1;
+		MainMenu[3].title = SpeedControlON;
+	}
+	else if(g_SpeedControlON == 1)
+	{
+		g_SpeedControlON = 0;
+		MainMenu[3].title = SpeedControlOFF;
+	}
+	isChangeMenu = true;
+	
+}
+
 /*
 *********************************************************************************************************
 *                                          
@@ -638,9 +660,9 @@ void MainMenu_Init(void)
 {
 	uint8_t i = 0;
 	/*  主菜单初始化  */
-	for(i=0; i<4; i++)
+	for(i=0; i<5; i++)
 	{
-		MainMenu[i].menuItemCount = 4;
+		MainMenu[i].menuItemCount = 5;
 		MainMenu[i].isSelect = false;
 		MainMenu[i].icoSelected = finger_img;
 		MainMenu[i].icoUnselected = NULL;
@@ -656,8 +678,9 @@ void MainMenu_Init(void)
 	MainMenu[1].Function = gotoNextMenu;
 	MainMenu[1].childrenMenu = ParaAdjMenu;
 	
+	MainMenu[3].Function = setSpeedControl;
 	
-	MainMenu[3].Function = gotoCarParaReset;
+	MainMenu[4].Function = gotoCarParaReset;
 }
 
 /*

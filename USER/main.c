@@ -55,10 +55,10 @@ int main(void)
 	bsp_tim_CreateSoftTimer(1, 21, bsp_key_Scan, TIMER_MODE_AUTO);
 	
 	/*  LED状态指示任务,周期500ms  */
-	bsp_tim_CreateSoftTimer(2, 200, Car_Running, TIMER_MODE_AUTO);
+//	bsp_tim_CreateSoftTimer(2, 200, Car_Running, TIMER_MODE_AUTO);
 	
 	/*  每五秒检测一下电池电压  */
-	bsp_tim_CreateSoftTimer(3, 5000, Car_GetVoltage, TIMER_MODE_AUTO);
+	bsp_tim_CreateSoftTimer(3, 1000, Car_GetVoltage, TIMER_MODE_AUTO);
 	
 	/*  每5ms读取一次角速度  */
 	bsp_tim_CreateHardTimer(0,5, ReadGryo);

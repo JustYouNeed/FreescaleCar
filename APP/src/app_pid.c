@@ -133,19 +133,21 @@ void pid_ReadPara(void)
 */
 void pid_StorePara(void)
 {	
-	uint32_t temp[32] = {0};
+	float temp[32] = {0};
+	uint8_t cnt = 0;
 	
-	temp[0] = Car.VelPID.Kp;
-	temp[1] = Car.VelPID.Ki;
-	temp[2] = Car.VelPID.Kd;
+	temp[cnt++] = Car.VelPID.Kp;
+	temp[cnt++] = Car.VelPID.Ki;
+	temp[cnt++] = Car.VelPID.Kd;
 	
-	temp[3] = Car.DirFuzzy.KPMax;
-	temp[4] = Car.DirFuzzy.KIMax;
-	temp[5] = Car.DirFuzzy.KDMax;
+	temp[cnt++] = Car.DirFuzzy.KPMax;
+	temp[cnt++] = Car.DirFuzzy.KIMax;
+	temp[cnt++] = Car.DirFuzzy.KDMax;
 	
-	
+	DISABLE_INT();
 	drv_flash_EraseSector(PID_PARA_FLASH_ADDR);	/*  先擦除一遍,不然无法写入  */
-	drv_flash_WriteSector(PID_PARA_FLASH_ADDR, (const uint8_t*)&temp, 48, 0);
+	drv_flash_WriteSector(PID_PARA_FLASH_ADDR, (const uint8_t*)&temp, cnt * 4, 0);
+	ENABLE_INT();
 }
 
 /*

@@ -28,30 +28,34 @@ Project File Date:  04/28/2018
 *** Using Compiler 'V5.06 update 3 (build 300)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'FreescaleCar'
 compiling FreescaleCar.c...
-FreescaleCar.c(362): warning:  #550-D: variable "LastError" was set but never used
+FreescaleCar.c(365): warning:  #550-D: variable "LastError" was set but never used
   	static float LastError = 0;
-FreescaleCar.c(752): warning:  #111-D: statement is unreachable
+FreescaleCar.c(455): warning:  #550-D: variable "FirstTime" was set but never used
+  	static uint32_t FirstTime = 0;
+FreescaleCar.c(552): warning:  #550-D: variable "temp" was set but never used
+  	static float temp = 0;
+FreescaleCar.c(761): warning:  #111-D: statement is unreachable
   		}break;
-FreescaleCar.c(112): warning:  #550-D: variable "g_NeedOutCurve" was set but never used
+FreescaleCar.c(115): warning:  #550-D: variable "g_NeedOutCurve" was set but never used
   static uint8_t g_NeedOutCurve = 0;
-FreescaleCar.c(120): warning:  #177-D: variable "g_SpeedFactor" was declared but never referenced
+FreescaleCar.c(123): warning:  #177-D: variable "g_SpeedFactor" was declared but never referenced
   static float g_SpeedFactor = 0.16;//0.48;
-FreescaleCar.c(121): warning:  #177-D: variable "g_HAEFactor" was declared but never referenced
+FreescaleCar.c(124): warning:  #177-D: variable "g_HAEFactor" was declared but never referenced
   static float g_HAEFactor = 0.09;
-FreescaleCar.c(125): warning:  #177-D: variable "g_CurveDirection" was declared but never referenced
+FreescaleCar.c(128): warning:  #177-D: variable "g_CurveDirection" was declared but never referenced
   static float g_CurveDirection = 0;
-FreescaleCar.c: 6 warnings, 0 errors
+FreescaleCar.c: 8 warnings, 0 errors
 linking...
-Program Size: Code=25332 RO-data=11088 RW-data=1236 ZI-data=4508  
+Program Size: Code=25412 RO-data=11100 RW-data=1240 ZI-data=4504  
 FromELF: creating hex file...
-".\Objects\FreescaleCar.axf" - 0 Error(s), 6 Warning(s).
+".\Objects\FreescaleCar.axf" - 0 Error(s), 8 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
   E:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE
   D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:01
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>

@@ -233,7 +233,7 @@ uint16_t drv_adc_ConvOnce(uint32_t ADC_Channel, uint8_t ADC_Resolution)
 		if((ADC_Channel >> channel) & 0x01) break;
 	}
 	
-//	ADC->SC3 |= (ADC_Resolution << 1)			/*  设置转换位数  */
+	ADC->SC3 |= (ADC_Resolution << 1);			/*  设置转换位数  */
 //							| ADC_SC3_ADIV(1)		/*  不分频  */
 //							| ADC_SC3_ADICLK(0);	/*  使用总线时钟  */
 

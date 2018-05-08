@@ -66,6 +66,7 @@ int main(void)
 	/*  开启小车控制  */
 	Car_ControlStart();	
 
+	//bsp_motor_SetPwm(500, 0);
 	setShow_ui(MAIN_UI);
 	while(1)
 	{

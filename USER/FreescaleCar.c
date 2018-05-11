@@ -68,7 +68,7 @@
 # include "math.h"
 
 /*  ËÙ¶È¿ØÖÆÖÜÆÚ*/
-# define SPEED_CONTROL_PERIOD	  100	
+# define SPEED_CONTROL_PERIOD	  30	
 
 /*  ·½Ïò¿ØÖÆÖÜÆÚ,µ¥Î»ms  */
 # define DIRCTION_CONTROL_PERIOD	5
@@ -111,8 +111,12 @@ static uint16_t g_DirectionControlPeriod = 0;	/*  ·½Ïò¿ØÖÆÖÜÆÚ¼ÆÊıÆ÷,ÓÃÓÚ½«·½Ïò¿
 
 static int16_t g_CurveSpeedControl = 0;
 static uint8_t g_CurveStatus = 0;
+
 static uint8_t g_NeedEnterCurve = 0;
 static uint8_t g_NeedOutCurve = 0;
+
+static uint8_t g_AlreadyEnterCurve = 0;
+
 /*  ½«ZÖá½ÇËÙ¶ÈÓÃÓÚ×ªÏò»·KdÏµÊı  */
 const static float g_GryoZ_Kd = 0.1;
 
@@ -176,9 +180,9 @@ void Car_ParaInit(void)
 	Car.DirFuzzy.ErrMax = 90;
 	Car.DirFuzzy.KP = 12;
 	Car.DirFuzzy.KD = 180;
-	Car.DirFuzzy.KPMax = 34;//drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 12, float);
+	Car.DirFuzzy.KPMax = 38;//drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 12, float);
 	Car.DirFuzzy.KIMax = 0;//drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 16, float);
-	Car.DirFuzzy.KDMax = 380;//drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 20, float);
+	Car.DirFuzzy.KDMax = 480;//drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 20, float);
 	fuzzy_PIDInit(&Car.DirFuzzy);
 	
 	/*  ³õÊ¼»¯ËÙ¶È¿ØÖÆÄ£ºıPID²ÎÊı  */
@@ -211,11 +215,10 @@ void Car_ParaInit(void)
 	
 	Car.Sensor[SENSOR_V_L].CalibrationMax = 100;
 	Car.Sensor[SENSOR_V_R].CalibrationMax = 100;
-	
 	/*  Ğ¡³µÄ¿±êËÙ¶È  */
 	Car.TargetSpeed = 20;//(float)drv_flash_ReadSector(CAR_PARA_FLASH_ADDR, 0, uint32_t);;
 		
-	Car.MaxPWM = 800;
+	Car.MaxPWM = 950;
 	
 }
 
@@ -459,29 +462,38 @@ void Car_RoadDetect(void)
 	if(Car.Sensor[SENSOR_H_L].Average < LOST_LINE_THRESHOLD && Car.Sensor[SENSOR_H_R].Average < LOST_LINE_THRESHOLD )
 		g_LoseLineCounter++;
 	
-	if(Car.Sensor[SENSOR_M].Average < 55 && Car.Sensor[SENSOR_H_L].Average < 100 && Car.Sensor[SENSOR_H_R].Average < 100)
+	if(Car.Sensor[SENSOR_M].Average < 50 && Car.Sensor[SENSOR_H_L].Average < 110 && Car.Sensor[SENSOR_H_R].Average < 110)
 	{
+		g_AlreadyEnterCurve = 0;
+		
 		g_CurveOffset = 0;		/*  Ö±µÀÉÏÒ²Çå³ıÔ²»·Æ«ÒÆÁ¿  */
 		g_CurveSpeedControl = 0;
 		Car.NowRoad = STRAIGHT;
 		g_CurveStatus = 0;
-		g_NeedEnterCurve =0 ;
+		g_NeedEnterCurve =0;
 		g_NeedOutCurve = 0;
 		Car.TargetSpeed = 18;
+		bsp_led_OFF(LED_ALL);
+	}
+	
+	if(Car.Sensor[SENSOR_H_L].Average < 80 && Car.Sensor[SENSOR_H_R].Average < 80)
+	{
+		Car.TargetSpeed = 18;
+		g_NeedOutCurve = 0;
 	}
 	
 	
-	/*  ¸Ã±êÖ¾Îª0,ËµÃ÷»¹Ã»ÓĞÕÒµ½µÚÒ»¸ö±êÖ¾µã  */
+	/*  ¸Ã±êÖ¾Îª0,ËµÃ÷»¹Ã»ÓĞÕÒµ½µÚÒ»¸ö±êÖ¾µã  */	
 	if(Car.Sensor[SENSOR_M].Average > 45 )
 	{
-		if(g_CurveStatus == 0)		/*  ±íÊ¾ÊÇµÚÒ»´Î½øÈëÔ²»·ÇøÓò,½ÓÏÂÀ´ĞèÒªÅĞ¶Ï·½Ïò  */
+		if(g_CurveStatus == 0 && g_NeedOutCurve == 0)		/*  ±íÊ¾ÊÇµÚÒ»´Î½øÈëÔ²»·ÇøÓò,½ÓÏÂÀ´ĞèÒªÅĞ¶Ï·½Ïò  */
 		{
 			if(Car.VecticalAE < -40)		/*  Ğ¡ÓÚÁã,ËµÃ÷ÊÇ×ó±ßÔ²»·  */
 			{
 				Car.NowRoad = LEFT_ISLAND;
-				bsp_led_ON(LED_RED);
+				
 				g_CurveOffset = 0;		/*  ·ÀÖ¹ÉÏ´ÎÎ´Çå³ıÆ«ÒÆÁ¿  */
-				Car.TargetSpeed = 11;
+				Car.TargetSpeed = 10;
 				g_CurveStatus = 1;
 				FirstTime = bsp_tim_GetRunTime();
 			}
@@ -489,44 +501,91 @@ void Car_RoadDetect(void)
 			{
 				Car.NowRoad = RIGHT_ISLAND;
 				g_CurveOffset = 0;					/*  ·ÀÖ¹ÉÏ´ÎÎ´Çå³ıÆ«ÒÆÁ¿  */
-				bsp_led_ON(LED_BLUE);
-				Car.TargetSpeed = 11;
+				
+				Car.TargetSpeed = 10;
 				g_CurveStatus = 1;
 				FirstTime = bsp_tim_GetRunTime();
 			}
 		}
 	}
-	
+	g_NeedOutCurve = 0;
 	/*  ÒÑ¾­ÕÒµ½µÚÒ»¸ö±êÖ¾µãÁË,ĞèÒªÕÒµ½µÚ¶ş¸ö±êÖ¾µã,µÚ¶ş¸ö±êÖ¾µãÎªÖĞ¼äË®Æ½µç¸ĞµÄ·åÖµ  */
 	if(g_CurveStatus == 1)	
 	{
-		if(Car.Sensor[SENSOR_M].Average > 80)
+		if(Car.NowRoad == LEFT_ISLAND) /*  ÕÒµ½ÖĞ¼ä»Ø¹éÁãµãµÄÖµ  */
 		{
-			g_CurveStatus = 2;
+			if(Car.VecticalAE >= 0 && g_NeedOutCurve == 0) 
+			{
+				bsp_led_ON(LED_RED);
+				g_NeedEnterCurve = 1;
+			}
+		}
+		else if(Car.NowRoad == RIGHT_ISLAND)
+		{
+			if(Car.VecticalAE <= 0 && g_NeedOutCurve == 0) 
+			{
+				g_NeedEnterCurve = 1;
+				bsp_led_ON(LED_BLUE);
+			}
 		}
 	}
 	
-	/*  µÚ¶ş¸ö±êÖ¾µãÒ²ÕÒµ½ÁË,ÔòĞèÒªÕÒµÚÈı¸ö±êÖ¾µã,¼´½øÈëÔ²»·µÄÎ»ÖÃ,µÚÈı¸öÎ»ÖÃÎªÖĞ¼äË®Æ½µç¸ĞµÄÏÂ½µÑØÖµÅĞ¶Ï  */
-	if(g_CurveStatus == 2)
-	{
-		if(Car.Sensor[SENSOR_M].Average < 65)
-		{
-			g_NeedEnterCurve = 1;
-		}
-		
-//		if(Car.VecticalAE > 50) g_NeedEnterCurve = 1;
-//		else if(Car.VecticalAE < -40) g_NeedEnterCurve = 1;
-	}
+//	/*  µÚ¶ş¸ö±êÖ¾µãÒ²ÕÒµ½ÁË,ÔòĞèÒªÕÒµÚÈı¸ö±êÖ¾µã,¼´½øÈëÔ²»·µÄÎ»ÖÃ,µÚÈı¸öÎ»ÖÃÎªÖĞ¼äË®Æ½µç¸ĞµÄÏÂ½µÑØÖµÅĞ¶Ï  */
+//	if(g_CurveStatus == 2)
+//	{		
+//		if(Car.NowRoad == RIGHT_ISLAND) /*  ÕÒµ½ÖĞ¼ä»Ø¹éÁãµãµÄÖµ  */
+//		{
+//			if(Car.VecticalAE >= 55)
+//			{
+//				bsp_led_ON(LED_RED);
+//				g_NeedEnterCurve = 1;
+//			}
+//		}
+//		else if(Car.NowRoad == LEFT_ISLAND)
+//		{
+//			if(Car.VecticalAE <= -55)
+//			{
+//				bsp_led_ON(LED_BLUE);
+//				g_NeedEnterCurve = 1;
+//			}
+//		}
+//		
+//	}
 	
 	/*  µ±½øÈëÔ²»·ºó,ÔòĞèÒª³öÔ²»·,½øÈëÔ²»·Ê¹ÓÃÖĞ¼äµç¸ĞÖµÅĞ¶Ï  */
-	if(g_NeedEnterCurve == 1)	/*  Ö»ÓĞÔÚĞèÒª½øÈëÔ²»·µÄÊ±ºò²ÅĞèÒªÅĞ¶ÏÊÇ·ñ½øÈëÔ²»·  */
-	{
-		if(Car.Sensor[SENSOR_M].Average < 45)		/*  ÖĞ¼äË®Æ½µç¸ĞµÄÖµÒÑ¾­ÏÂ½µµ½Õı³£Ë®Æ½  */
-		{
-			g_NeedOutCurve = 1;
-			g_CurveOffset = 0;		/*  ÒÑ¾­½øÈëÔ²»·ºó¾Í²»ĞèÒª°áÖĞÏßÁË  */
-		}
-	}
+//	if(g_NeedEnterCurve == 1)	/*  Ö»ÓĞÔÚĞèÒª½øÈëÔ²»·µÄÊ±ºò²ÅĞèÒªÅĞ¶ÏÊÇ·ñ½øÈëÔ²»·  */
+//	{
+//		if(Car.Sensor[SENSOR_M].Average < 45)		/*  ÖĞ¼äË®Æ½µç¸ĞµÄÖµÒÑ¾­ÏÂ½µµ½Õı³£Ë®Æ½  */
+//		{
+//			if(Car.NowRoad == LEFT_ISLAND)
+//			{
+//	//			g_NeedOutCurve = 1;
+//				g_AlreadyEnterCurve = 1;
+//				g_CurveOffset = 0;		/*  ÒÑ¾­½øÈëÔ²»·ºó¾Í²»ĞèÒª°áÖĞÏßÁË  */
+
+//			}
+//			if(Car.NowRoad == RIGHT_ISLAND)
+//			{
+//				g_AlreadyEnterCurve = 1;
+//				g_CurveOffset = 0;		/*  ÒÑ¾­½øÈëÔ²»·ºó¾Í²»ĞèÒª°áÖĞÏßÁË  */
+//			}
+//		}
+//	}
+//				
+//	if(g_AlreadyEnterCurve == 1 && Car.Sensor[SENSOR_M].Average > 50)   /*  ½øÈëÔ²»·ºóÅĞ¶Ï ËµÃ÷ÂíÉÏµ½´ïÔ²»·ÇĞµãÁË  */
+//	{
+//		 g_NeedOutCurve = 1;
+//		if(g_NeedOutCurve == 1 && Car.VecticalAE < 0)     /*  ĞèÒª³öÔ²»·Ê±ÏòÍâ°áÖĞÏß  */
+//		{
+//			g_CurveOffset = 20;
+//			Car.TargetSpeed = 25;
+//		}						
+//		if(g_NeedOutCurve == 1 && Car.VecticalAE > 0)     /*  ĞèÒª³öÔ²»·Ê±ÏòÍâ°áÖĞÏß  */
+//		{
+//			g_CurveOffset = -20;
+//			Car.TargetSpeed = 25;
+//		}
+//	}
 }
 
 /*
@@ -553,7 +612,8 @@ void Car_DirectionControl(void)
 	
 	switch(Car.NowRoad)
 	{
-		case STRAIGHT:temp = 0; g_CurveOffset = 0; g_NeedEnterCurve = 0; g_NeedOutCurve = 0; g_CurveSpeedControl = 0; break;
+		case STRAIGHT:temp = 0; g_AlreadyEnterCurve = 0; 
+		g_CurveOffset = 0; g_NeedEnterCurve = 0; g_NeedOutCurve = 0; g_CurveSpeedControl = 0; break;
 		case LEFT_CURVE:break;
 		case RIGHT_CURVE:break;
 		case LEFT_ISLAND:
@@ -561,9 +621,8 @@ void Car_DirectionControl(void)
 			if(g_NeedEnterCurve == 1) 	/*  Ö»ÓĞÔÚĞèÒª½øÈëÔ²»·ÇÒÃ»ÓĞ½øÈëÔ²»·Ê±ĞèÒª´¦Àí  */
 			{
 				bsp_beep_ON();
-//				g_CurveSpeedControl -= 5;
-				g_CurveOffset -= 5;
-				Car.HorizontalAE += g_CurveOffset;
+//			g_CurveSpeedControl -= 5;
+				g_CurveOffset = -30;
 			}
 		}break;
 		case RIGHT_ISLAND:
@@ -572,15 +631,14 @@ void Car_DirectionControl(void)
 			{
 				bsp_beep_ON();
 //				g_CurveSpeedControl += 5;
-				g_CurveOffset += 5;
-				Car.HorizontalAE += g_CurveOffset;
+				g_CurveOffset = 30;
 			}
 		}break;
 	}
 	
 	Gyro_Z = Car.MPU.Gryoz;
 	
-	Error = Car.HorizontalAE;
+	Error = Car.HorizontalAE + g_CurveOffset;
 	
 	/*  Æ«²îÎ¢·Ö  */
 	ErrorDiff = Error - LastError;

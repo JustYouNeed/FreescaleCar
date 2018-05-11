@@ -158,6 +158,8 @@ void bsp_sensor_DataProcess(void)
 	/*  计算垂直和比差,扩大100倍  */
 	Car.VecticalAE = 100 * ((Car.Sensor[SENSOR_V_R].NormalizedValue - Car.Sensor[SENSOR_V_L].NormalizedValue) / 
 														(Car.Sensor[SENSOR_V_R].NormalizedValue + Car.Sensor[SENSOR_V_L].NormalizedValue)) + 0;	
+	
+	if(Car.VecticalAE < 20 && Car.VecticalAE > -20) Car.VecticalAE = 0;
 }
 
 /*

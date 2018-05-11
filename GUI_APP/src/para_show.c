@@ -91,6 +91,8 @@ void Para_ShowRefresh(void)
 */
 void Para_Show_UI(void)
 {
+	int32_t ten = 0, dot = 0;
+	
 	Para_ShowRefresh();
 	
 	/*  第一页显示电感参数  */
@@ -144,33 +146,72 @@ void Para_Show_UI(void)
 	else if(showPage == 1)
 	{
 		/*  电机编码器  */
-		oled_showString(3, 15, "L_E:", 6, 12);
-		oled_showNum(27, 15, Car.Motor.LeftEncoder, 4, 6, 12);
+		oled_showString(3, 15, "LE:", 6, 12);
+		if(Car.Motor.LeftEncoder < 0)
+		{
+			oled_showChar(21, 15, '-', 6, 12, 1);
+			oled_showNum(27, 15, -Car.Motor.LeftEncoder, 4, 6, 12);
+		}else
+		{
+			oled_showChar(21, 15, ' ', 6, 12, 1);
+			oled_showNum(27, 15, Car.Motor.LeftEncoder, 4, 6, 12);
+		}
 		
-		oled_showString(55, 15, "R_E:", 6, 12);
-		oled_showNum(85, 15, Car.Motor.RightEncoder, 4, 6, 12);
+		oled_showString(61, 15, "RE:", 6, 12);
+		if(Car.Motor.RightEncoder < 0)
+		{
+			oled_showChar(79, 15, '-', 6, 12, 1);
+			oled_showNum(85, 15, -Car.Motor.RightEncoder, 4, 6, 12);
+		}
+		else
+		{
+			oled_showChar(79, 15, ' ', 6, 12, 1);
+			oled_showNum(85, 15, Car.Motor.RightEncoder, 4, 6, 12);
+		}
 		
-		oled_showString(3, 33, "L_P:", 6, 12);
+		oled_showString(3, 33, "LP:", 6, 12);
 		if(Car.Motor.LeftPwm<0)
 		{
-			oled_showChar(27, 50, '-', 6, 12, 1);
-			oled_showNum(33, 50, -Car.Motor.LeftPwm, 3, 6, 12);
+			oled_showChar(21, 50, '-', 6, 12, 1);
+			oled_showNum(37, 50, -Car.Motor.LeftPwm, 4, 6, 12);
 		}else
+		{
+			oled_showChar(21, 50, ' ', 6, 12, 1);
 			oled_showNum(27, 33, Car.Motor.LeftPwm, 4, 6, 12);
+		}
 		
-		oled_showString(55, 33, "R_P:", 6, 12);
+		oled_showString(61, 33, "RP:", 6, 12);
 		if(Car.Motor.RightPwm<0)
 		{
-			oled_showChar(85, 50, '-', 6, 12, 1);
-			oled_showNum(91, 50, -Car.Motor.RightPwm, 3, 6, 12);
+			oled_showChar(79, 50, '-', 6, 12, 1);
+			oled_showNum(85, 50, -Car.Motor.RightPwm, 4, 6, 12);
 		}else
+		{
+			oled_showChar(79, 33, ' ', 6, 12, 1);
 			oled_showNum(85, 33, Car.Motor.RightPwm, 4, 6, 12);
+		}
 		
-		oled_showString(3,50,"Nor:", 6, 12);
-		oled_showNum(27, 50, (Car.Sensor[0].CalibrationMax), 3, 6, 12);
+		ten = (int32_t)Car.CarSpeed;
+		dot = ((float)(Car.CarSpeed - ten * 10)) * 100;
 		
-		oled_showString(55,50,"Nor:", 6, 12);
-		oled_showNum(85, 50, (Car.Sensor[0].CalibrationMax), 3, 6, 12);
+		oled_showString(3, 51, "Speed:", 6, 12);
+		if(Car.CarSpeed < 0)
+		{
+			ten = -ten;
+			dot = - dot;
+			oled_showChar(39, 51, '-', 6, 12, 1);
+			oled_showNum(45, 51, ten, 2, 6, 12);
+			oled_showChar(57, 51, '.', 6, 12, 1);
+			oled_showNum(63, 51, dot, 2, 6, 12);
+		}
+		else
+		{
+			oled_showChar(39, 51, ' ', 6, 12, 1);
+			oled_showNum(45, 51, ten, 2, 6, 12);
+			oled_showChar(57, 51, '.', 6, 12, 1);
+			oled_showNum(63, 51, dot, 2, 6, 12);
+		}
+		oled_showString(78, 51, "R/S", 6, 12);
 	}
 	/*  第三页显示PID参数  */
 	else if(showPage == 2)

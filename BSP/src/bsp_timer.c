@@ -108,7 +108,7 @@ void SysTick_ISR(void)
 	g_iRunTime ++;				/*  运行时间计数器  */
 	if(g_iRunTime == 0x7fffffff) g_iRunTime = 0;			/*  运行时间计数器为32位，最大值为 0x7fffffff */
 	
-	if(g_iRunTime % 1000 == 0)
+	if(g_iRunTime % 990 == 0)
 		SysTime.Seconds++;
 
 	if(SysTime.Seconds > 59) 

@@ -405,17 +405,29 @@ void debug_MPUDataReport(void)
 	SendBuff[cnt ++] = BYTE2(Car.MPU.Accz);
 	SendBuff[cnt ++] = BYTE1(Car.MPU.Accz);
 	
-	SendBuff[cnt ++] = BYTE2(Car.MPU.Gryox);
-	SendBuff[cnt ++] = BYTE1(Car.MPU.Gryox);
+	SendBuff[cnt ++] = BYTE2(Car.MPU.Gyrox);
+	SendBuff[cnt ++] = BYTE1(Car.MPU.Gyrox);
 	
-	SendBuff[cnt ++] = BYTE2(Car.MPU.Gryoy);
-	SendBuff[cnt ++] = BYTE1(Car.MPU.Gryoy);
+	SendBuff[cnt ++] = BYTE2(Car.MPU.Gyroy);
+	SendBuff[cnt ++] = BYTE1(Car.MPU.Gyroy);
 	
-	SendBuff[cnt ++] = BYTE2(Car.MPU.Gryoz);
-	SendBuff[cnt ++] = BYTE1(Car.MPU.Gryoz);
+	SendBuff[cnt ++] = BYTE2(Car.MPU.Gyroz);
+	SendBuff[cnt ++] = BYTE1(Car.MPU.Gyroz);
 	
 	
 	debug_DataUpload(SendBuff, 0x02, 18);
+	
+	cnt = 0;
+	SendBuff[cnt++] = BYTE2((int16_t)(Car.MPU.Roll * 100));
+	SendBuff[cnt++] = BYTE1((int16_t)(Car.MPU.Roll * 100));
+	
+	SendBuff[cnt++] = BYTE2((int16_t)((Car.MPU.Pitch) * 100));
+	SendBuff[cnt++] = BYTE1((int16_t)((Car.MPU.Pitch) * 100));
+	
+	SendBuff[cnt++] = BYTE2((int16_t)(Car.MPU.Yaw * 10));
+	SendBuff[cnt++] = BYTE1((int16_t)(Car.MPU.Yaw * 10));
+
+	debug_DataUpload(SendBuff,0x01,12);
 }
 /*
 *********************************************************************************************************

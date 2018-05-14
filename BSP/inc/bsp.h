@@ -28,5 +28,6 @@
 
 void bsp_Config(void);
 float f_abs(float num);
+int i_abs(int num);
 # endif
 

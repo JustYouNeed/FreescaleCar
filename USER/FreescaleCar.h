@@ -60,7 +60,7 @@
 # define DEFAULT_DIRECTION_KP	30
 # define DEFAULT_DIRECTION_KD	300
 
-# define DEFAULT_SPEED  20
+# define DEFAULT_SPEED  18
 
 /*  道路类型枚举变量  */
 typedef enum
@@ -78,7 +78,6 @@ typedef struct
 {
 	PID_TypeDef VelPID;										/*  速度环PID  */
 	FuzzyPID_TypeDef DirFuzzy;						/*  转向控制模糊PID  */
-	FuzzyPID_TypeDef VelFuzzy;
 	Sensor_TypeDef Sensor[SENSOR_COUNT];	/*  传感器  */
 	Motor_TypeDef Motor;									/*  电机  */
 	MPU_TypeDef MPU;											/*  MPU参数  */

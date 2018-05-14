@@ -51,7 +51,7 @@ void filter_SildingAverage(uint16_t Array[], uint16_t *Average, uint16_t Length)
 void filter_Kalman1Dim_Init(Kalman1Dim_TypeDef *Kalman_struct, double Q, double R);
 void filter_Kalman1Dim(Kalman1Dim_TypeDef *Kalam_Struct, double input);
 void filter_KanlmanInit(Kalman_TypeDef *Kalman);
-void filter_KalmanFilter(Kalman_TypeDef *Kalman, double Gryo, double Acc);
+void filter_KalmanFilter(Kalman_TypeDef *Kalman, double Gyro, double AccAngle);
 # endif
 
 /********************************************  END OF FILE  *******************************************/

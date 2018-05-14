@@ -289,6 +289,9 @@ int8_t bsp_tim_CreateHardTimer(uint8_t ucTimerId, uint32_t uiPeriod, _cbTimerCal
 	
 	HardTimer[ucTimerId].ucUsed = 1;
 	HardTimer[ucTimerId]._cbTimer = _cbTimer;
+	
+	NVIC_SetPriority(PIT_CH0_IRQn, 1);
+	NVIC_SetPriority(PIT_CH1_IRQn, 3);
 	return 0;
 }
 

@@ -1,12 +1,42 @@
+/**
+  *******************************************************************************************************
+  * File Name: bsp_mpu.c
+  * Author: Vector
+  * Version: V1.0.0
+  * Date: 2018-3-2
+  * Brief: 
+  *******************************************************************************************************
+  * History
+  *
+  *
+  *******************************************************************************************************
+  */	
+/*
+  *******************************************************************************************************
+  *                              INCLUDE FILES
+  *******************************************************************************************************
+*/
 # include "bsp_mpu.h"
 # include "FreescaleCar.h"
 # include "app_filter.h"
 # include "math.h"
 # include "bsp_i2c.h"
 
-/*  MPU IIC控制结构体  */
-IIC_TypeDef mpu_iic;
 
+# define PI	3.14159265f
+
+/*
+  *******************************************************************************************************
+  *                              LOCAL VARIABLE
+  *******************************************************************************************************
+*/
+/*  MPU IIC控制结构体  */
+static IIC_TypeDef mpu_iic;
+
+
+static Kalman_TypeDef PitchKalman; 
+static Kalman_TypeDef RollKalman; 
+static Kalman_TypeDef YawKalman; 
 
 /*
 *********************************************************************************************************
@@ -64,7 +94,7 @@ static void MPU_SDA_SET_OUT(void)
 	GPIO_InitStruct.GPIO_HDrv = DISABLE;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 	GPIO_InitStruct.GPIO_Pin = MPU_SDA_PIN;
-	GPIO_InitStruct.GPIO_PuPd = ENABLE;
+	GPIO_InitStruct.GPIO_PuPd = DISABLE;
 	drv_gpio_Init(&GPIO_InitStruct);
 }
 
@@ -88,7 +118,7 @@ static void MPU_SDA_SET_IN(void)
 	GPIO_InitStruct.GPIO_HDrv = DISABLE;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStruct.GPIO_Pin = MPU_SDA_PIN;
-	GPIO_InitStruct.GPIO_PuPd = ENABLE;
+	GPIO_InitStruct.GPIO_PuPd = DISABLE;
 	drv_gpio_Init(&GPIO_InitStruct);
 }
 /*
@@ -156,14 +186,14 @@ static uint8_t MPU_READ_SDA(void)
 * Note(s)    : None
 *********************************************************************************************************
 */
-void bsp_mpu_IICConfig(void)
+static void bsp_mpu_IICConfig(void)
 {
 	GPIO_InitTypeDef GPIO_InitStruct;
 
 	GPIO_InitStruct.GPIO_HDrv = DISABLE;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 	GPIO_InitStruct.GPIO_Pin = MPU_SDA_PIN;
-	GPIO_InitStruct.GPIO_PuPd = ENABLE;
+	GPIO_InitStruct.GPIO_PuPd = DISABLE;
 	drv_gpio_Init(&GPIO_InitStruct);
 	
 	GPIO_InitStruct.GPIO_Pin = MPU_SCL_PIN;
@@ -177,6 +207,24 @@ void bsp_mpu_IICConfig(void)
 	mpu_iic.set_sda_in = MPU_SDA_SET_IN;
 	mpu_iic.set_sda_out = MPU_SDA_SET_OUT;
 	mpu_iic.read_sda = MPU_READ_SDA;
+}
+
+/*
+*********************************************************************************************************
+*                      bsp_mpu_Reset                    
+*
+* Description: 复位MPU6050
+*             
+* Arguments  : None.
+*
+* Reutrn     : None.
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
+void bsp_mpu_Reset(void)
+{
+	bsp_mpu_WriteByte(MPU_PWR_MGMT1_REG, 1 << 7);
 }
 /*
 *********************************************************************************************************
@@ -197,12 +245,13 @@ uint8_t bsp_mpu_Config(void)
 	
 	bsp_mpu_IICConfig();
 	
-	bsp_mpu_WriteByte(MPU_PWR_MGMT1_REG, 0x80);
-	bsp_tim_DelayMs(200);
-	bsp_mpu_WriteByte(MPU_PWR_MGMT1_REG, 0x00);
-	bsp_mpu_SetGyroFsr(3);
-	bsp_mpu_SetAccelFsr(0);
+	bsp_mpu_Reset();	/*  复位6050	*/
+	
+
+	bsp_mpu_SetGyroFSR(3);
+	bsp_mpu_SetAccelFSR(0);
 	bsp_mpu_SetRate(100);
+	
 	bsp_mpu_WriteByte(MPU_USER_CTRL_REG, 0x00);
 	bsp_mpu_WriteByte(MPU_FIFO_EN_REG, 0x00);
 	bsp_mpu_WriteByte(MPU_INTBP_CFG_REG, 0x80);
@@ -219,10 +268,10 @@ uint8_t bsp_mpu_Config(void)
 	}else
 		return 1;
 	
-//	while(mpu_dmp_init());	/*  等待DMP库初始化完成  */
-	
+	filter_KanlmanInit(&RollKalman);
+	filter_KanlmanInit(&PitchKalman);
+	filter_KanlmanInit(&YawKalman);
 	return 0;
-
 }
 
 
@@ -378,38 +427,41 @@ uint8_t bsp_mpu_ReadBuff(uint8_t addr, uint8_t reg, uint8_t len, uint8_t* buff)
 
 /*
 *********************************************************************************************************
-*                                          
+*                         bsp_mpu_SetGyroFSR                 
 *
-* Description: 
+* Description: 设置陀螺仪的输出量程
 *             
-* Arguments  : 
+* Arguments  : 1> fsr:量程 0 +-250度/s  1 +-500度/s 2 +-1000度/s 3 +-2000度/s
 *
-* Reutrn     : 
+* Reutrn     : 0: 成功,其他失败
 *
-* Note(s)    : 
+* Note(s)    : None.
 *********************************************************************************************************
 */
-uint8_t bsp_mpu_SetGyroFsr(uint8_t fsr)
+uint8_t bsp_mpu_SetGyroFSR(uint8_t fsr)
 {
+	if(fsr > 3) return 1;
+	
 	return bsp_mpu_WriteByte(MPU_GYRO_CFG_REG, fsr<<3);
 }
 
 
 /*
 *********************************************************************************************************
-*                                          
+*                      bsp_mpu_SetAccelFSR                    
 *
-* Description: 
+* Description: 设置加速度计量程
 *             
-* Arguments  : 
+* Arguments  : 0: +-2g 1:+-4g  2:+-8g 3:+-16g
 *
-* Reutrn     : 
+* Reutrn     : 0:成功
 *
-* Note(s)    : 
+* Note(s)    : None.
 *********************************************************************************************************
 */
-uint8_t bsp_mpu_SetAccelFsr(uint8_t fsr)
+uint8_t bsp_mpu_SetAccelFSR(uint8_t fsr)
 {
+	if(fsr > 3) return 1;
 	return bsp_mpu_WriteByte(MPU_ACCEL_CFG_REG, fsr<<3);
 }
 
@@ -442,7 +494,7 @@ uint8_t bsp_mpu_SetLPF(uint16_t lpf)
 
 /*
 *********************************************************************************************************
-*                                          
+*                       bsp_mpu_SetRate                   
 *
 * Description: 
 *             
@@ -464,6 +516,7 @@ uint8_t bsp_mpu_SetRate(uint16_t rate)
 	return bsp_mpu_SetLPF(rate / 2);
 }
 
+
 /*
 *********************************************************************************************************
 *                                          
@@ -477,9 +530,9 @@ uint8_t bsp_mpu_SetRate(uint16_t rate)
 * Note(s)    : 
 *********************************************************************************************************
 */
-uint8_t bsp_mpu_SetFIFO(uint8_t sens)
+uint8_t bsp_mpu_FIFOCmd(uint8_t fifo)
 {
-	return 0;
+	return bsp_mpu_WriteByte(MPU_FIFO_EN_REG, fifo);
 }
 
 /*
@@ -559,23 +612,52 @@ uint8_t bsp_mpu_ReadAcc(short* ax, short*ay, short*az)
 	return res;;
 }
 
-/*
-*********************************************************************************************************
-*                                          
-*
-* Description: 
-*             
-* Arguments  : 
-*
-* Reutrn     : 
-*
-* Note(s)    : 
-*********************************************************************************************************
-*/
-void ReadGryo(void)
-{
-	bsp_mpu_ReadGyro(&Car.MPU.Gryox, &Car.MPU.Gryoy, &Car.MPU.Gryoz);
-}
 
+void bsp_mpu_GetAngle(void)
+{
+	static float const IntTime = 0.005;
+	
+	float Accx = 0, Accy = 0, Accz = 0;
+	float Gyrox = 0, Gyroy = 0, Gyroz = 0;
+	float PitchAcc = 0, RollAcc = 0, YawAcc = 0;
+ 
+//	bsp_mpu_ReadAcc(&Car.MPU.Accx, &Car.MPU.Accy, &Car.MPU.Accz);
+	bsp_mpu_ReadGyro(&Car.MPU.Gyrox, &Car.MPU.Gyroy, &Car.MPU.Gyroz);
+	
+	
+//	Car.MPU.Gyroz = bsp_mpu_ReadByte(MPU_GYRO_ZOUTH_REG) << 8 | bsp_mpu_ReadByte(MPU_GYRO_ZOUTL_REG);
+//	Car.MPU.Gyroy = bsp_mpu_ReadByte(MPU_GYRO_YOUTH_REG) << 8 | bsp_mpu_ReadByte(MPU_GYRO_YOUTL_REG);
+//	
+//	Car.MPU.Accy = bsp_mpu_ReadByte(MPU_ACCEL_YOUTH_REG) << 8 | bsp_mpu_ReadByte(MPU_ACCEL_YOUTL_REG);
+	
+//	Accx = Car.MPU.Accx;
+//	Accy = Car.MPU.Accy;
+//	Accz = Car.MPU.Accz;
+	
+//	Gyrox = Car.MPU.Gyrox - MPU_GYROX_ZERO;
+//	Gyroy = Car.MPU.Gyroy - MPU_GYROY_ZERO;
+	Gyroz = Car.MPU.Gyroz - MPU_GYROZ_ZERO;
+	
+//	if(Gyrox > 32768) Gyrox -= 65536;
+//	if(Gyroy > 32768) Gyroy -= 65536;
+	if(Gyroz > 32768) Gyroz -= 65536;
+	
+//	Gyrox = Gyrox/16.4;
+//	Gyroy = Gyroy/16.4;
+	Gyroz = Gyroz/16.4;
+	
+	Car.MPU.Yaw += Gyroz * IntTime;
+//	if(fabs(Car.MPU.Yaw) > 360) Car.MPU.Yaw = 0;
+//	
+//	PitchAcc = atan2(Accx, Accz) * 180 / PI;
+//	RollAcc = atan2(Accy, Accz) * 180 / PI;	
+//	
+//	filter_KalmanFilter(&PitchKalman, Gyroy, PitchAcc);
+//	filter_KalmanFilter(&RollKalman, Gyrox, RollAcc);
+//	
+//	Car.MPU.Roll = RollKalman.X[0];
+//	Car.MPU.Pitch = PitchKalman.X[0];
+ 
+}
 /********************************************  END OF FILE  *******************************************/
 

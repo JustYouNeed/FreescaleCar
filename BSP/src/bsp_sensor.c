@@ -129,27 +129,36 @@ void bsp_sensor_DataCopy(uint16_t *dst, uint16_t *src, uint16_t length)
 void bsp_sensor_DataProcess(void)
 {	
 	uint8_t cnt = 0;
+	float LeftValue = 0, RightValue = 0;
 	
 	/*  循环处理每一个传感器的值  */
 	for(cnt = 0; cnt < SENSOR_COUNT; cnt ++)
 	{
 		switch(cnt)
 		{
-			case SENSOR_H_L: Car.Sensor[SENSOR_H_L].FIFO[Car.Sensor[SENSOR_H_L].Write++] = drv_adc_ConvOnce(ADC_Channel_F6, ADC_Resolution_8b);break;
-			case SENSOR_H_R: Car.Sensor[SENSOR_H_R].FIFO[Car.Sensor[SENSOR_H_R].Write++] = drv_adc_ConvOnce(ADC_Channel_C3, ADC_Resolution_8b);break;
-			case SENSOR_V_L: Car.Sensor[SENSOR_V_L].FIFO[Car.Sensor[SENSOR_V_L].Write++] = drv_adc_ConvOnce(ADC_Channel_F7, ADC_Resolution_8b);break;
-			case SENSOR_V_R: Car.Sensor[SENSOR_V_R].FIFO[Car.Sensor[SENSOR_V_R].Write++] = drv_adc_ConvOnce(ADC_Channel_C2, ADC_Resolution_8b);break;
-			case SENSOR_M: Car.Sensor[SENSOR_M].FIFO[Car.Sensor[SENSOR_M].Write++] = drv_adc_ConvOnce(ADC_Channel_C0, ADC_Resolution_8b);break;
+			case SENSOR_H_L: Car.Sensor[SENSOR_H_L].FIFO[Car.Sensor[SENSOR_H_L].Write++] = drv_adc_ConvOnce(S_H_L_CH, ADC_Resolution_8b);break;
+			case SENSOR_H_R: Car.Sensor[SENSOR_H_R].FIFO[Car.Sensor[SENSOR_H_R].Write++] = drv_adc_ConvOnce(S_H_R_CH, ADC_Resolution_8b);break;
+			case SENSOR_V_L: Car.Sensor[SENSOR_V_L].FIFO[Car.Sensor[SENSOR_V_L].Write++] = drv_adc_ConvOnce(S_V_L_CH, ADC_Resolution_8b);break;
+			case SENSOR_V_R: Car.Sensor[SENSOR_V_R].FIFO[Car.Sensor[SENSOR_V_R].Write++] = drv_adc_ConvOnce(S_V_R_CH, ADC_Resolution_8b);break;
+			case SENSOR_M: Car.Sensor[SENSOR_M].FIFO[Car.Sensor[SENSOR_M].Write++] = drv_adc_ConvOnce(S_M_CH, ADC_Resolution_8b);break;
 		}
 		if(Car.Sensor[cnt].Write >= SENSOR_FIFO_SIZE) Car.Sensor[cnt].Write = 0;	/*  环形队列  */
 		
 		/*  滑动平均滤波器  */
-		filter_SildingAverage(Car.Sensor[cnt].FIFO, &Car.Sensor[cnt].Average, SENSOR_FIFO_SIZE);	
+		filter_SildingAverage(Car.Sensor[cnt].FIFO, &Car.Sensor[cnt].Average, SENSOR_FIFO_SIZE);
+		
+		/*  限幅，避免出现最值跳变  */
+    if(Car.Sensor[SENSOR_V_L].Average < 5) 		Car.Sensor[SENSOR_V_L].Average = 5;
+		if(Car.Sensor[SENSOR_V_R].Average < 5)    Car.Sensor[SENSOR_V_R].Average = 5;
 		
 		/*  归一化处理  */
 		Car.Sensor[cnt].NormalizedValue = (float)(Car.Sensor[cnt].Average - Car.Sensor[cnt].CalibrationMin) / 
 																				 (Car.Sensor[cnt].CalibrationMax - Car.Sensor[cnt].CalibrationMin);
 	}
+	
+//	if(Car.Sensor[SENSOR_H_L].NormalizedValue == 0)
+	
+//	Car.HorizontalAE = 1 / 50 * ( 1 / Car.Sensor[SENSOR_H_L].NormalizedValue - 1 / Car.Sensor[SENSOR_H_R].NormalizedValue);
 	
 			/*  计算水平差比和,扩大100倍  */
 	Car.HorizontalAE = 100 * ((Car.Sensor[SENSOR_H_R].NormalizedValue - Car.Sensor[SENSOR_H_L].NormalizedValue) / 
@@ -159,7 +168,7 @@ void bsp_sensor_DataProcess(void)
 	Car.VecticalAE = 100 * ((Car.Sensor[SENSOR_V_R].NormalizedValue - Car.Sensor[SENSOR_V_L].NormalizedValue) / 
 														(Car.Sensor[SENSOR_V_R].NormalizedValue + Car.Sensor[SENSOR_V_L].NormalizedValue)) + 0;	
 	
-	if(Car.VecticalAE < 20 && Car.VecticalAE > -20) Car.VecticalAE = 0;
+	if(Car.VecticalAE < 35 && Car.VecticalAE > -35) Car.VecticalAE = 0;
 }
 
 /*
@@ -205,11 +214,11 @@ void bsp_sensor_Calibration(void)
 		{
 			switch(j)
 			{
-				case SENSOR_H_L: Car.Sensor[SENSOR_H_L].FIFO[Car.Sensor[SENSOR_H_L].Write++] = drv_adc_ConvOnce(ADC_Channel_F6, ADC_Resolution_8b);break;
-				case SENSOR_H_R: Car.Sensor[SENSOR_H_R].FIFO[Car.Sensor[SENSOR_H_R].Write++] = drv_adc_ConvOnce(ADC_Channel_C3, ADC_Resolution_8b);break;
-				case SENSOR_V_L: Car.Sensor[SENSOR_V_L].FIFO[Car.Sensor[SENSOR_V_L].Write++] = drv_adc_ConvOnce(ADC_Channel_F7, ADC_Resolution_8b);break;
-				case SENSOR_V_R: Car.Sensor[SENSOR_V_R].FIFO[Car.Sensor[SENSOR_V_R].Write++] = drv_adc_ConvOnce(ADC_Channel_C2, ADC_Resolution_8b);break;
-				case SENSOR_M: Car.Sensor[SENSOR_M].FIFO[Car.Sensor[SENSOR_M].Write++] = drv_adc_ConvOnce(ADC_Channel_C0, ADC_Resolution_8b);break;
+				case SENSOR_H_L: Car.Sensor[SENSOR_H_L].FIFO[Car.Sensor[SENSOR_H_L].Write++] = drv_adc_ConvOnce(S_H_L_CH, ADC_Resolution_8b);break;
+				case SENSOR_H_R: Car.Sensor[SENSOR_H_R].FIFO[Car.Sensor[SENSOR_H_R].Write++] = drv_adc_ConvOnce(S_H_R_CH, ADC_Resolution_8b);break;
+				case SENSOR_V_L: Car.Sensor[SENSOR_V_L].FIFO[Car.Sensor[SENSOR_V_L].Write++] = drv_adc_ConvOnce(S_V_L_CH, ADC_Resolution_8b);break;
+				case SENSOR_V_R: Car.Sensor[SENSOR_V_R].FIFO[Car.Sensor[SENSOR_V_R].Write++] = drv_adc_ConvOnce(S_V_R_CH, ADC_Resolution_8b);break;
+				case SENSOR_M: Car.Sensor[SENSOR_M].FIFO[Car.Sensor[SENSOR_M].Write++] = drv_adc_ConvOnce(S_M_CH, ADC_Resolution_8b);break;
 			}
 			
 			if(Car.Sensor[j].Write >= SENSOR_FIFO_SIZE) Car.Sensor[j].Write = 0;	/*  环形队列  */

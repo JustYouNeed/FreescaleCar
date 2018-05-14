@@ -197,24 +197,7 @@
           <Name>UL2CM3(-S0 -C0 -P0 -FD1FFFF000 -FC1000 -FN1 -FF0MKE04Zxxx_P128KB -FS00 -FL020000 -FP0($$Device:SKEAZ128xxx4$Flash\MKE04Zxxx_P128KB.FLM))</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint>
-        <Bp>
-          <Number>0</Number>
-          <Type>0</Type>
-          <LineNumber>118</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>13540</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>E:\瀛︿範璧勬枡\姣旇禌\椋炴€濆崱灏旀櫤鑳借溅澶ц禌\鐢电涓夎疆缁?绋嬪簭\Freescale\APP\src\app_debug.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\FreescaleCar\../APP/src/app_debug.c\118</Expression>
-        </Bp>
-      </Breakpoint>
+      <Breakpoint/>
       <WatchWindow1>
         <Ww>
           <count>0</count>
@@ -225,6 +208,11 @@
           <count>1</count>
           <WinNumber>1</WinNumber>
           <ItemText>Car</ItemText>
+        </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Pitch</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>

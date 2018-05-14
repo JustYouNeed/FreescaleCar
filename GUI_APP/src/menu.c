@@ -73,8 +73,8 @@ const uint8_t* MainMenuTitle[5]=
 	"5.Reset",
 };
 
-const char * SpeedControlON = "4.Speed ON";
-const char * SpeedControlOFF = "4.Speed OFF";
+const uint8_t * SpeedControlON = "4.Speed ON";
+const uint8_t * SpeedControlOFF = "4.Speed OFF";
 
 /*  参数调节界面标题  */
 const uint8_t *ParaAdjMenuTitle[3] = 

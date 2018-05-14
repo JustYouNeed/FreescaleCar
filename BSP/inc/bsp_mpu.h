@@ -1,13 +1,15 @@
 /**
   *******************************************************************************************************
-  * File Name: 
-  * Author: 
-  * Version: 
-  * Date: 
-  * Brief: 
+  * File Name: bsp_mpu.h
+  * Author: Vector
+  * Version: V1.0.0
+  * Date: 2018-3-2
+  * Brief: 本文件提供了有关操作MPU6050函数的声明,以及相关寄存器的定义
   *******************************************************************************************************
   * History
-  *
+  *		1.Author: Vector
+	*     Date: 2018-3-2
+	*			Mod: 建立文件
   *
   *******************************************************************************************************
   */	
@@ -30,8 +32,8 @@
 #define MPU_SELF_TESTY_REG		0X0E	//自检寄存器Y
 #define MPU_SELF_TESTZ_REG		0X0F	//自检寄存器Z
 #define MPU_SELF_TESTA_REG		0X10	//自检寄存器A
-#define MPU_SAMPLE_RATE_REG		0X19	//采样频率分频器
-#define MPU_CFG_REG				0X1A	//配置寄存器
+#define MPU_SAMPLE_RATE_REG		0X19	/*  采样分频寄存器,bit0-7:分频系数  */
+#define MPU_CFG_REG						0X1A	/*  配置寄存器 bit0:2 配置数字低通滤波器 bit3:5配置帧同步引脚的采样  */
 #define MPU_GYRO_CFG_REG		0X1B	//陀螺仪配置寄存器
 #define MPU_ACCEL_CFG_REG		0X1C	//加速度计配置寄存器
 #define MPU_MOTION_DET_REG		0X1F	//运动检测阀值设置寄存器
@@ -92,6 +94,17 @@
 #define MPU_FIFO_CNTL_REG		0X73	//FIFO计数寄存器低八位
 #define MPU_FIFO_RW_REG			0X74	//FIFO读写寄存器
 #define MPU_DEVICE_ID_REG		0X75	//器件ID寄存器
+
+/*  6050FIFO相关位设置  */
+# define SLV0_FIFO_EN			0x01
+# define SLV1_FIFO_EN			0x02
+# define SLV2_FIFO_EN			0x04
+# define ACCEL_FIFO_EN		0x08
+# define ZG_FIFO_EN				0x10
+# define YG_FIFO_EN				0x20
+# define XG_FIFO_EN				0x40
+# define TEMP_FIFO_EN			0x80
+
  
 //如果AD0脚(9脚)接地,IIC地址为0X68(不包含最低位).
 //如果接V3.3,则IIC地址为0X69(不包含最低位).
@@ -103,28 +116,27 @@
 # define MPU_SCL_PIN			GPIO_Pin_F5
 
 
-# define MPU_GRYOZ_ZERO		-42
+# define MPU_GYROZ_ZERO		-29
+# define MPU_GYROY_ZERO		-1
+# define MPU_GYROX_ZERO   -24
+# define MPU_ACCX_ZERO    0
+# define MPU_ACCY_ZERO		0
+# define MPU_ACCZ_ZERO		0
+
+# define MPU_DelayUs(x)  bsp_tim_DelayUs(x)
+# define MPU_DelayMs(x)  bsp_tim_DelayMs(x)
+
 
 typedef struct
 {
 	short Accx, Accy, Accz;
-	short Gryox, Gryoy, Gryoz;
+	short Gyrox, Gyroy, Gyroz;
 	float Pitch, Roll, Yaw;
 }MPU_TypeDef;
 
 
-
-void MPU_SDA_IN(void);
-void MPU_SDA_OUT(void);
-void MPU_SDA_LOW(void);
-void MPU_SDA_HIGH(void);
-uint8_t MPU_READ_SDA(void);
-
-void MPU_SCL_HIGH(void);
-void MPU_SCL_LOW(void);
-
-//void bsp_mpu_extiConfig(void);
 uint8_t bsp_mpu_Config(void);
+
 void bsp_mpu_extiConfig(void);
 	
 uint8_t bsp_mpu_WriteByte(uint8_t reg, uint8_t byte);
@@ -132,18 +144,22 @@ uint8_t bsp_mpu_ReadByte(uint8_t reg);
 uint8_t bsp_mpu_WriteBuff(uint8_t addr, uint8_t reg, uint8_t len, uint8_t* buff);
 uint8_t bsp_mpu_ReadBuff(uint8_t addr, uint8_t reg, uint8_t len, uint8_t* buff);
 
-uint8_t bsp_mpu_SetGyroFsr(uint8_t fsr);
-uint8_t bsp_mpu_SetAccelFsr(uint8_t fsr);
+uint8_t bsp_mpu_SetGyroFSR(uint8_t fsr);
+uint8_t bsp_mpu_SetAccelFSR(uint8_t fsr);
 uint8_t bsp_mpu_SetLPF(uint16_t lpf);
 uint8_t bsp_mpu_SetRate(uint16_t rate);
-uint8_t bsp_mpu_SetFIFO(uint8_t sens);
+void bsp_mpu_IntCmd(uint8_t cmd);
+uint8_t bsp_mpu_FIFOCmd(uint8_t fifo);
+void bsp_mpu_Reset(void);
+
 
 short bsp_mpu_ReadTemperature(void);
 uint8_t bsp_mpu_ReadGyro(short *gx, short *gy, short* gz);
 uint8_t bsp_mpu_ReadAcc(short* ax, short*ay, short*az);
 
+void bsp_mpu_QuaSolution(double ax, double ay, double az, double gx, double gy, double gz);
 
-void bsp_mpu_DataProcess(void);
+void bsp_mpu_GetAngle(void);
 
 void ReadGryo(void);
 # endif

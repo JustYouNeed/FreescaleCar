@@ -158,19 +158,19 @@ void filter_KanlmanInit(Kalman_TypeDef *Kalman)
 * Description: 卡尔曼滤波函数
 *             
 * Arguments  : 1.Kalman: Kalman控制结构体
-*							 2.Gryo: 测量到的角速度
-*							 3.Acc: 测量到的加速度
+*							 2.Gyro: 测量到的角速度
+*							 3.AccAngle: 测量到的加速度计算出的角度
 *
 * Reutrn     : None.
 *
 * Note(s)    : None.
 *********************************************************************************************************
 */
-void filter_KalmanFilter(Kalman_TypeDef *Kalman, double Gryo, double Acc)
+void filter_KalmanFilter(Kalman_TypeDef *Kalman, double Gyro, double AccAngle)
 {	
 	/*  公式1,X(k|k-1) = AX(k-1|k-1) + BU(k)  X, A, B, 都为矩阵, 进行先验估计  */
-	Kalman->X[0] = (Kalman->A[0][0] * Kalman->X[0] + Kalman->A[0][1] * Kalman->X[1]) + Gryo * Kalman->B[0];
-	Kalman->X[1] = (Kalman->A[1][0] * Kalman->X[0] + Kalman->A[1][1] * Kalman->X[1]) + Gryo * Kalman->B[1];
+	Kalman->X[0] = (Kalman->A[0][0] * Kalman->X[0] + Kalman->A[0][1] * Kalman->X[1]) + Gyro * Kalman->B[0];
+	Kalman->X[1] = (Kalman->A[1][0] * Kalman->X[0] + Kalman->A[1][1] * Kalman->X[1]) + Gyro * Kalman->B[1];
 	
 	/*  公式2, P(k|k-1) = AP(k-1|k-1)A_T + Q */
 	Kalman->P[0][0] = Kalman->P[0][0] - Kalman->P[1][0]*Kalman->dt - Kalman->P[0][1]*Kalman->dt + Kalman->P[0][0] * Kalman->dt * Kalman->dt + Kalman->Q[0][0];
@@ -183,9 +183,9 @@ void filter_KalmanFilter(Kalman_TypeDef *Kalman, double Gryo, double Acc)
 	Kalman->Kg[1] = Kalman->P[1][0] / (Kalman->P[0][0] + Kalman->R);
 	
 	/*  公式4, X(k|k) = X(k|k-1) + Kg(k)(Z(k) - H*X(k|k-1)), Z(k)为系统测量输入  */
-	Kalman->X[0] = Kalman->X[0] + Kalman->Kg[0] * (Acc - Kalman->X[0]);
-	Kalman->X[1] = Kalman->X[1] + Kalman->Kg[1] * (Gryo - Kalman->X[0]);
-	Kalman->Gyro = Gryo - Kalman->X[0];
+	Kalman->X[0] = Kalman->X[0] + Kalman->Kg[0] * (AccAngle - Kalman->X[0]);
+//	Kalman->X[1] = Kalman->X[1] + Kalman->Kg[1] * (Gyro - Kalman->X[1]);
+	Kalman->Gyro = Gyro - Kalman->X[1];
 	
 	/*  公式5, P(k|k) = (I - Kg(k)*H)P(k|k-1)  */
 	Kalman->P[0][0] = Kalman->P[0][0] * (1 - Kalman->Kg[0]);
@@ -193,6 +193,8 @@ void filter_KalmanFilter(Kalman_TypeDef *Kalman, double Gryo, double Acc)
 	Kalman->P[1][0] = Kalman->P[1][0] - Kalman->P[0][0] * Kalman->Kg[1];
 	Kalman->P[1][1] = Kalman->P[1][1] - Kalman->P[0][1] * Kalman->Kg[1];
 }
+
+
 
 /********************************************  END OF FILE  *******************************************/
 

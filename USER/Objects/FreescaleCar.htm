@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\FreescaleCar.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\FreescaleCar.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060300: Last Updated: Mon May 14 21:25:49 2018
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060300: Last Updated: Tue May 15 15:43:35 2018
 <BR><P>
 <H3>Maximum Stack Usage =        504 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1848,10 +1848,11 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[44]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_CarDataReport
 </UL>
 
-<P><STRONG><a name="[90]"></a>displayInit</STRONG> (Thumb, 16 bytes, Stack size 8 bytes, display.o(i.displayInit))
-<BR><BR>[Stack]<UL><LI>Max Depth = 28<LI>Call Chain = displayInit &rArr; ParaSetMenu_Init
+<P><STRONG><a name="[90]"></a>displayInit</STRONG> (Thumb, 22 bytes, Stack size 8 bytes, display.o(i.displayInit))
+<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = displayInit &rArr; setShow_ui &rArr; GUI_ClearSCR &rArr; oled_clear &rArr; oled_refreshGram &rArr; oled_wr_byte &rArr; drv_gpio_WritePin
 </UL>
-<BR>[Calls]<UL><LI><a href="#[110]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ParaSetMenu_Init
+<BR>[Calls]<UL><LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setShow_ui
+<LI><a href="#[110]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ParaSetMenu_Init
 <LI><a href="#[111]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PIDAdjMenu_Init
 <LI><a href="#[10f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MainMenu_Init
 </UL>
@@ -2376,6 +2377,7 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GUI_ClearSCR
 </UL>
 <BR>[Called By]<UL><LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;displayTask
+<LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;displayInit
 <LI><a href="#[c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SpeedKp_Set
 <LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SpeedKi_Set
 <LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Para_Show_UI

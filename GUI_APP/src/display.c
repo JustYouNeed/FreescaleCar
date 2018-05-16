@@ -60,6 +60,8 @@ void displayInit(void)
 	MainMenu_Init();
 	ParaSetMenu_Init();
 	PIDAdjMenu_Init();
+	
+	setShow_ui(MAIN_UI);
 }
 
 

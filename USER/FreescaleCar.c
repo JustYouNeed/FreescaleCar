@@ -74,7 +74,7 @@
 # define DIRCTION_CONTROL_PERIOD	5
 
 /*  车子出跑道后的电感值  */
-# define LOST_LINE_THRESHOLD		16
+# define LOST_LINE_THRESHOLD		10
 
 /*  速度转换比例因子,计算完成后速度单位为 转速  */
 # define CAR_SPEED_CONSTANT	(1000.0/SPEED_CONTROL_PERIOD/ENCONDER_LINES)*ENCONDER_TEETH/WHEEL_TEETH
@@ -180,9 +180,9 @@ void Car_ParaInit(void)
 	Car.DirFuzzy.ErrMax = 90;
 	Car.DirFuzzy.KP = 12;
 	Car.DirFuzzy.KD = 180;
-	Car.DirFuzzy.KPMax = 28;//drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 12, float);
+	Car.DirFuzzy.KPMax = 38;//drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 12, float);
 	Car.DirFuzzy.KIMax = 0;//drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 16, float);
-	Car.DirFuzzy.KDMax = 480;//drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 20, float);
+	Car.DirFuzzy.KDMax = 580;//drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 20, float);
 	fuzzy_PIDInit(&Car.DirFuzzy);
 	
 	/*  初始化速度PID,只采用比例控制,无积分微分  */
@@ -352,7 +352,7 @@ void Car_Reset(void)
 * Note(s)    : None.
 *********************************************************************************************************
 */
-void Car_SpeedControl(void)
+static void Car_SpeedControl(void)
 {
 	static float LastError = 0;
 	volatile int32_t LeftEnconder = 0, RightEnconder = 0;
@@ -373,6 +373,13 @@ void Car_SpeedControl(void)
 	
 	
 	SpeedError = Car.TargetSpeed - Car.CarSpeed;
+	
+//	fuzzy_PIDClac(&Car.VelFuzzy, SpeedError, SpeedError - LastError);
+//	
+//	/*  由于模糊PID算出来的值有负的,所以需要极性判断  */
+//	Car.VelPID.Kp = (Car.VelFuzzy.KP < 0) ? (-Car.VelFuzzy.KP) : Car.VelFuzzy.KP;
+//	Car.VelPID.Ki = (Car.VelFuzzy.KI < 0) ? (-Car.VelFuzzy.KI) : Car.VelFuzzy.KI;
+//	Car.VelPID.Kd = (Car.VelFuzzy.KD < 0) ? (-Car.VelFuzzy.KD) : Car.VelFuzzy.KD;
 	
 	
 /*  如果选择位置式  */
@@ -408,7 +415,7 @@ void Car_SpeedControl(void)
 * Note(s)    : None.
 *********************************************************************************************************
 */
-void Car_SpeedControlOutput(void)
+static void Car_SpeedControlOutput(void)
 {
 # if SPEED_CONTROL_METHOD == 1	/*  位置式PID  */
 	volatile float SpeedControlOut = 0;
@@ -422,6 +429,24 @@ void Car_SpeedControlOutput(void)
 # endif
 }
 
+
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
+static void Car_ResetAllFlag(void)
+{
+	
+}
 /*
 *********************************************************************************************************
 *                       Car_RoadDetect                   
@@ -439,20 +464,35 @@ void Car_RoadDetect(void)
 {
 	static uint32_t FirstTime = 0;
 	static float AngleTemp = 0;
+<<<<<<< HEAD
+=======
+	static uint32_t cnt = 0;
+	
+>>>>>>> 421d93c508597dfbf2aec154fc71db21e673828f
 	
 		/*  两边的电感值都小于阈值,说明出跑道了  */
 	if(Car.Sensor[SENSOR_H_L].Average < LOST_LINE_THRESHOLD && Car.Sensor[SENSOR_H_R].Average < LOST_LINE_THRESHOLD )
 		g_LoseLineCounter++;
 	
+<<<<<<< HEAD
 
 	/*  中间电感的值大于阈值,说明已经进入了圆环范围,首先判断圆环方向  */
+=======
+	
+	/*  该标志为0,说明还没有找到第一个标志点  */	
+>>>>>>> 421d93c508597dfbf2aec154fc71db21e673828f
 	if(Car.Sensor[SENSOR_M].Average > 45 )
 	{
 		if(g_CurveStatus == 0)		/*  表示是第一次进入圆环区域,接下来需要判断方向  */
 		{
 			if(Car.VecticalAE < -40)		/*  小于零,说明是左边圆环  */
 			{
+<<<<<<< HEAD
 				Car.NowRoad = LEFT_ISLAND;	
+=======
+				Car.NowRoad = LEFT_ISLAND;
+				
+>>>>>>> 421d93c508597dfbf2aec154fc71db21e673828f
 				g_CurveOffset = 0;		/*  防止上次未清除偏移量  */
 				Car.TargetSpeed = 10;
 				g_CurveStatus = 1;
@@ -474,8 +514,15 @@ void Car_RoadDetect(void)
 		{
 			if(Car.VecticalAE >= 0 && g_NeedOutCurve == 0) 
 			{
+				g_CurveOffset = -30;
 				bsp_led_ON(LED_RED);
+<<<<<<< HEAD
 //				AngleTemp = Car.MPU.Yaw;
+=======
+				AngleTemp = Car.MPU.Yaw;
+				g_CurveStatus = 2;
+				bsp_beep_ON();
+>>>>>>> 421d93c508597dfbf2aec154fc71db21e673828f
 				g_NeedEnterCurve = 1;
 			}
 		}
@@ -483,13 +530,22 @@ void Car_RoadDetect(void)
 		{
 			if(Car.VecticalAE <= 0 && g_NeedOutCurve == 0) 
 			{
+<<<<<<< HEAD
 				g_NeedEnterCurve = 1;
 //				AngleTemp = Car.MPU.Yaw;
+=======
+				g_CurveOffset = 30;
+				g_CurveStatus = 2;
+				AngleTemp = Car.MPU.Yaw;
+>>>>>>> 421d93c508597dfbf2aec154fc71db21e673828f
 				bsp_led_ON(LED_BLUE);
+				bsp_beep_ON();
+				g_NeedEnterCurve = 1;
 			}
 		}
 	}
 	
+<<<<<<< HEAD
 //	if(i_abs(Car.Sensor[SENSOR_V_L].Average - Car.Sensor[SENSOR_V_R].Average) < 5 && g_NeedEnterCurve == 1 && Car.Sensor[SENSOR_M].Average < 35)   //说明没进圆环 清除所有标志保证不影响下一个圆环的进入
 //	{
 //		g_NeedEnterCurve = 0;
@@ -526,9 +582,61 @@ void Car_RoadDetect(void)
 		g_CurveOffset = 0;
 		g_NeedOutCurve = 0;
 		Car.TargetSpeed = 15;
+=======
+	if(fabs(Car.MPU.Pitch) > 15 && g_NeedEnterCurve == 1) 
+	{
+		g_NeedEnterCurve = 0;
+		AngleTemp = 0;
+		g_CurveOffset = 0;
+		g_CurveStatus = 0;
+		bsp_led_OFF(LED_ALL);
+		Car.TargetSpeed = 15;
+		bsp_beep_OFF();
+	}
+	
+	if(fabs(Car.MPU.Yaw - AngleTemp) > 40 && g_NeedEnterCurve ==1)
+	{
+		g_CurveOffset = 0;
+		g_NeedOutCurve = 1;
+		g_NeedEnterCurve = 0;
+		Car.TargetSpeed = 15;
+	}
+	
+	if(g_NeedOutCurve == 1 && fabs(Car.MPU.Yaw - AngleTemp) > 200)
+	{
+		g_NeedOutCurve = 2;
+		Car.TargetSpeed = 10;
+>>>>>>> 421d93c508597dfbf2aec154fc71db21e673828f
 		bsp_led_OFF(LED_ALL);
 	}
 	
+	if(Car.Sensor[SENSOR_M].Average < 40 && Car.Sensor[SENSOR_H_L].Average < 100 && Car.Sensor[SENSOR_H_R].Average < 100)
+	{
+		if(g_NeedOutCurve == 2)
+		{
+			Car.TargetSpeed = 15;
+			bsp_beep_OFF();
+			g_CurveOffset = 0;
+			g_NeedOutCurve = 0;
+			g_CurveStatus = 0;
+		}
+	}
+	
+//	if(fabs(Car.HorizontalAE) < 15 )
+//	{
+//		cnt ++;
+//		
+//		if(cnt > 400) 
+//		{
+//			g_NeedEnterCurve = 0;
+//			AngleTemp = 0;
+//			g_CurveOffset = 0;
+//			g_CurveStatus = 0;
+//			bsp_led_OFF(LED_ALL);
+//			bsp_beep_OFF();
+//			Car.TargetSpeed = 15;
+//		}
+//	}
 }
 
 /*
@@ -553,6 +661,7 @@ void Car_DirectionControl(void)
 	float KpOut = 0, KdOutNow = 0, KdGryozOut = 0;
 	static float temp = 0;
 	
+<<<<<<< HEAD
 	switch(Car.NowRoad)
 	{
 		case STRAIGHT:temp = 0; g_CurveOffset = 0; g_NeedEnterCurve = 0; g_NeedOutCurve = 0; g_CurveSpeedControl = 0; break;
@@ -577,6 +686,9 @@ void Car_DirectionControl(void)
 	}
 	
 	Gyro_Z = Car.MPU.Gyroz - MPU_GYROZ_ZERO;
+=======
+	Gyro_Z = Car.MPU.Gyroz;
+>>>>>>> 421d93c508597dfbf2aec154fc71db21e673828f
 	
 	Error = Car.HorizontalAE + g_CurveOffset;
 	
@@ -593,7 +705,7 @@ void Car_DirectionControl(void)
 	KdOutLast = KdOutNow;		/*  由于采用不完全微分,所以需要保存上一时刻的微分  */
 	KpOut = Error * Kp;		/*  转向环的比例  */
 	KdOutNow = ErrorDiff * Kd;				/*  转向环的微分  */
-	KdGryozOut = g_GryoZ_Kd * Gyro_Z;		/*  采用陀螺仪的角速度进行补偿,抵制转向  */
+	KdGryozOut = g_GryoZ_Kd * (Gyro_Z - MPU_GYROZ_ZERO);		/*  采用陀螺仪的角速度进行补偿,抵制转向  */
 	
 	/*  保存上次的PWM  */
 	g_DirciotnControlOutOld = g_DirectionControlOutNew; 
@@ -664,7 +776,9 @@ void Car_MotorOutput(void)
 		
 	/*  当丢线计数器的值大于2时,说明已经冲出了跑道,停车  */
 	if(g_LoseLineCounter > 2)
+	{
 		bsp_motor_SetPwm(0,0);
+	}
 	else
 		bsp_motor_SetPwm(LeftPwm, RightPwm);	/*  输出到电机  */	
 }
@@ -700,9 +814,10 @@ void Car_Control(void)
 	g_DirectionControlPeriod++;
 	Car_DirectionControlOutput();
 	
-	/*  控制状态机  */
-	switch(CarControlCounter)
+	SpeedControlCounter++;
+	if(SpeedControlCounter >= SPEED_CONTROL_PERIOD/5 && g_SpeedControlON == 1)
 	{
+<<<<<<< HEAD
 		/*  每5ms读取一次编码器  */
 		case 1:
 		{
@@ -718,46 +833,30 @@ void Car_Control(void)
 		/*  速度控制  */
 		case 2:
 		{
-
-		}break;/*  end of case 2  */
-		
-		
-		/*  每5ms进行一次传感器数据处理  */
-		case 3:
-		{
-			bsp_sensor_DataProcess();		/*  运行时长64us  */
-			Car_RoadDetect();
-		}break;
-		
-		/*  方向控制  */
-		case 4:
-		{
-			DirectionControlCounter++;
-			if(DirectionControlCounter >= DIRCTION_CONTROL_PERIOD/5)
-			{
-				DirectionControlCounter = 0;
-				g_DirectionControlPeriod = 0;
-				Car_DirectionControl();		/*  运行时长600us  */
-			}
-		}break;
-		
-		/*  每5ms进行一次电机输出  */
-		case 5:
-		{
-			Car_MotorOutput();
-			CarControlCounter=0;
-		}break;
-		default:		/*  程序如果跑到这里了,说明程序出错了,停车处理  */
-		{
-			CarControlCounter = 0;
-			DirectionControlCounter = 0;
-			SpeedControlCounter = 0;
-			g_SpeedControlPeriod = 0;
-			g_DirectionControlPeriod = 0;
-			DRV_DISABLE();				/*  关闭电机驱动  */
-			while(1);							
-		}break;
+=======
+		SpeedControlCounter = 0;
+		g_SpeedControlPeriod = 0;
+		Car_SpeedControl();				/*  运行时长68us  */
 	}
+>>>>>>> 421d93c508597dfbf2aec154fc71db21e673828f
+
+	bsp_sensor_DataProcess();		/*  运行时长64us  */
+	Car_RoadDetect();
+
+
+
+	DirectionControlCounter++;
+	if(DirectionControlCounter >= DIRCTION_CONTROL_PERIOD/5)
+	{
+		DirectionControlCounter = 0;
+		g_DirectionControlPeriod = 0;
+		Car_DirectionControl();		/*  运行时长600us  */
+	}
+
+
+	Car_MotorOutput();
+	CarControlCounter=0;
+
 }
 	
 	

@@ -621,7 +621,7 @@ void bsp_mpu_GetAngle(void)
 	float Gyrox = 0, Gyroy = 0, Gyroz = 0;
 	float PitchAcc = 0, RollAcc = 0, YawAcc = 0;
  
-//	bsp_mpu_ReadAcc(&Car.MPU.Accx, &Car.MPU.Accy, &Car.MPU.Accz);
+	bsp_mpu_ReadAcc(&Car.MPU.Accx, &Car.MPU.Accy, &Car.MPU.Accz);
 	bsp_mpu_ReadGyro(&Car.MPU.Gyrox, &Car.MPU.Gyroy, &Car.MPU.Gyroz);
 	
 	
@@ -630,33 +630,33 @@ void bsp_mpu_GetAngle(void)
 //	
 //	Car.MPU.Accy = bsp_mpu_ReadByte(MPU_ACCEL_YOUTH_REG) << 8 | bsp_mpu_ReadByte(MPU_ACCEL_YOUTL_REG);
 	
-//	Accx = Car.MPU.Accx;
-//	Accy = Car.MPU.Accy;
-//	Accz = Car.MPU.Accz;
+	Accx = Car.MPU.Accx;
+	Accy = Car.MPU.Accy;
+	Accz = Car.MPU.Accz;
 	
-//	Gyrox = Car.MPU.Gyrox - MPU_GYROX_ZERO;
-//	Gyroy = Car.MPU.Gyroy - MPU_GYROY_ZERO;
+	Gyrox = Car.MPU.Gyrox - MPU_GYROX_ZERO;
+	Gyroy = Car.MPU.Gyroy - MPU_GYROY_ZERO;
 	Gyroz = Car.MPU.Gyroz - MPU_GYROZ_ZERO;
 	
-//	if(Gyrox > 32768) Gyrox -= 65536;
-//	if(Gyroy > 32768) Gyroy -= 65536;
+	if(Gyrox > 32768) Gyrox -= 65536;
+	if(Gyroy > 32768) Gyroy -= 65536;
 	if(Gyroz > 32768) Gyroz -= 65536;
 	
-//	Gyrox = Gyrox/16.4;
-//	Gyroy = Gyroy/16.4;
+	Gyrox = Gyrox/16.4;
+	Gyroy = Gyroy/16.4;
 	Gyroz = Gyroz/16.4;
 	
 	Car.MPU.Yaw += Gyroz * IntTime;
 //	if(fabs(Car.MPU.Yaw) > 360) Car.MPU.Yaw = 0;
 //	
-//	PitchAcc = atan2(Accx, Accz) * 180 / PI;
+	PitchAcc = atan2(Accx, Accz) * 180 / PI;
 //	RollAcc = atan2(Accy, Accz) * 180 / PI;	
 //	
-//	filter_KalmanFilter(&PitchKalman, Gyroy, PitchAcc);
+	filter_KalmanFilter(&PitchKalman, Gyroy, PitchAcc);
 //	filter_KalmanFilter(&RollKalman, Gyrox, RollAcc);
 //	
 //	Car.MPU.Roll = RollKalman.X[0];
-//	Car.MPU.Pitch = PitchKalman.X[0];
+	Car.MPU.Pitch = PitchKalman.X[0];
  
 }
 /********************************************  END OF FILE  *******************************************/

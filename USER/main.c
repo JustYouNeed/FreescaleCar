@@ -22,6 +22,9 @@
 # include "FreescaleCar.h"
 # include "display.h"
 
+
+
+
 /*
 *********************************************************************************************************
 *                               main           
@@ -60,8 +63,11 @@ int main(void)
 	/*  每五秒检测一下电池电压  */
 	bsp_tim_CreateSoftTimer(3, 1000, Car_GetVoltage, TIMER_MODE_AUTO);
 	
-	/*  每5ms读取一次角速度  */
-	bsp_tim_CreateHardTimer(1,5, bsp_mpu_GetAngle);
+	
+	bsp_tim_CreateSoftTimer(2, 100, displayTask, TIMER_MODE_AUTO);
+	
+//	/*  每5ms读取一次角速度  */
+//	bsp_tim_CreateHardTimer(1,5, bsp_mpu_GetAngle);
 
 	/*  开启小车控制  */
 	Car_ControlStart();	
@@ -70,7 +76,7 @@ int main(void)
 //	setShow_ui(MAIN_UI);
 	while(1)
 	{
-		displayTask();				/*  任务执行时长36ms  */
+//		bsp_mpu_GetAngle();
 		bsp_tim_DelayMs(100);
 	}
 }

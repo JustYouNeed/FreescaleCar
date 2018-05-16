@@ -205,7 +205,7 @@ void Car_ParaInit(void)
 	Car.Sensor[SENSOR_V_L].CalibrationMin = 0;
 	Car.Sensor[SENSOR_V_R].CalibrationMin = 0;
 	/*  小车目标速度  */
-	Car.TargetSpeed = 18;//(float)drv_flash_ReadSector(CAR_PARA_FLASH_ADDR, 0, uint32_t);;
+	Car.TargetSpeed = 15;//(float)drv_flash_ReadSector(CAR_PARA_FLASH_ADDR, 0, uint32_t);;
 		
 	Car.MaxPWM = 950;
 	
@@ -439,25 +439,20 @@ void Car_RoadDetect(void)
 {
 	static uint32_t FirstTime = 0;
 	static float AngleTemp = 0;
-	static uint8_t FirstPointFlag = 0, SecondPointFlag = 0;
 	
 		/*  两边的电感值都小于阈值,说明出跑道了  */
 	if(Car.Sensor[SENSOR_H_L].Average < LOST_LINE_THRESHOLD && Car.Sensor[SENSOR_H_R].Average < LOST_LINE_THRESHOLD )
 		g_LoseLineCounter++;
 	
 
-	
-	
-	/*  该标志为0,说明还没有找到第一个标志点  */	
+	/*  中间电感的值大于阈值,说明已经进入了圆环范围,首先判断圆环方向  */
 	if(Car.Sensor[SENSOR_M].Average > 45 )
 	{
-		if(g_CurveStatus == 0 && g_NeedOutCurve == 0)		/*  表示是第一次进入圆环区域,接下来需要判断方向  */
+		if(g_CurveStatus == 0)		/*  表示是第一次进入圆环区域,接下来需要判断方向  */
 		{
 			if(Car.VecticalAE < -40)		/*  小于零,说明是左边圆环  */
 			{
-				FirstPointFlag = 1;
-				
-				Car.NowRoad = LEFT_ISLAND;
+				Car.NowRoad = LEFT_ISLAND;	
 				g_CurveOffset = 0;		/*  防止上次未清除偏移量  */
 				Car.TargetSpeed = 10;
 				g_CurveStatus = 1;
@@ -466,12 +461,12 @@ void Car_RoadDetect(void)
 			{
 				Car.NowRoad = RIGHT_ISLAND;
 				g_CurveOffset = 0;					/*  防止上次未清除偏移量  */
-				
 				Car.TargetSpeed = 10;
 				g_CurveStatus = 1;
 			}
 		}
 	}
+	
 	/*  已经找到第一个标志点了,需要找到第二个标志点,第二个标志点为中间水平电感的峰值  */
 	if(g_CurveStatus == 1)	
 	{
@@ -480,8 +475,7 @@ void Car_RoadDetect(void)
 			if(Car.VecticalAE >= 0 && g_NeedOutCurve == 0) 
 			{
 				bsp_led_ON(LED_RED);
-				g_CurveStatus = 2;
-				AngleTemp = Car.MPU.Yaw;
+//				AngleTemp = Car.MPU.Yaw;
 				g_NeedEnterCurve = 1;
 			}
 		}
@@ -490,28 +484,48 @@ void Car_RoadDetect(void)
 			if(Car.VecticalAE <= 0 && g_NeedOutCurve == 0) 
 			{
 				g_NeedEnterCurve = 1;
-				g_CurveStatus = 2;
-				AngleTemp = Car.MPU.Yaw;
+//				AngleTemp = Car.MPU.Yaw;
 				bsp_led_ON(LED_BLUE);
 			}
 		}
 	}
 	
-	if(fabs(Car.MPU.Yaw - AngleTemp) > 40 && g_NeedEnterCurve == 1) 
+//	if(i_abs(Car.Sensor[SENSOR_V_L].Average - Car.Sensor[SENSOR_V_R].Average) < 5 && g_NeedEnterCurve == 1 && Car.Sensor[SENSOR_M].Average < 35)   //说明没进圆环 清除所有标志保证不影响下一个圆环的进入
+//	{
+//		g_NeedEnterCurve = 0;
+//		g_CurveOffset = 0;
+//		g_NeedOutCurve = 0;
+//		bsp_led_OFF(LED_ALL);
+//	}
+	if(i_abs(Car.Sensor[SENSOR_V_L].Average - Car.Sensor[SENSOR_V_R].Average) > 10 && g_NeedEnterCurve == 1 && Car.Sensor[SENSOR_M].Average < 35)    //说明进圆环了 按正常处理
 	{
 		g_NeedOutCurve = 1;
-		g_NeedEnterCurve = 0;
+		g_AlreadyEnterCurve = 1;
 		g_CurveOffset = 0;
-		
+		Car.TargetSpeed = 15;
 	}
-	if(fabs(Car.MPU.Yaw - AngleTemp) > 300 && g_NeedOutCurve == 1) Car.TargetSpeed = 10;
 	
-	if(Car.Sensor[SENSOR_M].Average < 45 && Car.Sensor[SENSOR_H_L].Average < 95 && Car.Sensor[SENSOR_H_R].Average < 95)
+	if(g_AlreadyEnterCurve == 1 && Car.Sensor[SENSOR_M].Average > 40)    //已经进入圆环 将圆环总标志置零
+	{
+		g_CurveStatus = 0;
+		Car.TargetSpeed = 10;
+	}
+	
+//	if(fabs(Car.MPU.Yaw - AngleTemp) > 40 && g_NeedEnterCurve == 1) 
+//	{
+//		g_NeedOutCurve = 1;
+//		g_NeedEnterCurve = 0;
+//		g_CurveOffset = 0;
+//	}
+//	if(fabs(Car.MPU.Yaw - AngleTemp) > 300 && g_NeedOutCurve == 1) Car.TargetSpeed = 10;
+	
+	if(Car.Sensor[SENSOR_M].Average < 35 && Car.VecticalAE == 0 && g_CurveStatus == 0)   //(Car.Sensor[SENSOR_H_L].Average  + Car.Sensor[SENSOR_H_R].Average) < 145)
 	{
 		g_NeedEnterCurve = 0;
+		g_AlreadyEnterCurve = 1;
 		g_CurveOffset = 0;
-		g_CurveStatus = 0;
-		Car.TargetSpeed = 18;
+		g_NeedOutCurve = 0;
+		Car.TargetSpeed = 15;
 		bsp_led_OFF(LED_ALL);
 	}
 	
@@ -541,8 +555,7 @@ void Car_DirectionControl(void)
 	
 	switch(Car.NowRoad)
 	{
-		case STRAIGHT:temp = 0; g_AlreadyEnterCurve = 0; 
-		g_CurveOffset = 0; g_NeedEnterCurve = 0; g_NeedOutCurve = 0; g_CurveSpeedControl = 0; break;
+		case STRAIGHT:temp = 0; g_CurveOffset = 0; g_NeedEnterCurve = 0; g_NeedOutCurve = 0; g_CurveSpeedControl = 0; break;
 		case LEFT_CURVE:break;
 		case RIGHT_CURVE:break;
 		case LEFT_ISLAND:
@@ -698,7 +711,7 @@ void Car_Control(void)
 			{
 				SpeedControlCounter = 0;
 				g_SpeedControlPeriod = 0;
-				Car_SpeedControl();				/*  运行时长68us  */
+//				Car_SpeedControl();				/*  运行时长68us  */
 			}
 		}break;
 		

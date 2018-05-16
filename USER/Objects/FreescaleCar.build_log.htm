@@ -27,11 +27,19 @@ Project File Date:  05/15/2018
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 3 (build 300)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'FreescaleCar'
-compiling main.c...
+compiling display.c...
+compiling bsp_mpu.c...
+..\BSP\src\bsp_mpu.c(620): warning:  #550-D: variable "Accy" was set but never used
+  	float Accx = 0, Accy = 0, Accz = 0;
+..\BSP\src\bsp_mpu.c(622): warning:  #177-D: variable "RollAcc" was declared but never referenced
+  	float PitchAcc = 0, RollAcc = 0, YawAcc = 0;
+..\BSP\src\bsp_mpu.c(622): warning:  #177-D: variable "YawAcc" was declared but never referenced
+  	float PitchAcc = 0, RollAcc = 0, YawAcc = 0;
+..\BSP\src\bsp_mpu.c: 3 warnings, 0 errors
 linking...
 Program Size: Code=29208 RO-data=11264 RW-data=1236 ZI-data=4956  
 FromELF: creating hex file...
-".\Objects\FreescaleCar.axf" - 0 Error(s), 0 Warning(s).
+".\Objects\FreescaleCar.axf" - 0 Error(s), 3 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
   E:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE

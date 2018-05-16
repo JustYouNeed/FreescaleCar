@@ -58,13 +58,13 @@ int main(void)
 //	bsp_tim_CreateSoftTimer(2, 200, Car_Running, TIMER_MODE_AUTO);
 	
 	/*  每五秒检测一下电池电压  */
-	bsp_tim_CreateSoftTimer(3, 1000, Car_GetVoltage, TIMER_MODE_AUTO);
+//	bsp_tim_CreateSoftTimer(3, 1000, Car_GetVoltage, TIMER_MODE_AUTO);
 	
 	/*  每5ms读取一次角速度  */
 	bsp_tim_CreateHardTimer(1,5, bsp_mpu_GetAngle);
 
 	/*  开启小车控制  */
-	Car_ControlStart();	
+	bsp_tim_CreateHardTimer(0, 5, Car_Control);
 
 	while(1)
 	{

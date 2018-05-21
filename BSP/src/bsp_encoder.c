@@ -127,8 +127,8 @@ void ftm_count_clean(FTMn ftmn)
 void bsp_encoder_ReadCounter(void)
 {	
 	/*  读取FTM计数器值  */
-//	Car.Motor.RightEncoder += (uint32_t)FTM0->CNT;
-//	Car.Motor.LeftEncoder += (uint32_t)FTM1->CNT;
+	Car.Motor.RightEncoder += (uint32_t)FTM0->CNT;
+	Car.Motor.LeftEncoder += (uint32_t)FTM1->CNT;
 	
 	/*  清空计数器  */
 	FTM0->CNT = 0;

@@ -425,21 +425,8 @@ void gotoSetTargetSpeed(void)
 	isChangeMenu = true;
 }
 
-extern uint8_t g_SpeedControlON;		/*  速度控制开关  */
-
 void setSpeedControl(void)
 {
-	if(g_SpeedControlON == 0)
-	{
-		g_SpeedControlON = 1;
-		MainMenu[3].title = SpeedControlON;
-	}
-	else if(g_SpeedControlON == 1)
-	{
-		g_SpeedControlON = 0;
-		MainMenu[3].title = SpeedControlOFF;
-	}
-	isChangeMenu = true;
 	
 }
 

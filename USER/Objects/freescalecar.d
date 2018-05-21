@@ -83,4 +83,3 @@
 .\objects\freescalecar.o: ..\APP\inc\app_filter.h
 .\objects\freescalecar.o: ..\APP\inc\app_sort.h
 .\objects\freescalecar.o: ..\APP\inc\app_pid.h
-.\objects\freescalecar.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h

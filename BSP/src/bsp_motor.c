@@ -52,7 +52,7 @@ void bsp_motor_Config(void)
 	
 	/*  初始化电机PWM  */
 	PWM_InitStruct.PWM_Channel = DRV_PWM1_CHANNEL;
-	PWM_InitStruct.PWM_Frequency = 20;
+	PWM_InitStruct.PWM_Frequency = 15;
 	PWM_InitStruct.PWM_Pulse = 0;
 	drv_ftm_PWMInit(&PWM_InitStruct);
 	

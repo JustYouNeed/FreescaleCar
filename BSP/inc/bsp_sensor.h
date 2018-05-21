@@ -24,12 +24,18 @@
 */
 # include "derivative.h"
 
-# define S_H_L_CH		ADC_Channel_C3
+# define S_H_L_CH		ADC_Channel_C1
 # define S_H_R_CH		ADC_Channel_F6
 # define S_V_L_CH		ADC_Channel_C2
 # define S_V_R_CH		ADC_Channel_F7
-# define S_M_CH			ADC_Channel_C1
+# define S_M_CH			ADC_Channel_C3
 
+
+//# define S_H_L_CH		ADC_Channel_C1
+//# define S_H_R_CH		ADC_Channel_C0
+//# define S_V_L_CH		ADC_Channel_C2
+//# define S_V_R_CH		ADC_Channel_F7//ADC_Channel_F7
+//# define S_M_CH			ADC_Channel_C3
 
 # define SENSOR_FIFO_SIZE		4
 

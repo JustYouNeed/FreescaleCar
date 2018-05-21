@@ -45,8 +45,8 @@ typedef volatile uint32     vuint32; // 32 bits
 typedef volatile uint64     vuint64; // 64 bits 
 
 
-typedef enum {RESET = 0, SET = !RESET,} FlagStatus, ITStatus;
-typedef enum {DISABLE = 0, ENABLE = !DISABLE,} FunctionalState;
+//typedef enum {RESET = 0, SET = !RESET,} FlagStatus, ITStatus;
+//typedef enum {DISABLE = 0, ENABLE = !DISABLE,} FunctionalState;
 
 typedef enum //枚举端口状态
 {
@@ -87,8 +87,8 @@ typedef enum // 枚举管脚编号
 
 
 
-# define GPIO_PIN_SET		1
-# define GPIO_PIN_RESET 0
+//# define GPIO_PIN_SET		1
+//# define GPIO_PIN_RESET 0
 
 #define PTX(PTX_n)  (PTX_n>>5)  //获取模块号 PTX_n/32
 #define PTn(PTX_n)  (PTX_n&0x1f)//获取引脚号 PTX_n%32
@@ -112,7 +112,7 @@ void get_clk(void);
 
 
 
-#include "headfile.h"
+#include "common.h"
 
 
 

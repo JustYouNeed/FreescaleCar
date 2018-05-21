@@ -48,6 +48,15 @@
 # define WHEEL_D						0.06
 
 
+typedef enum
+{
+	CHECK_POINT_A = 0x0,
+	CHECK_POINT_B,
+	WAIT_ENTER,
+	WAIT_OUT_A,
+	WAIT_OUT_B,
+	CLEAR_FLAG,
+}IslandStatus_EnumTypeDef;
 
 
 /*  小车走走道时的目标速度  */
@@ -81,10 +90,11 @@ typedef struct
 	Sensor_TypeDef Sensor[SENSOR_COUNT];	/*  传感器  */
 	Motor_TypeDef Motor;									/*  电机  */
 	MPU_TypeDef MPU;											/*  MPU参数  */
-	Road_TypeDef NowRoad;
+	uint8_t NowRoad;
 	
 	float HorizontalAE, VecticalAE, AE;				/*  传感器水平、垂直和差比  */
 	float CarSpeed, TargetSpeed;	/*  当前车速,整体目标速度  */
+	float LeftTargetSpeed, RightTargetSpeed;
 	int16_t MaxPWM;												/*  最大PWM  */
 	float Voltage;												/*  电池电压  */
 }Car_TypeDef;

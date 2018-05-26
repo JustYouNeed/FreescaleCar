@@ -52,8 +52,6 @@
 ".\objects\pid_set.o"
 ".\objects\para_show.o"
 ".\objects\calibration.o"
-".\objects\inv_mpu.o"
-".\objects\inv_mpu_dmp_motion_driver.o"
 --strict --scatter ".\Objects\FreescaleCar.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

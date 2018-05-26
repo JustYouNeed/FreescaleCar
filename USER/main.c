@@ -1,3 +1,4 @@
+# include "bsp.h"
 # include "FreescaleCar.h"
 # include "display.h"
 
@@ -35,10 +36,11 @@ int main(void)
 	/*  LED状态指示任务,周期500ms  */
 //	bsp_tim_CreateSoftTimer(2, 200, Car_Running, TIMER_MODE_AUTO);
 	
+	bsp_tim_CreateSoftTimer(2, 10, bsp_beep_Thread, TIMER_MODE_AUTO);
+	
 	/*  硬件定时器任务,车子控制任务,周期20ms  */
 	bsp_tim_CreateHardTimer(1, 1, Car_Control);
 	bsp_tim_CreateHardTimer(0,5, bsp_mpu_GetAngle);
-	
 	while(1)
 	{
 		displayTask();

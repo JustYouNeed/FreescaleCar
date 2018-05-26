@@ -34,12 +34,8 @@
   *                              INCLUDE FILES
   *******************************************************************************************************
 */
-# include "bsp_encoder.h"
-# include "bsp_timer.h"
+# include "bsp.h"
 # include "FreescaleCar.h"
-
-
-
 
 
 void ftm_count_mux(FTMn ftmn)

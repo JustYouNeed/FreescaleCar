@@ -23,7 +23,10 @@
   *                              INCLUDE FILES
   *******************************************************************************************************
 */
-# include "bsp_key.h"
+# include "bsp.h"
+
+# define KEY_TONE		1
+
 
 /*  检测按键是否按键的函数  */
 static uint8_t IsKeyUpPress(void) { return (drv_gpio_ReadPin(KEY_UP_PIN) == 1)?0:1;}
@@ -272,6 +275,9 @@ void bsp_key_Detect(uint8_t Id)
 				
 				/*  推送按键值到按键FIFO  */
 				bsp_key_PutKey((uint8_t)(3 * Id + 1));
+				# if KEY_TONE
+					bsp_beep_KeyTone();
+				# endif
 			}
 			
 			/*  长按时间大于零,说明开启了长按检测功能  */
@@ -284,6 +290,9 @@ void bsp_key_Detect(uint8_t Id)
 					{
 						/*  推送长按消息到按键FIFO  */
 						bsp_key_PutKey((uint8_t)(3 * Id + 3));
+						# if KEY_TONE
+							bsp_beep_KeyTone();
+						# endif
 					}
 				}
 				else	/*  如果已经超过了长按时间,则看看是否开启了按键连发  */
@@ -295,6 +304,10 @@ void bsp_key_Detect(uint8_t Id)
 						{
 							pKey->RepeatCount = 0;
 							bsp_key_PutKey((uint8_t)(3 * Id + 1));
+							
+							# if KEY_TONE
+								bsp_beep_KeyTone();
+							# endif
 						}
 					}
 				}

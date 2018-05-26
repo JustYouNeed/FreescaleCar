@@ -20,13 +20,6 @@
 # ifndef __BSP_LED_H
 # define __BSP_LED_H
 
-/*
-  *******************************************************************************************************
-  *                              INCLUDE FILES
-  *******************************************************************************************************
-*/
-# include "derivative.h"
-
 /*  定义按键开关时引脚的状态  */
 # define LED_OFF				GPIO_PIN_RESET
 # define LED_ON					GPIO_PIN_SET
@@ -41,7 +34,7 @@ typedef enum
 	LED_ALL = 0x0,
 	LED_RED,
 	LED_BLUE,
-}LED_IDType;
+}LED_EnumTypeDef;
 
 
 void bsp_led_Config(void);

@@ -17,8 +17,8 @@
   *                              INCLUDE FILES
   *******************************************************************************************************
 */
-# include "app_debug.h"
-# include "bsp_led.h"
+# include "app.h"
+# include "bsp.h"
 # include "FreescaleCar.h"
 
 

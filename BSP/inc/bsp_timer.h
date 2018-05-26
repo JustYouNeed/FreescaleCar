@@ -24,7 +24,6 @@
 # ifndef __BSP_TIMER_H
 # define __BSP_TIMER_H
 
-# include "derivative.h"
 
 # define SOFT_TIMER_COUNT			6
 

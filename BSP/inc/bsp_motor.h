@@ -22,7 +22,6 @@
   *                              INCLUDE FILES
   *******************************************************************************************************
 */
-# include "derivative.h"
 
 /*  电机PWM通道宏定义  */
 # define DRV_PWM1_CHANNEL		PWM_Channel0_H0
@@ -32,14 +31,12 @@
 
 /*  电机驱动使能引脚  */
 # define DRV_EN_PIN			GPIO_Pin_E5
-# define DRV_ENABLE()		drv_gpio_WritePin(DRV_EN_PIN, 1)
-# define DRV_DISABLE()	drv_gpio_WritePin(DRV_EN_PIN, 0)
+# define DRV_ENABLE()		drv_gpio_WritePin(DRV_EN_PIN, GPIO_PIN_SET)
+# define DRV_DISABLE()	drv_gpio_WritePin(DRV_EN_PIN, GPIO_PIN_RESET)
 
 /*  电机控制结构体定义  */
 typedef struct
-{
-	int16_t PWM_Frequency;	/*  电机PWM频率  */
-	
+{	
  	int16_t LeftPwm;				/*  左边电机PWM  */
 	int16_t RightPwm;				/*  右边电机PWM  */
 	

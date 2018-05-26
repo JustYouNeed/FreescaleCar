@@ -28,6 +28,15 @@
 # include "bsp.h"
 # include "app.h"
 
+
+# define PID_PARA_FLASH_ADDR			254
+# define PID_PARA_LENGTH					60
+
+# define SENSOR_PARA_FLASH_ADDR		253
+# define SENSOR_PARA_LENGTH				60
+
+# define CAR_PARA_FLASH_ADDR			252
+
 /*  ±àÂëÆ÷Ã¿È¦Êä³öÂö³åÊý  */
 # define ENCONDER_LINES			512
 

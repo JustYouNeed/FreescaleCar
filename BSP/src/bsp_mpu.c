@@ -16,11 +16,9 @@
   *                              INCLUDE FILES
   *******************************************************************************************************
 */
-# include "bsp_mpu.h"
-# include "FreescaleCar.h"
-# include "app_filter.h"
+# include "bsp.h"
 # include "math.h"
-# include "bsp_i2c.h"
+# include "FreescaleCar.h"
 
 
 # define PI	3.14159265f

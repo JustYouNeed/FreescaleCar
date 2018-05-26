@@ -18,10 +18,7 @@
   *                              INCLUDE FILES
   ******************************************************************************
 */
-# include "bsp_flash.h"
-# include "drv.h"
-# include "bsp_timer.h"
-//# include "bsp_spi.h"
+# include "bsp.h"
 
 uint16_t W25QXX_TYPE = W25Q128;
 

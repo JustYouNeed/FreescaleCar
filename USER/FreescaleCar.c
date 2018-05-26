@@ -69,7 +69,6 @@
 	*******************************************************************************************************
 */
 # include "FreescaleCar.h"
-# include "app_debug.h"
 
 /*  速度控制周期*/
 # define SPEED_CONTROL_PERIOD	  50	
@@ -102,7 +101,6 @@ static int16_t g_RightSpeedControlOut = 0;
 
 /*  小车方向控制变量  */
 static int16_t g_DirectionControlOut = 0;
-static int16_t g_DirectionControlCounter = 0;
 static int16_t g_DirectionControlPeriod = 0;
 static int16_t g_DirectionControlOutNew = 0;
 static int16_t g_DirciotnControlOutOld = 0;
@@ -115,6 +113,15 @@ const static float g_GryoZ_Kd = 0.1f;
 static int16_t g_LossLineCounter = 0;
 static float g_SpeedFactor = 0.12;
 static float g_IslandOffset = 0.0f;
+
+/*  丢线积分  */
+static float g_LeftLostLineInteral = 0.0f;
+static float g_RightLostLineInteral = 0.0f;
+static float g_LostLineRecoup = 0.0f;
+
+static float g_DirKp = 0;
+static float g_DirKi = 0;
+static float g_DirKd = 0;
 
 /*  圆环检测状态机  */
 static IslandStatus_EnumTypeDef g_IslandStatus = CHECK_POINT_A;
@@ -149,17 +156,21 @@ void Car_ParaInit(void)
 	/*  初始化速度PID,只采用比例控制,无积分微分  */
 	pid_PIDInit(&Car.VelPID, VelKp, VelKi, VelKd, 0, 0);
 	
+	
+	g_DirKp = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 12, float);
+	g_DirKi = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 16, float);
+	g_DirKd = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 20, float);
 	/*  初始化方向模糊PID参数  */
 	Car.DirFuzzy.DeltaKdMax = 25;
 	Car.DirFuzzy.DeltaKiMax = 0;
 	Car.DirFuzzy.DeltaKpMax = 15;
-	Car.DirFuzzy.DErrMax = 30;
-	Car.DirFuzzy.ErrMax = 90;
+	Car.DirFuzzy.DErrMax = 50;
+	Car.DirFuzzy.ErrMax = 160;
 	Car.DirFuzzy.KP = 12;
 	Car.DirFuzzy.KD = 180;
-	Car.DirFuzzy.KPMax = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 12, float);
-	Car.DirFuzzy.KIMax = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 16, float);
-	Car.DirFuzzy.KDMax = drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 20, float);
+	Car.DirFuzzy.KPMax = g_DirKp;//drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 12, float);
+	Car.DirFuzzy.KIMax = g_DirKi;//drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 16, float);
+	Car.DirFuzzy.KDMax = g_DirKd;//drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 20, float);
 	fuzzy_PIDInit(&Car.DirFuzzy);
 	
 	/*  初始化车子的传感器参数,从Flash中读取标定值  */
@@ -181,7 +192,6 @@ void Car_ParaInit(void)
 	Car.Sensor[SENSOR_V_R].CalibrationMin = 0;//drv_flash_ReadSector(SENSOR_PARA_FLASH_ADDR, (i * 2 +  1 ) * 4, uint16_t);
 		
 	/*  电机控制参数初始化  */
-	Car.Motor.PWM_Frequency = 10;	/*  电机PWM频率为10KHz  */
 	Car.Motor.LeftPwm = 0;
 	Car.Motor.RightPwm = 0;
 	Car.Motor.LeftEncoder = 0;
@@ -445,6 +455,8 @@ void Car_SpeedControlOutput(void)
 * Note(s)    : 
 *********************************************************************************************************
 */
+static uint16_t resumeCnt = 0;
+static float RecoupTemp = 0;
 void Car_RoadDetect(void)
 {
 	static float FirstPoint = 0, SecondPoint = 0, EnterIslandAngle = 0;
@@ -454,6 +466,49 @@ void Car_RoadDetect(void)
 	if(Car.Sensor[SENSOR_H_L].Average < LOST_LINE_THRESHOLD && Car.Sensor[SENSOR_H_R].Average < LOST_LINE_THRESHOLD)
 		g_LossLineCounter++;
 	
+	if(Car.Sensor[SENSOR_H_L].Average < 10) g_LeftLostLineInteral ++;
+	if(Car.Sensor[SENSOR_H_L].Average < 10) g_RightLostLineInteral ++;
+	
+	if(g_LeftLostLineInteral > 10) 
+	{
+		RecoupTemp = 20;
+		bsp_beep_ON(6,2, 10);
+//		Car.DirFuzzy.KPMax *= 2.5;
+	}
+	else if(g_RightLostLineInteral > 10) 
+	{
+//		Car.DirFuzzy.KPMax *= 2.5;
+		bsp_beep_ON(6, 2, 10);
+		RecoupTemp = -20;
+	}
+	
+	
+	if(Car.Sensor[SENSOR_H_L].Average > 16 && Car.Sensor[SENSOR_H_L].Average > 16)
+	{
+//		
+		if(g_LostLineRecoup !=0)
+		{
+			resumeCnt++;
+			if(g_LostLineRecoup > 0)
+			{
+				g_LostLineRecoup = (resumeCnt + 1) / 10 * RecoupTemp - RecoupTemp;
+			}
+			else if(g_LostLineRecoup < 0)
+			{
+				g_LostLineRecoup = (resumeCnt + 1) / 10 * RecoupTemp + RecoupTemp;
+			}
+		}
+		else
+		{
+//			bsp_beep_OFF();
+			Car.DirFuzzy.KPMax = g_DirKp;
+			resumeCnt = 0;
+		}
+		g_LeftLostLineInteral = 0;
+		g_RightLostLineInteral = 0;
+	}
+	else
+		g_LostLineRecoup = RecoupTemp;
 	/*  圆环状态机  */
 	switch(g_IslandStatus)
 	{
@@ -467,6 +522,7 @@ void Car_RoadDetect(void)
 				FirstPointTime = bsp_tim_GetRunTime();
 				g_IslandStatus = CHECK_POINT_B;
 				
+				bsp_beep_ON(10, 5, 5);
 				if(FirstPoint < 0) bsp_led_ON(LED_RED);			/*  根据圆环方向点亮不同的灯  */
 				else if(FirstPoint > 0) bsp_led_ON(LED_BLUE);
 			}
@@ -539,8 +595,8 @@ void Car_DirectionControl(void)
 	float Kp = 0, Kd = 0, Gyro_Z;		
 	int16_t KpOut = 0, KdOutNow = 0, KdGryozOut = 0;
 		
-	Error = Car.HorizontalAE + g_IslandOffset;
-	
+	Error = Car.HorizontalAE + g_IslandOffset + g_LostLineRecoup;
+//	Error = g_LostLineRecoup;
 	/*  偏差微分  */
 	ErrorDiff = Error - LastError;
 	
@@ -625,7 +681,10 @@ void Car_MotorOutput(void)
 	
 	/*  输出到电机  */
 	if(g_LossLineCounter > 2)		/*  冲出跑道停车  */
+	{
 		bsp_motor_SetPwm(0,0);
+		bsp_beep_Pause();
+	}
 	else
 		bsp_motor_SetPwm(Car.Motor.LeftPwm, Car.Motor.RightPwm);
 }
@@ -684,7 +743,6 @@ void Car_Control(void)
 		case 4:
 		{
 			Car_RoadDetect();
-			g_DirectionControlCounter = 0;
 			g_DirectionControlPeriod = 0;
 			Car_DirectionControl();
 		}break;
@@ -698,7 +756,6 @@ void Car_Control(void)
 		default:
 		{
 			CarControlCunter = 0;
-			g_DirectionControlCounter = 0;
 			g_SpeedControlCounter = 0;
 			g_SpeedControlPeriod = 0;
 			g_DirectionControlPeriod = 0;

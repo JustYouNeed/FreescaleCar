@@ -111,7 +111,7 @@ const static float g_GryoZ_Kd = 0.1f;
 
 /*  丢线计数器,由该变量来统计偏离中线一定范围的次数,该值越小,说明偏离中线越小  */
 static int16_t g_LossLineCounter = 0;
-static float g_SpeedFactor = 0.12;
+static float g_SpeedFactor = 0.18;
 static float g_IslandOffset = 0.0f;
 
 /*  丢线积分  */
@@ -210,6 +210,7 @@ void Car_ParaInit(void)
 		
 	Car.MaxPWM = 950;
 	
+	g_LostLineRecoup = 0.0f;
 }
 
 /*
@@ -477,19 +478,19 @@ void Car_RoadDetect(void)
 >>>>>>> Mr-He
 	
 	if(Car.Sensor[SENSOR_H_L].Average < 10) g_LeftLostLineInteral ++;
-	if(Car.Sensor[SENSOR_H_L].Average < 10) g_RightLostLineInteral ++;
+	if(Car.Sensor[SENSOR_H_R].Average < 10) g_RightLostLineInteral ++;
 	
 	if(g_LeftLostLineInteral > 10) 
 	{
-		RecoupTemp = 20;
+		RecoupTemp = 60;
 		bsp_beep_ON(6,2, 10);
-//		Car.DirFuzzy.KPMax *= 2.5;
+//		Car.DirFuzzy.KPMax *= 1.5;
 	}
 	else if(g_RightLostLineInteral > 10) 
 	{
-//		Car.DirFuzzy.KPMax *= 2.5;
+//		Car.DirFuzzy.KPMax *= 1.5;
 		bsp_beep_ON(6, 2, 10);
-		RecoupTemp = -20;
+		RecoupTemp = -60;
 	}
 	
 <<<<<<< HEAD
@@ -498,6 +499,7 @@ void Car_RoadDetect(void)
 =======
 	
 <<<<<<< HEAD
+<<<<<<< HEAD
 	/*  该标志为0,说明还没有找到第一个标志点  */	
 >>>>>>> 421d93c508597dfbf2aec154fc71db21e673828f
 	if(Car.Sensor[SENSOR_M].Average > 45 )
@@ -505,12 +507,16 @@ void Car_RoadDetect(void)
 		if(g_CurveStatus == 0)		/*  表示是第一次进入圆环区域,接下来需要判断方向  */
 =======
 	if(Car.Sensor[SENSOR_H_L].Average > 16 && Car.Sensor[SENSOR_H_L].Average > 16)
+=======
+	if(Car.Sensor[SENSOR_H_L].Average > 16 && Car.Sensor[SENSOR_H_R].Average > 16)
+>>>>>>> Mr-He
 	{
-//		
+		
 		if(g_LostLineRecoup !=0)
 >>>>>>> Mr-He
 		{
 			resumeCnt++;
+<<<<<<< HEAD
 			if(g_LostLineRecoup > 0)
 			{
 <<<<<<< HEAD
@@ -538,11 +544,15 @@ void Car_RoadDetect(void)
 				g_LostLineRecoup = (resumeCnt + 1) / 10 * RecoupTemp + RecoupTemp;
 >>>>>>> Mr-He
 			}
+=======
+			g_LostLineRecoup = (resumeCnt + 1) / 10 * RecoupTemp - RecoupTemp;
+>>>>>>> Mr-He
 		}
 		else
 		{
 //			bsp_beep_OFF();
-			Car.DirFuzzy.KPMax = g_DirKp;
+			RecoupTemp = 0;
+//			Car.DirFuzzy.KPMax = g_DirKp;
 			resumeCnt = 0;
 		}
 		g_LeftLostLineInteral = 0;
@@ -794,7 +804,7 @@ void Car_DirectionControl(void)
 	KpOut = Error * Kp;		/*  转向环的比例  */
 	KdOutNow = ErrorDiff * Kd;				/*  转向环的微分  */
 	Gyro_Z = Car.MPU.Gyroz - MPU_GYROZ_ZERO;
-	KdGryozOut = g_GryoZ_Kd * Gyro_Z;		/*  采用陀螺仪的角速度进行补偿,抵制转向  */
+//	KdGryozOut = g_GryoZ_Kd * Gyro_Z;		/*  采用陀螺仪的角速度进行补偿,抵制转向  */
 		
 	/*  保存上次的PWM  */
 	g_DirciotnControlOutOld = g_DirectionControlOutNew; 
@@ -806,7 +816,7 @@ void Car_DirectionControl(void)
 	if(Car.HorizontalAE < 4 && Car.HorizontalAE > -4) g_DirectionControlOutNew = 0;
 
 	/*  保存上个时刻的误差  */
-	LastError = Car.HorizontalAE;
+	LastError = Error;
 }
 
 /*
@@ -866,7 +876,7 @@ void Car_MotorOutput(void)
 	if(g_LossLineCounter > 2)		/*  冲出跑道停车  */
 	{
 		bsp_motor_SetPwm(0,0);
-		bsp_beep_Pause();
+		bsp_beep_OFF();
 	}
 	else
 		bsp_motor_SetPwm(Car.Motor.LeftPwm, Car.Motor.RightPwm);

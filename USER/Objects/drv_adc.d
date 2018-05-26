@@ -44,5 +44,8 @@
 .\objects\drv_adc.o: ..\USER\derivative.h
 .\objects\drv_adc.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
 .\objects\drv_adc.o: ..\BSP\inc\bsp_led.h
+<<<<<<< HEAD
 .\objects\drv_adc.o: ..\USER\derivative.h
 .\objects\drv_adc.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
+=======
+>>>>>>> Mr-He

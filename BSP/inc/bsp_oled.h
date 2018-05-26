@@ -15,8 +15,6 @@
 # ifndef __BSP_OLED_H
 # define __BSP_OLED_H
 
-# include "derivative.h"
-
 
 //OLED模式设置
 //0:4线串行模式

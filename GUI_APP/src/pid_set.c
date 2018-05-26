@@ -24,9 +24,6 @@ extern int selected;
 extern MenuItem_Typedef*  CurItem;
 extern uint8_t getMenuSelectitem(MenuItem_Typedef menu[]);
 
-
-//uint8_t PID_SetSelected = 0;
-
 Button_Typedef bt_add={
 4,
 46,
@@ -88,11 +85,11 @@ void SpeedKp_Set(void)
 	if(key == KEY_UP_PRESS)
 	{
 		GUI_Button_Selected(&bt_add, 0);
-		kp_temp += 0.5;
+		kp_temp -= 0.5;
 	}else if(KEY_DOWN_PRESS == key)
 	{
 		GUI_Button_Selected(&bt_mines, 0);
-		kp_temp -= 0.5;
+		kp_temp += 0.5;
 	}else if(key == KEY_OK_PRESS)
 	{
 		Car.VelPID.Kp = kp_temp;
@@ -142,11 +139,11 @@ void SpeedKi_Set(void)
 	if(key == KEY_UP_PRESS)
 	{
 		GUI_Button_Selected(&bt_add, 0);
-		ki_temp += 0.5;
+		ki_temp -= 0.5;
 	}	else if(KEY_DOWN_PRESS == key)
 	{
 		GUI_Button_Selected(&bt_mines, 0);
-		ki_temp -= 0.5;
+		ki_temp += 0.5;
 	}	else if(key == KEY_OK_PRESS)
 	{
 		Car.VelPID.Ki = ki_temp;
@@ -196,11 +193,11 @@ void SpeedKd_Set(void)
 	if(key == KEY_UP_PRESS)
 	{
 		GUI_Button_Selected(&bt_add, 0);
-		kd_temp += 0.5;
+		kd_temp -= 0.5;
 	}else if(KEY_DOWN_PRESS == key)
 	{
 		GUI_Button_Selected(&bt_mines, 0);
-		kd_temp -= 0.5;
+		kd_temp += 0.5;
 	}else if(key == KEY_OK_PRESS)
 	{
 		Car.VelPID.Kd = kd_temp;
@@ -249,11 +246,11 @@ void DirectionKp_Set(void)
 	if(key == KEY_UP_PRESS)
 	{
 		GUI_Button_Selected(&bt_add, 0);
-		kp_temp += 0.5;
+		kp_temp -= 0.5;
 	}else if(KEY_DOWN_PRESS == key)
 	{
 		GUI_Button_Selected(&bt_mines, 0);
-		kp_temp -= 0.5;
+		kp_temp += 0.5;
 	}else if(key == KEY_OK_PRESS)
 	{
 		Car.DirFuzzy.KPMax = kp_temp;
@@ -300,11 +297,11 @@ void DirectionKi_Set(void)
 		cnt = 1;
 	}
 		
-	if(key == KEY_UP_PRESS)
+	if(key == KEY_DOWN_PRESS)
 	{
 		GUI_Button_Selected(&bt_add, 0);
 		ki_temp += 0.5;
-	}else if(KEY_DOWN_PRESS == key)
+	}else if(KEY_UP_PRESS == key)
 	{
 		GUI_Button_Selected(&bt_mines, 0);
 		ki_temp -= 0.5;
@@ -354,11 +351,11 @@ void DirectionKd_Set(void)
 		cnt = 1;
 	}
 		
-	if(key == KEY_UP_PRESS)
+	if(key == KEY_DOWN_PRESS)
 	{
 		GUI_Button_Selected(&bt_add, 0);
 		kd_temp += 5;
-	}else if(KEY_DOWN_PRESS == key)
+	}else if(KEY_UP_PRESS == key)
 	{
 		GUI_Button_Selected(&bt_mines, 0);
 		kd_temp -= 5;
@@ -402,11 +399,11 @@ void Car_SetTarSpeed(void)
 		cnt = 1;
 	}
 		
-	if(key == KEY_UP_PRESS)
+	if(key == KEY_DOWN_PRESS)
 	{
 		GUI_Button_Selected(&bt_add, 0);
 		speed += 1;
-	}else if(KEY_DOWN_PRESS == key)
+	}else if(KEY_UP_PRESS == key)
 	{
 		GUI_Button_Selected(&bt_mines, 0);
 		if(speed > 0 )

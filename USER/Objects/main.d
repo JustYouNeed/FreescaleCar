@@ -1,7 +1,5 @@
 .\objects\main.o: main.c
-.\objects\main.o: FreescaleCar.h
 .\objects\main.o: ..\BSP\inc\bsp.h
-.\objects\main.o: ..\BSP\inc\bsp_led.h
 .\objects\main.o: ..\USER\derivative.h
 .\objects\main.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
 .\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
@@ -46,16 +44,28 @@
 .\objects\main.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
 .\objects\main.o: ..\DRV\inc\drv_kbi.h
 .\objects\main.o: ..\USER\derivative.h
+<<<<<<< HEAD
 .\objects\main.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
+=======
+.\objects\main.o: D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
+.\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+.\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\main.o: ..\BSP\inc\bsp_led.h
+>>>>>>> Mr-He
 .\objects\main.o: ..\BSP\inc\bsp_uart.h
 .\objects\main.o: ..\USER\derivative.h
 .\objects\main.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
 .\objects\main.o: ..\BSP\inc\bsp_timer.h
+<<<<<<< HEAD
 .\objects\main.o: ..\USER\derivative.h
 .\objects\main.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
+=======
+>>>>>>> Mr-He
 .\objects\main.o: ..\BSP\inc\bsp_key.h
+.\objects\main.o: ..\BSP\inc\bsp_i2c.h
 .\objects\main.o: ..\BSP\inc\bsp.h
 .\objects\main.o: ..\BSP\inc\bsp_oled.h
+<<<<<<< HEAD
 .\objects\main.o: ..\USER\derivative.h
 .\objects\main.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
 .\objects\main.o: ..\BSP\inc\bsp_flash.h
@@ -64,6 +74,11 @@
 .\objects\main.o: ..\BSP\inc\bsp_motor.h
 .\objects\main.o: ..\USER\derivative.h
 .\objects\main.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
+=======
+.\objects\main.o: ..\BSP\inc\bsp_beep.h
+.\objects\main.o: ..\BSP\inc\bsp_flash.h
+.\objects\main.o: ..\BSP\inc\bsp_motor.h
+>>>>>>> Mr-He
 .\objects\main.o: ..\BSP\inc\bsp_encoder.h
 .\objects\main.o: ..\USER\derivative.h
 .\objects\main.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
@@ -77,7 +92,7 @@
 .\objects\main.o: ..\MPU\inc\inv_mpu.h
 .\objects\main.o: ..\MPU\inc\inv_mpu_dmp_motion_driver.h
 .\objects\main.o: ..\BSP\inc\bsp_battery.h
-.\objects\main.o: ..\BSP\inc\bsp_beep.h
+.\objects\main.o: FreescaleCar.h
 .\objects\main.o: ..\APP\inc\app.h
 .\objects\main.o: ..\APP\inc\app_debug.h
 .\objects\main.o: ..\APP\inc\app_filter.h

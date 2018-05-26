@@ -676,21 +676,6 @@
             </File>
           </Files>
         </Group>
-        <Group>
-          <GroupName>MPU</GroupName>
-          <Files>
-            <File>
-              <FileName>inv_mpu.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\MPU\src\inv_mpu.c</FilePath>
-            </File>
-            <File>
-              <FileName>inv_mpu_dmp_motion_driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\MPU\src\inv_mpu_dmp_motion_driver.c</FilePath>
-            </File>
-          </Files>
-        </Group>
       </Groups>
     </Target>
   </Targets>

@@ -20,7 +20,7 @@
   *                              INCLUDE FILES
   *******************************************************************************************************
 */
-# include "bsp_led.h"
+# include "bsp.h"
 
 
 /*
@@ -55,6 +55,54 @@ void bsp_led_Config(void)
 
 /*
 *********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
+static void bsp_led_WritePin(LED_EnumTypeDef LEDx, uint8_t LEDState)
+{
+	switch(LEDx)
+	{
+		case LED_ALL:	drv_gpio_WritePin(LED_RED_PIN, LEDState); drv_gpio_WritePin(LED_BLUE_PIN, LEDState);break;
+		case LED_RED: drv_gpio_WritePin(LED_RED_PIN, LEDState);break;
+		case LED_BLUE: drv_gpio_WritePin(LED_BLUE_PIN, LEDState);break;
+		default:break;
+	}
+}
+
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
+static void bsp_led_TogglePin(LED_EnumTypeDef LEDx)
+{
+	switch(LEDx)
+	{
+		case LED_ALL:	drv_gpio_TogglePin(LED_RED_PIN); drv_gpio_TogglePin(LED_BLUE_PIN);break;
+		case LED_RED: drv_gpio_TogglePin(LED_RED_PIN);break;
+		case LED_BLUE: drv_gpio_TogglePin(LED_BLUE_PIN);break;
+		default:break;
+	}
+}
+
+/*
+*********************************************************************************************************
 *                                          bsp_led_ON
 *
 * Description: 打开一个LED灯
@@ -70,13 +118,9 @@ void bsp_led_ON(uint8_t LEDx)
 {
 	switch(LEDx)
 	{
-		case LED_ALL: 
-		{
-			drv_gpio_WritePin(LED_RED_PIN, LED_ON);
-			drv_gpio_WritePin(LED_BLUE_PIN, LED_ON);
-		}break;
-		case LED_RED: drv_gpio_WritePin(LED_RED_PIN, LED_ON);break;
-		case LED_BLUE: drv_gpio_WritePin(LED_BLUE_PIN, LED_ON);break;
+		case LED_ALL: bsp_led_WritePin(LED_ALL, LED_ON);break;
+		case LED_RED: bsp_led_WritePin(LED_RED, LED_ON);break;
+		case LED_BLUE: bsp_led_WritePin(LED_BLUE, LED_ON);break;
 		default: break;
 	}
 }
@@ -98,13 +142,9 @@ void bsp_led_OFF(uint8_t LEDx)
 {
 	switch(LEDx)
 	{
-		case LED_ALL: 
-		{
-			drv_gpio_WritePin(LED_RED_PIN, LED_OFF);
-			drv_gpio_WritePin(LED_BLUE_PIN, LED_OFF);
-		}break;
-		case LED_RED: drv_gpio_WritePin(LED_RED_PIN, LED_OFF);break;
-		case LED_BLUE: drv_gpio_WritePin(LED_BLUE_PIN, LED_OFF);break;
+		case LED_ALL: bsp_led_WritePin(LED_ALL, LED_OFF);break;
+		case LED_RED: bsp_led_WritePin(LED_RED, LED_OFF);break;
+		case LED_BLUE: bsp_led_WritePin(LED_BLUE, LED_OFF);break;
 		default: break;
 	}
 }
@@ -127,13 +167,9 @@ void bsp_led_Toggle(uint8_t LEDx)
 {
 	switch(LEDx)
 	{
-		case LED_ALL: 
-		{
-			drv_gpio_TogglePin(LED_RED_PIN);
-			drv_gpio_TogglePin(LED_BLUE_PIN);
-		}break;
-		case LED_RED: drv_gpio_TogglePin(LED_RED_PIN);break;
-		case LED_BLUE: drv_gpio_TogglePin(LED_BLUE_PIN);break;
+		case LED_ALL: bsp_led_TogglePin(LED_ALL);break;
+		case LED_RED: bsp_led_TogglePin(LED_RED);break;
+		case LED_BLUE: bsp_led_TogglePin(LED_BLUE);break;
 		default: break;
 	}
 }

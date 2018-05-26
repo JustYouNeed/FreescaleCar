@@ -1,7 +1,7 @@
 .\objects\app_sort.o: ..\APP\src\app_sort.c
-.\objects\app_sort.o: ..\APP\inc\app_sort.h
+.\objects\app_sort.o: ..\APP\inc\app.h
+.\objects\app_sort.o: ..\APP\inc\app_debug.h
 .\objects\app_sort.o: ..\BSP\inc\bsp.h
-.\objects\app_sort.o: ..\BSP\inc\bsp_led.h
 .\objects\app_sort.o: ..\USER\derivative.h
 .\objects\app_sort.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
 .\objects\app_sort.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
@@ -46,16 +46,28 @@
 .\objects\app_sort.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
 .\objects\app_sort.o: ..\DRV\inc\drv_kbi.h
 .\objects\app_sort.o: ..\USER\derivative.h
+<<<<<<< HEAD
 .\objects\app_sort.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
+=======
+.\objects\app_sort.o: D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
+.\objects\app_sort.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+.\objects\app_sort.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\app_sort.o: ..\BSP\inc\bsp_led.h
+>>>>>>> Mr-He
 .\objects\app_sort.o: ..\BSP\inc\bsp_uart.h
 .\objects\app_sort.o: ..\USER\derivative.h
 .\objects\app_sort.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
 .\objects\app_sort.o: ..\BSP\inc\bsp_timer.h
+<<<<<<< HEAD
 .\objects\app_sort.o: ..\USER\derivative.h
 .\objects\app_sort.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
+=======
+>>>>>>> Mr-He
 .\objects\app_sort.o: ..\BSP\inc\bsp_key.h
+.\objects\app_sort.o: ..\BSP\inc\bsp_i2c.h
 .\objects\app_sort.o: ..\BSP\inc\bsp.h
 .\objects\app_sort.o: ..\BSP\inc\bsp_oled.h
+<<<<<<< HEAD
 .\objects\app_sort.o: ..\USER\derivative.h
 .\objects\app_sort.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
 .\objects\app_sort.o: ..\BSP\inc\bsp_flash.h
@@ -64,6 +76,11 @@
 .\objects\app_sort.o: ..\BSP\inc\bsp_motor.h
 .\objects\app_sort.o: ..\USER\derivative.h
 .\objects\app_sort.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
+=======
+.\objects\app_sort.o: ..\BSP\inc\bsp_beep.h
+.\objects\app_sort.o: ..\BSP\inc\bsp_flash.h
+.\objects\app_sort.o: ..\BSP\inc\bsp_motor.h
+>>>>>>> Mr-He
 .\objects\app_sort.o: ..\BSP\inc\bsp_encoder.h
 .\objects\app_sort.o: ..\USER\derivative.h
 .\objects\app_sort.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
@@ -77,4 +94,6 @@
 .\objects\app_sort.o: ..\MPU\inc\inv_mpu.h
 .\objects\app_sort.o: ..\MPU\inc\inv_mpu_dmp_motion_driver.h
 .\objects\app_sort.o: ..\BSP\inc\bsp_battery.h
-.\objects\app_sort.o: ..\BSP\inc\bsp_beep.h
+.\objects\app_sort.o: ..\APP\inc\app_filter.h
+.\objects\app_sort.o: ..\APP\inc\app_sort.h
+.\objects\app_sort.o: ..\APP\inc\app_pid.h

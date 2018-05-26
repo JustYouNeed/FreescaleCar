@@ -22,7 +22,6 @@
   *                              INCLUDE FILES
   *******************************************************************************************************
 */
-# include "derivative.h"
 
 /*  电机PWM通道宏定义  */
 # define DRV_PWM1_CHANNEL		PWM_Channel0_H0
@@ -37,9 +36,7 @@
 
 /*  电机控制结构体定义  */
 typedef struct
-{
-	int16_t PWM_Frequency;	/*  电机PWM频率  */
-	
+{	
  	int16_t LeftPwm;				/*  左边电机PWM  */
 	int16_t RightPwm;				/*  右边电机PWM  */
 	

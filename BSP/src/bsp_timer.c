@@ -33,7 +33,7 @@
   *                              INCLUDE FILES
   *******************************************************************************************************
 */
-# include "bsp_timer.h"
+# include "bsp.h"
 
 static volatile uint32_t s_uiDelayCount = 0;	/*  该文件私有变量,用于延时  */
 static volatile uint8_t s_ucTimeOutFlag = 0;	/*  该文件私有变量,用于统计运行时间  */

@@ -32,10 +32,9 @@
   *                              INCLUDE FILES
   *******************************************************************************************************
 */
-# include "app_sort.h"
-# include "app_filter.h"
+# include "bsp.h"
+# include "app.h"
 # include "FreescaleCar.h"
-# include "app_debug.h"
 
 /*
 *********************************************************************************************************
@@ -129,7 +128,7 @@ void bsp_sensor_DataCopy(uint16_t *dst, uint16_t *src, uint16_t length)
 void bsp_sensor_DataProcess(void)
 {	
 	uint8_t cnt = 0;
-	float LeftValue = 0, RightValue = 0;
+	int16_t MValue = 0;
 	
 	/*  循环处理每一个传感器的值  */
 	for(cnt = 0; cnt < SENSOR_COUNT; cnt ++)
@@ -156,10 +155,6 @@ void bsp_sensor_DataProcess(void)
 																				 (Car.Sensor[cnt].CalibrationMax - Car.Sensor[cnt].CalibrationMin);
 	}
 	
-//	if(Car.Sensor[SENSOR_H_L].NormalizedValue == 0)
-	
-//	Car.HorizontalAE = 1 / 50 * ( 1 / Car.Sensor[SENSOR_H_L].NormalizedValue - 1 / Car.Sensor[SENSOR_H_R].NormalizedValue);
-	
 			/*  计算水平差比和,扩大100倍  */
 	Car.HorizontalAE = 100 * ((Car.Sensor[SENSOR_H_R].NormalizedValue - Car.Sensor[SENSOR_H_L].NormalizedValue) / 
 														(Car.Sensor[SENSOR_H_R].NormalizedValue + Car.Sensor[SENSOR_H_L].NormalizedValue)) + 0;
@@ -168,7 +163,18 @@ void bsp_sensor_DataProcess(void)
 	Car.VecticalAE = 100 * ((Car.Sensor[SENSOR_V_R].NormalizedValue - Car.Sensor[SENSOR_V_L].NormalizedValue) / 
 														(Car.Sensor[SENSOR_V_R].NormalizedValue + Car.Sensor[SENSOR_V_L].NormalizedValue)) + 0;	
 	
-	if(Car.VecticalAE < 35 && Car.VecticalAE > -35) Car.VecticalAE = 0;
+	if(Car.VecticalAE < 30 && Car.VecticalAE > -30) Car.VecticalAE = 0;
+	
+	MValue = Car.Sensor[SENSOR_M].Average;
+	if(MValue < 80) 
+	{
+		Car.VecticalAE = 0;
+		MValue = 0;
+	}
+		
+	Car.AE = (Car.VecticalAE * MValue / 100.0);
+	
+	if(Car.AE > -20 && Car.AE < 20) Car.AE = 0;
 }
 
 /*

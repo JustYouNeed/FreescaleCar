@@ -228,6 +228,12 @@ void Para_Show_UI(void)
 		oled_showString(55, 33, "DKD:", 6, 12);
 		oled_showNum(85, 33, Car.DirFuzzy.KDMax, 4, 6, 12);
 		
+				oled_showString(3,50,"LT:", 6, 12);
+		oled_showNum(27, 50, (Car.LeftTargetSpeed), 3, 6, 12);
+		
+		oled_showString(55,50,"RT:", 6, 12);
+		oled_showNum(85, 50, (Car.RightTargetSpeed), 3, 6, 12);
+		
 	} 
 	else if(showPage == 3)
 	{

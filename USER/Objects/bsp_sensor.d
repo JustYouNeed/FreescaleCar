@@ -1,7 +1,5 @@
 .\objects\bsp_sensor.o: ..\BSP\src\bsp_sensor.c
-.\objects\bsp_sensor.o: ..\APP\inc\app_sort.h
 .\objects\bsp_sensor.o: ..\BSP\inc\bsp.h
-.\objects\bsp_sensor.o: ..\BSP\inc\bsp_led.h
 .\objects\bsp_sensor.o: ..\USER\derivative.h
 .\objects\bsp_sensor.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
 .\objects\bsp_sensor.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
@@ -46,16 +44,28 @@
 .\objects\bsp_sensor.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
 .\objects\bsp_sensor.o: ..\DRV\inc\drv_kbi.h
 .\objects\bsp_sensor.o: ..\USER\derivative.h
+<<<<<<< HEAD
 .\objects\bsp_sensor.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
+=======
+.\objects\bsp_sensor.o: D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
+.\objects\bsp_sensor.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+.\objects\bsp_sensor.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\bsp_sensor.o: ..\BSP\inc\bsp_led.h
+>>>>>>> Mr-He
 .\objects\bsp_sensor.o: ..\BSP\inc\bsp_uart.h
 .\objects\bsp_sensor.o: ..\USER\derivative.h
 .\objects\bsp_sensor.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
 .\objects\bsp_sensor.o: ..\BSP\inc\bsp_timer.h
+<<<<<<< HEAD
 .\objects\bsp_sensor.o: ..\USER\derivative.h
 .\objects\bsp_sensor.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
+=======
+>>>>>>> Mr-He
 .\objects\bsp_sensor.o: ..\BSP\inc\bsp_key.h
+.\objects\bsp_sensor.o: ..\BSP\inc\bsp_i2c.h
 .\objects\bsp_sensor.o: ..\BSP\inc\bsp.h
 .\objects\bsp_sensor.o: ..\BSP\inc\bsp_oled.h
+<<<<<<< HEAD
 .\objects\bsp_sensor.o: ..\USER\derivative.h
 .\objects\bsp_sensor.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
 .\objects\bsp_sensor.o: ..\BSP\inc\bsp_flash.h
@@ -64,6 +74,11 @@
 .\objects\bsp_sensor.o: ..\BSP\inc\bsp_motor.h
 .\objects\bsp_sensor.o: ..\USER\derivative.h
 .\objects\bsp_sensor.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
+=======
+.\objects\bsp_sensor.o: ..\BSP\inc\bsp_beep.h
+.\objects\bsp_sensor.o: ..\BSP\inc\bsp_flash.h
+.\objects\bsp_sensor.o: ..\BSP\inc\bsp_motor.h
+>>>>>>> Mr-He
 .\objects\bsp_sensor.o: ..\BSP\inc\bsp_encoder.h
 .\objects\bsp_sensor.o: ..\USER\derivative.h
 .\objects\bsp_sensor.o: C:\Keil_v5\ARM\PACK\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
@@ -77,9 +92,9 @@
 .\objects\bsp_sensor.o: ..\MPU\inc\inv_mpu.h
 .\objects\bsp_sensor.o: ..\MPU\inc\inv_mpu_dmp_motion_driver.h
 .\objects\bsp_sensor.o: ..\BSP\inc\bsp_battery.h
-.\objects\bsp_sensor.o: ..\BSP\inc\bsp_beep.h
-.\objects\bsp_sensor.o: ..\APP\inc\app_filter.h
-.\objects\bsp_sensor.o: ..\USER\FreescaleCar.h
 .\objects\bsp_sensor.o: ..\APP\inc\app.h
 .\objects\bsp_sensor.o: ..\APP\inc\app_debug.h
+.\objects\bsp_sensor.o: ..\APP\inc\app_filter.h
+.\objects\bsp_sensor.o: ..\APP\inc\app_sort.h
 .\objects\bsp_sensor.o: ..\APP\inc\app_pid.h
+.\objects\bsp_sensor.o: ..\USER\FreescaleCar.h

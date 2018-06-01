@@ -17,12 +17,11 @@
 # ifndef __BSP_UART_H
 # define __BSP_UART_H
 
-# include "derivative.h"
-
 
 # define UART_BAUD		115200
 # define UART_TX_BUFF_SIZE	256
 # define UART_RX_BUFF_SIZE	256
+
 
 /*  串口编号枚举变量  */
 typedef enum

@@ -28,7 +28,7 @@ int main(void)
 		bsp_sensor_Calibration();
 
 	/*  注册软件定时器任务,传感器数据上传任务,周期50ms  */
-	bsp_tim_CreateSoftTimer(0, 51, debug_CarDataReport, TIMER_MODE_AUTO);
+	bsp_tim_CreateSoftTimer(0, 51, app_ano_CarDataReport, TIMER_MODE_AUTO);
 	
 	/*  按键扫描任务,周期20ms  */
 	bsp_tim_CreateSoftTimer(1, 21, bsp_key_Scan, TIMER_MODE_AUTO);
@@ -41,6 +41,9 @@ int main(void)
 	/*  硬件定时器任务,车子控制任务,周期20ms  */
 	bsp_tim_CreateHardTimer(1, 1, Car_Control);
 	bsp_tim_CreateHardTimer(0,5, bsp_mpu_GetAngle);
+	
+//	bsp_motor_SetPwm(50, 100);
+	DRV_ENABLE();
 	while(1)
 	{
 		displayTask();

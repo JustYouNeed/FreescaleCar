@@ -19,9 +19,10 @@
   *                              INCLUDE FILES
   *******************************************************************************************************
 */
-# include "app_debug.h"
+# include "bsp.h"
+
+# include "app_ano.h"
 # include "app_filter.h"
-# include "app_debug.h"
 # include "app_sort.h"
 # include "app_pid.h"
 

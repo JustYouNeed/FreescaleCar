@@ -1,13 +1,17 @@
 /**
   *******************************************************************************************************
-  * File Name: 
-  * Author: 
-  * Version: 
-  * Date: 
-  * Brief: 
+  * File Name: app_ano.c
+  * Author: Vector
+  * Version: V1.0.0
+  * Date: 2018-3-2
+  * Brief: 程序调试模块,提供与上位机通信的功能
   *******************************************************************************************************
   * History
-  *
+  *		1.Author: Vector
+	*			Date: 2018-3-2
+	*			Mod: 建立文件,对应匿名上位机V5.0
+	*		
+	*
   *
   *******************************************************************************************************
   */	
@@ -21,14 +25,15 @@
 # include "bsp.h"
 # include "FreescaleCar.h"
 
-
-extern Uart_Str uart_info;
-extern uint8_t TimerTaskRunMutexSignal;
-
-/*  用于暂存从上位机接收到的数据  */
-uint8_t RecBuff[512];
-/*  接收到的上位机命令  */
-uint8_t RecCommand;
+/*
+  *******************************************************************************************************
+  *                              LOCAL VARIABLE
+  *******************************************************************************************************
+*/
+static ANO_TypeDef ANO_RX;						/*  用于接收的结构体  */
+static ANO_TypeDef ANO_TX;						/*  用于发送  */
+static uint8_t g_ucDataRecCnt = 0;		/*  用于协议接收数据时计数,整个帧  */
+static uint8_t g_ucDatacnt = 0;				/*  用于协议接收数据部分计数  */
 
 /*
 *********************************************************************************************************
@@ -43,7 +48,7 @@ uint8_t RecCommand;
 * Note(s)    : None.
 *********************************************************************************************************
 */
-void debug_Response(uint8_t funcode)
+static void app_ano_Response(uint8_t funcode)
 {
 	uint8_t SendBuff[8] = {0};
 	uint8_t i;
@@ -53,7 +58,7 @@ void debug_Response(uint8_t funcode)
 	SendBuff[2] = 0XEF;
 	SendBuff[3] = 7;
 	SendBuff[4] = funcode;
-	SendBuff[5] = RecBuff[RecBuff[3] + 0X04]&0xff;
+	SendBuff[5] = ANO_RX.Data[ANO_RX.DataLength + 0X04]&0xff;
 	
 	for(i = 0;i<7;i++) SendBuff[6] += SendBuff[i];
 	
@@ -75,95 +80,26 @@ void debug_Response(uint8_t funcode)
 */
 void debug_DataProcess(void)
 {	
-	if(!RecCommand) return;	/*  没有接收到指令  */
-	
-	switch(RecCommand)
-	{
-		case REQUEST_PID: debug_PIDParaReport(); break; /*  上传PID参数  */
-		case ADJ_PID1:debug_PIDDownload();debug_Response(ADJ_PID1); break; /*  接收第PID参数1  */
-		case ADJ_PID2:debug_Response(ADJ_PID2); break; /*  其他PID参数不接收  */
-		case ADJ_PID3:debug_Response(ADJ_PID3); break; 
-		case ADJ_PID4:debug_Response(ADJ_PID4); break; 
-		case ADJ_PID5:debug_Response(ADJ_PID5); break; 
-		case ADJ_PID6:debug_Response(ADJ_PID6); break; 
-		case BOOTMODE:break;               /*  进入IAP下载模式命令  */
-	}
-	RecCommand = 0;     /*  处理完数据后接收标志复位  */
+//	if(!RecCommand) return;	/*  没有接收到指令  */
+//	
+//	switch(RecCommand)
+//	{
+//		case REQUEST_PID: debug_PIDParaReport(); break; /*  上传PID参数  */
+//		case ADJ_PID1:debug_PIDDownload();debug_Response(ADJ_PID1); break; /*  接收第PID参数1  */
+//		case ADJ_PID2:debug_Response(ADJ_PID2); break; /*  其他PID参数不接收  */
+//		case ADJ_PID3:debug_Response(ADJ_PID3); break; 
+//		case ADJ_PID4:debug_Response(ADJ_PID4); break; 
+//		case ADJ_PID5:debug_Response(ADJ_PID5); break; 
+//		case ADJ_PID6:debug_Response(ADJ_PID6); break; 
+//		case BOOTMODE:break;               /*  进入IAP下载模式命令  */
+//	}
 }
 
-/*
-*********************************************************************************************************
-*                             debug_Handler             
-*
-* Description: 串口调试中断函数
-*             
-* Arguments  : None.
-*
-* Reutrn     : None.
-*
-* Note(s)    : None.
-*********************************************************************************************************
-*/
-void debug_Handler(void)
-{
-	uint8_t RecvData;  //字节接收暂存
-	uint8_t i = 0;  //
-	uint8_t checkSum = 0; //
-	static uint8_t uCnt = 0;
-	
-	(void)UART0_S1;
-	
-	if(UART0->S1 & UART_S1_RDRF_MASK)  /*  接收数据寄存器满  */
-	{
-		RecvData = UART0->D;		/*  读取数据并送入接收缓存区  */
-		switch(uCnt)
-		{
-			case 0X00:
-			{
-					if(0XAA == RecvData) RecBuff[uCnt++] = RecvData;  //帧起始判断
-					else uCnt = 0X00;
-			}break;
-			case 0X01:
-			{
-				if(0XAF == RecvData)	RecBuff[uCnt++] = RecvData;//帧起始判断
-				else uCnt = 0X00;
-			}break;
-			case 0X02:RecBuff[uCnt++] = RecvData; break;  //功能码
-			case 0X03:RecBuff[uCnt++] = RecvData; break; //数据长度，除去功能码以及起始帧与检验和
-			default:if(uCnt < (RecBuff[3] + 0X05)) RecBuff[uCnt++] = RecvData;break;//接收数据
-			//加0x05是因为 ano_info[len+4]中放着检验和，当接收完检验和时，uCnt = len+0x05,条件不成立
-		}
-		
-		if(uCnt == (RecBuff[3] + 0X05))  //已经接收完整个数据帧
-		{
-			uCnt = 0;
-			for(i = 0;i < RecBuff[3] + 0x04; i++) //计算检验和不包括最后一个的检验和，
-			{
-				checkSum += RecBuff[i]; //计算检验和
-			}
-			
-			if((checkSum&0xff) != RecBuff[RecBuff[3] + 0X04]) 
-			{
-				RecCommand = 0; //接收错误
-			}
-			else 
-			{
-				RecCommand = RecBuff[2];		//数据检验无误，保存功能码
-		#if ANO_DATA_PRECESS_ON==1  //选择是否接收完一帧数据后自动处理
-				debug_DataProcess();
-		#endif
-			}
-		}
-	}
-	
-	/*  处理发送数据部分  */
-	bsp_uart_IRQHandler(&uart_info);
-}
 
 
 /*
 *********************************************************************************************************
-*                     debug_DataUpload                     
+*                     app_ano_DataUpload                     
 *
 * Description: 调试功能数据上传
 *             
@@ -176,7 +112,7 @@ void debug_Handler(void)
 * Note(s)    : None.
 *********************************************************************************************************
 */
-uint8_t debug_DataUpload(uint8_t *buff, uint8_t funCode, uint8_t len)
+uint8_t app_ano_DataUpload(uint8_t *buff, uint8_t funCode, uint8_t len)
 {
 	uint8_t SendBuff[32] = {0};
 	uint8_t i;
@@ -207,7 +143,7 @@ uint8_t debug_DataUpload(uint8_t *buff, uint8_t funCode, uint8_t len)
 *********************************************************************************************************
 *                         debug_PIDParaReport                 
 *
-* Description: 填写PID参数并调用debug_DataUpload发送
+* Description: 填写PID参数并调用app_ano_DataUpload发送
 *             
 * Arguments  : None.
 *
@@ -216,7 +152,7 @@ uint8_t debug_DataUpload(uint8_t *buff, uint8_t funCode, uint8_t len)
 * Note(s)    : None.
 *********************************************************************************************************
 */
-void debug_PIDParaReport(void)
+static void app_ano_PIDReport(void)
 {
 	uint8_t Buff[18] = {0};
 	short temp = 0;
@@ -234,19 +170,19 @@ void debug_PIDParaReport(void)
 	Buff[5] = BYTE1(temp);
 	
 	
-	temp = (short)(Car.VelPID.Kp * 100);
+	temp = (short)(Car.LVelPID.Kp * 100);
 	Buff[6] = BYTE2(temp);
 	Buff[7] = BYTE1(temp);
 	
-	temp = (short)(Car.VelPID.Ki * 100);
+	temp = (short)(Car.LVelPID.Ki * 100);
 	Buff[8] = BYTE2(temp);
 	Buff[9] = BYTE1(temp);
 	
-	temp = (short)(Car.VelPID.Kd * 100);
+	temp = (short)(Car.LVelPID.Kd * 100);
 	Buff[10] = BYTE2(temp);
 	Buff[11] = BYTE1(temp);
 	
-	debug_DataUpload(Buff,0x10,18);
+	app_ano_DataUpload(Buff,PID,18);
 }
 
 /*
@@ -262,31 +198,31 @@ void debug_PIDParaReport(void)
 * Note(s)    : None.
 *********************************************************************************************************
 */
-void debug_PIDDownload(void)
+void app_ano_PIDDownload(void)
 {
 	//取前后两个8位的数据合并成一个16位的数据，并强制转换成一个float型的数据
 	//转换完成后除以相应的传输因子
-	uint8_t cnt = 4;
+	uint8_t cnt = 0;
 	
-	Car.DirFuzzy.KPMax = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_P;
+	Car.DirFuzzy.KPMax = MERGE2(ANO_RX.Data[cnt], ANO_RX.Data[cnt + 1], float) / ANO_PID_TRAN_FAC_P;
 	cnt += 2;
-	Car.DirFuzzy.KIMax = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_I;
+	Car.DirFuzzy.KIMax = MERGE2(ANO_RX.Data[cnt], ANO_RX.Data[cnt + 1], float) / ANO_PID_TRAN_FAC_I;
 	cnt += 2;
-	Car.DirFuzzy.KDMax = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_D;
+	Car.DirFuzzy.KDMax = MERGE2(ANO_RX.Data[cnt], ANO_RX.Data[cnt + 1], float) / ANO_PID_TRAN_FAC_D;
 	cnt += 2;
 	
-//	Car.PID.Kp_Curved = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_P;
+//	Car.PID.Kp_Curved = MERGE2(ANO_RX.Data[cnt], ANO_RX.Data[cnt + 1], float) / ANO_PID_TRAN_FAC_P;
 //	cnt += 2;
-//	Car.PID.Ki_Curved = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_I;
+//	Car.PID.Ki_Curved = MERGE2(ANO_RX.Data[cnt], ANO_RX.Data[cnt + 1], float) / ANO_PID_TRAN_FAC_I;
 //	cnt += 2;
-//	Car.PID.Kd_Curved = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / ANO_PID_TRAN_FAC_D;
+//	Car.PID.Kd_Curved = MERGE2(ANO_RX.Data[cnt], ANO_RX.Data[cnt + 1], float) / ANO_PID_TRAN_FAC_D;
 //	cnt += 2;
 	
-	Car.VelPID.Kp = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float)/100;
+	Car.LVelPID.Kp = MERGE2(ANO_RX.Data[cnt], ANO_RX.Data[cnt + 1], float)/100;
 	cnt += 2;
-	Car.VelPID.Ki = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float) / 100;
+	Car.LVelPID.Ki = MERGE2(ANO_RX.Data[cnt], ANO_RX.Data[cnt + 1], float) / 100;
 	cnt += 2;
-	Car.VelPID.Kd = MERGE(RecBuff[cnt], RecBuff[cnt + 1], float)/100;
+	Car.LVelPID.Kd = MERGE2(ANO_RX.Data[cnt], ANO_RX.Data[cnt + 1], float)/100;
 	cnt += 2;
 
 	pid_StorePara();	/*  将PID参数保存到Flash中  */
@@ -338,7 +274,7 @@ void debug_SensorDataReport(void)
 	Buff[cnt++] = BYTE2(Car.Sensor[SENSOR_M].Average);
 	Buff[cnt++] = BYTE1(Car.Sensor[SENSOR_M].Average);
 	
-	debug_DataUpload(Buff,0xf2,cnt);
+	app_ano_DataUpload(Buff,0xf2,cnt);
 }
 
 
@@ -355,7 +291,6 @@ void debug_SensorDataReport(void)
 * Note(s)    : 
 *********************************************************************************************************
 */
-int16_t LPWM,RPWM;
 void debug_MotorDataReport(void)
 {
 	uint8_t SendBuff[32] = {0};
@@ -378,17 +313,17 @@ void debug_MotorDataReport(void)
 	SendBuff[cnt++] = BYTE2(Car.Motor.RightEncoder);
 	SendBuff[cnt++] = BYTE1(Car.Motor.RightEncoder);
 	
-	SendBuff[cnt++] = BYTE2((int16_t)(Car.CarSpeed * 100));
-	SendBuff[cnt++] = BYTE1((int16_t)(Car.CarSpeed * 100));
+	SendBuff[cnt++] = BYTE2((int16_t)(Car.CarSpeed));
+	SendBuff[cnt++] = BYTE1((int16_t)(Car.CarSpeed));
 	
-	SendBuff[cnt++] = BYTE2((int16_t)(Car.DirFuzzy.KP));
-	SendBuff[cnt++] = BYTE1((int16_t)(Car.DirFuzzy.KP));
+	SendBuff[cnt++] = BYTE2((int16_t)(Car.Motor.LeftSpeed));
+	SendBuff[cnt++] = BYTE1((int16_t)(Car.Motor.LeftSpeed));
 	
-	SendBuff[cnt++] = BYTE2((int16_t)(Car.DirFuzzy.KD));
-	SendBuff[cnt++] = BYTE1((int16_t)(Car.DirFuzzy.KD));
+	SendBuff[cnt++] = BYTE2((int16_t)(Car.Motor.RightSpeed));
+	SendBuff[cnt++] = BYTE1((int16_t)(Car.Motor.RightSpeed));
 
 	
-	debug_DataUpload(SendBuff, 0xf1, cnt);
+	app_ano_DataUpload(SendBuff, 0xf1, cnt);
 }
 
 void debug_MPUDataReport(void)
@@ -415,7 +350,7 @@ void debug_MPUDataReport(void)
 	SendBuff[cnt ++] = BYTE1(Car.MPU.Gyroz);
 	
 	
-	debug_DataUpload(SendBuff, 0x02, 18);
+	app_ano_DataUpload(SendBuff, 0x02, 18);
 	
 	cnt = 0;
 	SendBuff[cnt++] = BYTE2((int16_t)(Car.MPU.Roll * 100));
@@ -427,7 +362,7 @@ void debug_MPUDataReport(void)
 	SendBuff[cnt++] = BYTE2((int16_t)(Car.MPU.Yaw * 10));
 	SendBuff[cnt++] = BYTE1((int16_t)(Car.MPU.Yaw * 10));
 
-	debug_DataUpload(SendBuff,0x01,12);
+	app_ano_DataUpload(SendBuff,0x01,12);
 }
 /*
 *********************************************************************************************************
@@ -442,10 +377,10 @@ void debug_MPUDataReport(void)
 * Note(s)    : 该函数应该周期性调用,以便及时收到车子的数据
 *********************************************************************************************************
 */
-void debug_CarDataReport(void)
+void app_ano_CarDataReport(void)
 {	
 	/*  先处理收到的数据  */
-	debug_DataProcess();
+	app_ano_Thread();
 	
 	/*  上传传感器数据  */
 	debug_SensorDataReport();
@@ -457,6 +392,139 @@ void debug_CarDataReport(void)
 	
 }
 
+/*
+*********************************************************************************************************
+*                               app_ano_CheckSum           
+*
+* Description: 校验从上位机接收到的数据是否正确
+*             
+* Arguments  : None.
+*
+* Reutrn     : 1> 0:校验失败
+*							 2> 1:成功
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
+static uint8_t app_ano_CheckSum(void)
+{
+	uint8_t cnt = 0;
+	
+	ANO_RX.CheckSum = 0;
+	ANO_RX.CheckSum += FRAME_HEADER1;
+	ANO_RX.CheckSum += FRAME_HEADER2;
+	ANO_RX.CheckSum += ANO_RX.FunCode;
+	ANO_RX.CheckSum += ANO_RX.DataLength;
+	
+	for(cnt = 0; cnt < ANO_RX.DataLength; cnt++)
+		ANO_RX.CheckSum += ANO_RX.Data[cnt];
+	
+	return ANO_RX.CheckSum == ANO_RX.Data[ANO_RX.DataLength];
+}
+
+/*
+*********************************************************************************************************
+*                            app_ano_HandlerAck              
+*
+* Description: 处理ACK命令
+*             
+* Arguments  : None.
+*
+* Reutrn     : None.
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
+static void app_ano_HandlerAck(void)
+{
+	uint8_t cmd = ANO_RX.Data[0];
+
+	switch(cmd)
+	{
+		case ACK_PID:	app_ano_PIDReport();break;		/*  请求PID  */
+		case ACK_MODE: break;
+		case ACK_G_OFFSET: break;
+		case ACK_DEST: break;
+		case ACK_RESET_PID: break;
+		case ACK_RESET_ALL:break;
+		default: break;
+	}
+}
+
+/*
+*********************************************************************************************************
+*                                          
+*
+* Description: 
+*             
+* Arguments  : 
+*
+* Reutrn     : 
+*
+* Note(s)    : 
+*********************************************************************************************************
+*/
+void app_ano_Thread(void)
+{
+	if(!app_ano_CheckSum()) return;		/*  校验错误则返回  */
+	
+	if(!ANO_RX.FunCode) return;		/*  没有命令需要处理则返回  */
+
+	switch(ANO_RX.FunCode)
+	{
+		case ACK:	app_ano_HandlerAck();break;		
+		case VERSION:break;
+		case STATUS:break;
+		case RCDATA:break;
+		case GPSDATA:break;
+		case POWER:break;
+		case MOTOR:break;
+		case SENSOR2:break;
+		case STRING:break;
+		case COMMAND:break;
+		default:break;
+	}
+	
+	ANO_RX.FunCode = 0;
+	g_ucDataRecCnt = 0;
+	g_ucDatacnt = 0;
+}
+
+
+/*
+*********************************************************************************************************
+*                             app_ano_ReceiveData             
+*
+* Description: 通信协议接收数据并预解析
+*             
+* Arguments  : None.
+*
+* Reutrn     : None.
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
+void app_ano_ReceiveData(uint8_t data)
+{
+	switch(g_ucDataRecCnt)
+	{
+		case 0X00:		/*  接收帧头  */
+		{
+			if(FRAME_HEADER1 == data) g_ucDataRecCnt++;
+			else g_ucDataRecCnt = 0;
+		}break;
+		case 0X01:			/*  接收帧头  */
+		{
+			if(FRAME_HEADER2 == data) g_ucDataRecCnt++;
+			else g_ucDataRecCnt = 0;
+		}break;
+		case 0X02:ANO_RX.FunCode = data; g_ucDataRecCnt++; break;		/*  功能字  */
+		case 0X03:ANO_RX.DataLength = data; g_ucDataRecCnt++;break;		/*  数据长度  */
+		
+		/*  接收数据区,加5是因为有另外一个字节的数据不属于数据区  */
+		default:if(g_ucDataRecCnt++ < ANO_RX.DataLength + 5) ANO_RX.Data[g_ucDatacnt++] = data;break;	
+	}
+}
 
 
 /********************************************  END OF FILE  *******************************************/

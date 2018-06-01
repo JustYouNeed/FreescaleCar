@@ -136,9 +136,9 @@ void pid_StorePara(void)
 	float temp[32] = {0};
 	uint8_t cnt = 0;
 	
-	temp[cnt++] = Car.VelPID.Kp;
-	temp[cnt++] = Car.VelPID.Ki;
-	temp[cnt++] = Car.VelPID.Kd;
+	temp[cnt++] = Car.LVelPID.Kp;
+	temp[cnt++] = Car.LVelPID.Ki;
+	temp[cnt++] = Car.LVelPID.Kd;
 	
 	temp[cnt++] = Car.DirFuzzy.KPMax;
 	temp[cnt++] = Car.DirFuzzy.KIMax;

@@ -520,11 +520,6 @@
               <FilePath>..\BSP\src\bsp_oled.c</FilePath>
             </File>
             <File>
-              <FileName>bsp_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\BSP\src\bsp_flash.c</FilePath>
-            </File>
-            <File>
               <FileName>bsp_motor.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\BSP\src\bsp_motor.c</FilePath>
@@ -570,11 +565,6 @@
           <GroupName>APP</GroupName>
           <Files>
             <File>
-              <FileName>app_debug.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\APP\src\app_debug.c</FilePath>
-            </File>
-            <File>
               <FileName>app_sort.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\APP\src\app_sort.c</FilePath>
@@ -588,6 +578,11 @@
               <FileName>app_pid.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\APP\src\app_pid.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_ano.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APP\src\app_ano.c</FilePath>
             </File>
           </Files>
         </Group>

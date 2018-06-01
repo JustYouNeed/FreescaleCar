@@ -21,7 +21,7 @@
   *******************************************************************************************************
 */
 # include "bsp.h"
-
+# include "app.h"
 
 /*
   *******************************************************************************************************
@@ -305,13 +305,14 @@ void bsp_uart_IRQHandler(Uart_Str *pUart)
 	uint8_t reg = 0x0;
 	
 	
-//	if(pUart->uart->S1 & UART_S1_RDRF_MASK)  /*  接收数据寄存器满  */
-//	{
-////		reg = (uint8_t)pUart->uart->S1;
-////		pUart->uart->S2 |= 1 << 6;
-//		RecvData = pUart->uart->D;		/*  读取数据并送入接收缓存区  */
-//		bsp_uart_Put(pUart, RecvData);
-//	}
+	if(pUart->uart->S1 & UART_S1_RDRF_MASK)  /*  接收数据寄存器满  */
+	{
+//		reg = (uint8_t)pUart->uart->S1;
+//		pUart->uart->S2 |= 1 << 6;
+		RecvData = pUart->uart->D;		/*  读取数据并送入接收缓存区  */
+		app_ano_ReceiveData(RecvData);
+		bsp_uart_Put(pUart, RecvData);
+	}
 	
 	if(pUart->uart->S1 & UART_S1_OR_MASK)
 	{
@@ -406,11 +407,11 @@ uint8_t bsp_uart_Printf(const char *format, ...)
 * Note(s)    : None.
 *********************************************************************************************************
 */
-//void UART0_IRQHandler(void)
-//{
-//	(void)UART0_S1;
-//	bsp_uart_IRQHandler(&uart_info);
-//}
+void UART0_IRQHandler(void)
+{
+	(void)UART0_S1;
+	bsp_uart_IRQHandler(&uart_info);
+}
 
 
 /*  加入以下代码,支持printf, 而不需要选择use MicroLIB  */

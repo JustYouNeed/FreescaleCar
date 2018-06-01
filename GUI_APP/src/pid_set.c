@@ -74,7 +74,7 @@ void SpeedKp_Set(void)
 	if(cnt == 0)
 	{
 		MenuWindow.title = "Speed Kp";
-		kp_temp = (Car.VelPID.Kp);
+		kp_temp = (Car.LVelPID.Kp);
 		GUI_WindowsDraw(&MenuWindow);
 		GUI_DrawButton(&bt_add);
 		GUI_DrawButton(&bt_mines);
@@ -92,7 +92,7 @@ void SpeedKp_Set(void)
 		kp_temp += 0.5;
 	}else if(key == KEY_OK_PRESS)
 	{
-		Car.VelPID.Kp = kp_temp;
+		Car.LVelPID.Kp = kp_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
 		cnt = 0;
 		displayInit();
@@ -128,7 +128,7 @@ void SpeedKi_Set(void)
 	if(cnt == 0)
 	{
 		MenuWindow.title = "Speed Ki";
-		ki_temp = (Car.VelPID.Ki);
+		ki_temp = (Car.LVelPID.Ki);
 		GUI_WindowsDraw(&MenuWindow);
 		GUI_DrawButton(&bt_add);
 		GUI_DrawButton(&bt_mines);
@@ -146,7 +146,7 @@ void SpeedKi_Set(void)
 		ki_temp += 0.5;
 	}	else if(key == KEY_OK_PRESS)
 	{
-		Car.VelPID.Ki = ki_temp;
+		Car.LVelPID.Ki = ki_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
 		cnt = 0;
 		displayInit();
@@ -182,7 +182,7 @@ void SpeedKd_Set(void)
 	if(cnt == 0)
 	{
 		MenuWindow.title = "Speed Kd";
-		kd_temp = (Car.VelPID.Kd);
+		kd_temp = (Car.LVelPID.Kd);
 		GUI_WindowsDraw(&MenuWindow);
 		GUI_DrawButton(&bt_add);
 		GUI_DrawButton(&bt_mines);
@@ -200,7 +200,7 @@ void SpeedKd_Set(void)
 		kd_temp += 0.5;
 	}else if(key == KEY_OK_PRESS)
 	{
-		Car.VelPID.Kd = kd_temp;
+		Car.LVelPID.Kd = kd_temp;
 		pid_StorePara();	/*  将PID参数保存到Flash中  */
 		cnt = 0;
 		displayInit();

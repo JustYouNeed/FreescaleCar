@@ -250,6 +250,12 @@ void bsp_sensor_Calibration(void)
 		bsp_tim_DelayMs(5);
 	} /*  end of for  */
 	
+	/*  对于两个垂直电感,进行手动标定  */
+	Car.Sensor[SENSOR_V_L].CalibrationMax = 150;
+	Car.Sensor[SENSOR_V_L].CalibrationMin = 0;
+	
+	Car.Sensor[SENSOR_V_R].CalibrationMax = 150;
+	Car.Sensor[SENSOR_V_R].CalibrationMin = 0;
 	/*  先将各标定值暂存到缓存区,便于写入Flash  */
 	for(j = 0; j < SENSOR_COUNT; j ++)
 	{

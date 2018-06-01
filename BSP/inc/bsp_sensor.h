@@ -17,25 +17,12 @@
 # ifndef __BSP_SENSOR_H
 # define __BSP_SENSOR_H
 
-/*
-  *******************************************************************************************************
-  *                              INCLUDE FILES
-  *******************************************************************************************************
-*/
-# include "derivative.h"
 
 # define S_H_L_CH		ADC_Channel_C1
-# define S_H_R_CH		ADC_Channel_F6
+# define S_H_R_CH		ADC_Channel_F7
 # define S_V_L_CH		ADC_Channel_C2
-# define S_V_R_CH		ADC_Channel_F7
+# define S_V_R_CH		ADC_Channel_F6
 # define S_M_CH			ADC_Channel_C3
-
-
-//# define S_H_L_CH		ADC_Channel_C1
-//# define S_H_R_CH		ADC_Channel_C0
-//# define S_V_L_CH		ADC_Channel_C2
-//# define S_V_R_CH		ADC_Channel_F7//ADC_Channel_F7
-//# define S_M_CH			ADC_Channel_C3
 
 # define SENSOR_FIFO_SIZE		4
 
@@ -53,7 +40,6 @@ typedef enum
 /*  传感器数据结构体  */
 typedef struct 
 {
-	uint8_t Read;
 	uint8_t Write;
 	uint16_t Average;
 	uint16_t CalibrationMax;

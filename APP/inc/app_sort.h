@@ -17,12 +17,6 @@
 # ifndef __APP_SORT_H
 # define __APP_SORT_H
 
-/*
-  *******************************************************************************************************
-  *                              INCLUDE FILES
-  *******************************************************************************************************
-*/
-# include "bsp.h"
 
 void sort_QuickSort(uint16_t Array[], int32_t StartIndex, int32_t EndIndex);
 //void sort_MergeSort(int32_t Array[], int32_t StartIndex, int32_t EndIndex);

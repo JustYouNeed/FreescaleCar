@@ -15,7 +15,6 @@
 # ifndef __BSP_SWITCH_H
 # define __BSP_SWITCH_H
 
-# include "derivative.h"
 
 # define BIT1_PIN			GPIO_Pin_F0
 # define BIT2_PIN			GPIO_Pin_F1

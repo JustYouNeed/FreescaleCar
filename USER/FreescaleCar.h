@@ -94,7 +94,7 @@ typedef enum
 /*  车子整体参数结构体定义  */
 typedef struct
 {
-	PID_TypeDef VelPID;										/*  速度环PID  */
+	PID_TypeDef LVelPID, RVelPID;										/*  速度环PID  */
 	FuzzyPID_TypeDef DirFuzzy;						/*  转向控制模糊PID  */
 	Sensor_TypeDef Sensor[SENSOR_COUNT];	/*  传感器  */
 	Motor_TypeDef Motor;									/*  电机  */

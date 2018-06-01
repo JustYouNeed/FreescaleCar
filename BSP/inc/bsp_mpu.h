@@ -17,15 +17,6 @@
 # ifndef __BSP_MPU_H
 # define __BSP_MPU_H
 
-/*
-  *******************************************************************************************************
-  *                              INCLUDE FILES
-  *******************************************************************************************************
-*/
-# include "bsp.h"
-# include "inv_mpu.h"
-# include "inv_mpu_dmp_motion_driver.h"
-
 //#define MPU_ACCEL_OFFS_REG		0X06	//accel_offs寄存器,可读取版本号,寄存器手册未提到
 //#define MPU_PROD_ID_REG			0X0C	//prod id寄存器,在寄存器手册未提到
 #define MPU_SELF_TESTX_REG		0X0D	//自检寄存器X

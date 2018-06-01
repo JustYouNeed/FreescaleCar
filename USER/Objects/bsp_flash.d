@@ -49,8 +49,6 @@
 .\objects\bsp_flash.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\bsp_flash.o: ..\BSP\inc\bsp_led.h
 .\objects\bsp_flash.o: ..\BSP\inc\bsp_uart.h
-.\objects\bsp_flash.o: ..\USER\derivative.h
-.\objects\bsp_flash.o: D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h
 .\objects\bsp_flash.o: ..\BSP\inc\bsp_timer.h
 .\objects\bsp_flash.o: ..\BSP\inc\bsp_key.h
 .\objects\bsp_flash.o: ..\BSP\inc\bsp_i2c.h

@@ -1,6 +1,6 @@
 Dependencies for Project 'FreescaleCar', Target 'FreescaleCar': (DO NOT MODIFY !)
-F (.\main.c)(0x5B11647A)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\main.o --omf_browse .\objects\main.crf --depend .\objects\main.d)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+F (.\main.c)(0x5B2109EB)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\main.o --omf_browse .\objects\main.crf --depend .\objects\main.d)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
@@ -35,22 +35,22 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
-I (FreescaleCar.h)(0x5B10EF13)
+I (FreescaleCar.h)(0x5B1F630A)
 I (..\APP\inc\app.h)(0x5B099B02)
 I (..\APP\inc\app_ano.h)(0x5B09B0DB)
 I (..\APP\inc\app_filter.h)(0x5B09B44B)
 I (..\APP\inc\app_sort.h)(0x5B09B477)
 I (..\APP\inc\app_pid.h)(0x5B09B461)
 I (..\GUI_APP\inc\display.h)(0x5AFA8E85)
-F (.\FreescaleCar.c)(0x5B116A7A)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\freescalecar.o --omf_browse .\objects\freescalecar.crf --depend .\objects\freescalecar.d)
-I (FreescaleCar.h)(0x5B10EF13)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+F (.\FreescaleCar.c)(0x5B2249E7)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\freescalecar.o --omf_browse .\objects\freescalecar.crf --depend .\objects\freescalecar.d)
+I (FreescaleCar.h)(0x5B1F630A)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
@@ -85,10 +85,10 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
 I (..\APP\inc\app.h)(0x5B099B02)
@@ -365,8 +365,8 @@ F (..\DRV\src\drv_pwt.c)(0x5A720ED5)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=int
 I (..\DRV\inc\drv_pwt.h)(0x5A720D60)
 F (..\DRV\src\drv_rtc.c)(0x5A720ED5)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\drv_rtc.o --omf_browse .\objects\drv_rtc.crf --depend .\objects\drv_rtc.d)
 I (..\DRV\inc\drv_rtc.h)(0x5A720D54)
-F (..\BSP\src\bsp.c)(0x5AFBA1FC)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\bsp.o --omf_browse .\objects\bsp.crf --depend .\objects\bsp.d)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+F (..\BSP\src\bsp.c)(0x5B1D2212)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\bsp.o --omf_browse .\objects\bsp.crf --depend .\objects\bsp.d)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
@@ -401,14 +401,14 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
 F (..\BSP\src\bsp_led.c)(0x5B09403F)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\bsp_led.o --omf_browse .\objects\bsp_led.crf --depend .\objects\bsp_led.d)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
@@ -443,14 +443,14 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
-F (..\BSP\src\bsp_uart.c)(0x5B09AA75)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\bsp_uart.o --omf_browse .\objects\bsp_uart.crf --depend .\objects\bsp_uart.d)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+F (..\BSP\src\bsp_uart.c)(0x5B1C25A1)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\bsp_uart.o --omf_browse .\objects\bsp_uart.crf --depend .\objects\bsp_uart.d)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
@@ -485,10 +485,10 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
 I (..\APP\inc\app.h)(0x5B099B02)
@@ -497,7 +497,7 @@ I (..\APP\inc\app_filter.h)(0x5B09B44B)
 I (..\APP\inc\app_sort.h)(0x5B09B477)
 I (..\APP\inc\app_pid.h)(0x5B09B461)
 F (..\BSP\src\bsp_timer.c)(0x5B09403F)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\bsp_timer.o --omf_browse .\objects\bsp_timer.crf --depend .\objects\bsp_timer.d)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
@@ -532,14 +532,14 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
 F (..\BSP\src\bsp_key.c)(0x5B09403F)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\bsp_key.o --omf_browse .\objects\bsp_key.crf --depend .\objects\bsp_key.d)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
@@ -574,14 +574,14 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
 F (..\BSP\src\bsp_oled.c)(0x5B09403F)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\bsp_oled.o --omf_browse .\objects\bsp_oled.crf --depend .\objects\bsp_oled.d)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
@@ -616,15 +616,15 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
 I (..\GUI_DRV\interface\font.h)(0x5AFA8E85)
 F (..\BSP\src\bsp_motor.c)(0x5B113427)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\bsp_motor.o --omf_browse .\objects\bsp_motor.crf --depend .\objects\bsp_motor.d)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
@@ -659,20 +659,20 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
-I (..\USER\FreescaleCar.h)(0x5B10EF13)
+I (..\USER\FreescaleCar.h)(0x5B1F630A)
 I (..\APP\inc\app.h)(0x5B099B02)
 I (..\APP\inc\app_ano.h)(0x5B09B0DB)
 I (..\APP\inc\app_filter.h)(0x5B09B44B)
 I (..\APP\inc\app_sort.h)(0x5B09B477)
 I (..\APP\inc\app_pid.h)(0x5B09B461)
 F (..\BSP\src\bsp_encoder.c)(0x5B10FD15)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\bsp_encoder.o --omf_browse .\objects\bsp_encoder.crf --depend .\objects\bsp_encoder.d)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
@@ -707,20 +707,20 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
-I (..\USER\FreescaleCar.h)(0x5B10EF13)
+I (..\USER\FreescaleCar.h)(0x5B1F630A)
 I (..\APP\inc\app.h)(0x5B099B02)
 I (..\APP\inc\app_ano.h)(0x5B09B0DB)
 I (..\APP\inc\app_filter.h)(0x5B09B44B)
 I (..\APP\inc\app_sort.h)(0x5B09B477)
 I (..\APP\inc\app_pid.h)(0x5B09B461)
-F (..\BSP\src\bsp_sensor.c)(0x5B09FAF8)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\bsp_sensor.o --omf_browse .\objects\bsp_sensor.crf --depend .\objects\bsp_sensor.d)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+F (..\BSP\src\bsp_sensor.c)(0x5B21276A)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\bsp_sensor.o --omf_browse .\objects\bsp_sensor.crf --depend .\objects\bsp_sensor.d)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
@@ -755,10 +755,10 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
 I (..\APP\inc\app.h)(0x5B099B02)
@@ -766,9 +766,9 @@ I (..\APP\inc\app_ano.h)(0x5B09B0DB)
 I (..\APP\inc\app_filter.h)(0x5B09B44B)
 I (..\APP\inc\app_sort.h)(0x5B09B477)
 I (..\APP\inc\app_pid.h)(0x5B09B461)
-I (..\USER\FreescaleCar.h)(0x5B10EF13)
-F (..\BSP\src\bsp_switch.c)(0x5B09403F)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\bsp_switch.o --omf_browse .\objects\bsp_switch.crf --depend .\objects\bsp_switch.d)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+I (..\USER\FreescaleCar.h)(0x5B1F630A)
+F (..\BSP\src\bsp_switch.c)(0x5B2109B8)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\bsp_switch.o --omf_browse .\objects\bsp_switch.crf --depend .\objects\bsp_switch.d)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
@@ -803,14 +803,14 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
 F (..\BSP\src\bsp_mpu.c)(0x5B09403F)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\bsp_mpu.o --omf_browse .\objects\bsp_mpu.crf --depend .\objects\bsp_mpu.d)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
@@ -845,21 +845,21 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
 I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x574E3E26)
-I (..\USER\FreescaleCar.h)(0x5B10EF13)
+I (..\USER\FreescaleCar.h)(0x5B1F630A)
 I (..\APP\inc\app.h)(0x5B099B02)
 I (..\APP\inc\app_ano.h)(0x5B09B0DB)
 I (..\APP\inc\app_filter.h)(0x5B09B44B)
 I (..\APP\inc\app_sort.h)(0x5B09B477)
 I (..\APP\inc\app_pid.h)(0x5B09B461)
 F (..\BSP\src\bsp_i2c.c)(0x5B09403F)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\bsp_i2c.o --omf_browse .\objects\bsp_i2c.crf --depend .\objects\bsp_i2c.d)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
@@ -894,14 +894,14 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
 F (..\BSP\src\bsp_battery.c)(0x5B09403F)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\bsp_battery.o --omf_browse .\objects\bsp_battery.crf --depend .\objects\bsp_battery.d)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
@@ -936,14 +936,14 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
-F (..\BSP\src\bsp_beep.c)(0x5B09403F)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\bsp_beep.o --omf_browse .\objects\bsp_beep.crf --depend .\objects\bsp_beep.d)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+F (..\BSP\src\bsp_beep.c)(0x5B1D1884)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\bsp_beep.o --omf_browse .\objects\bsp_beep.crf --depend .\objects\bsp_beep.d)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
@@ -978,15 +978,15 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
 F (..\APP\src\app_sort.c)(0x5B09403F)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\app_sort.o --omf_browse .\objects\app_sort.crf --depend .\objects\app_sort.d)
 I (..\APP\inc\app.h)(0x5B099B02)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
@@ -1021,10 +1021,10 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
 I (..\APP\inc\app_ano.h)(0x5B09B0DB)
@@ -1033,7 +1033,7 @@ I (..\APP\inc\app_sort.h)(0x5B09B477)
 I (..\APP\inc\app_pid.h)(0x5B09B461)
 F (..\APP\src\app_filter.c)(0x5B09403F)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\app_filter.o --omf_browse .\objects\app_filter.crf --depend .\objects\app_filter.d)
 I (..\APP\inc\app.h)(0x5B099B02)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
@@ -1068,19 +1068,19 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
 I (..\APP\inc\app_ano.h)(0x5B09B0DB)
 I (..\APP\inc\app_filter.h)(0x5B09B44B)
 I (..\APP\inc\app_sort.h)(0x5B09B477)
 I (..\APP\inc\app_pid.h)(0x5B09B461)
-F (..\APP\src\app_pid.c)(0x5B10EF4E)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\app_pid.o --omf_browse .\objects\app_pid.crf --depend .\objects\app_pid.d)
+F (..\APP\src\app_pid.c)(0x5B1C2218)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\app_pid.o --omf_browse .\objects\app_pid.crf --depend .\objects\app_pid.d)
 I (..\APP\inc\app.h)(0x5B099B02)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
@@ -1115,21 +1115,21 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
 I (..\APP\inc\app_ano.h)(0x5B09B0DB)
 I (..\APP\inc\app_filter.h)(0x5B09B44B)
 I (..\APP\inc\app_sort.h)(0x5B09B477)
 I (..\APP\inc\app_pid.h)(0x5B09B461)
-I (..\USER\FreescaleCar.h)(0x5B10EF13)
+I (..\USER\FreescaleCar.h)(0x5B1F630A)
 I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x574E3E26)
-F (..\APP\src\app_ano.c)(0x5B10FB16)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\app_ano.o --omf_browse .\objects\app_ano.crf --depend .\objects\app_ano.d)
+F (..\APP\src\app_ano.c)(0x5B1F630A)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\app_ano.o --omf_browse .\objects\app_ano.crf --depend .\objects\app_ano.d)
 I (..\APP\inc\app.h)(0x5B099B02)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
@@ -1164,17 +1164,17 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
 I (..\APP\inc\app_ano.h)(0x5B09B0DB)
 I (..\APP\inc\app_filter.h)(0x5B09B44B)
 I (..\APP\inc\app_sort.h)(0x5B09B477)
 I (..\APP\inc\app_pid.h)(0x5B09B461)
-I (..\USER\FreescaleCar.h)(0x5B10EF13)
+I (..\USER\FreescaleCar.h)(0x5B1F630A)
 F (..\GUI_DRV\src\button.c)(0x5AFA8E85)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\button.o --omf_browse .\objects\button.crf --depend .\objects\button.d)
 I (..\GUI_DRV\interface\button.h)(0x5AFA8E85)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
@@ -1251,8 +1251,8 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x574E3E26)
 I (..\GUI_DRV\interface\gui_config.h)(0x5AFA8E85)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
 I (..\GUI_DRV\interface\lcmdrv.h)(0x5AFA8E85)
-I (..\USER\FreescaleCar.h)(0x5B10EF13)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+I (..\USER\FreescaleCar.h)(0x5B1F630A)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\CMSIS\Include\core_cm0plus.h)(0x559CDD8A)
@@ -1286,10 +1286,10 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
 I (..\APP\inc\app.h)(0x5B099B02)
@@ -1315,8 +1315,8 @@ I (..\GUI_DRV\interface\gui_basic.h)(0x5AFA8E85)
 I (..\GUI_DRV\interface\lcmdrv.h)(0x5AFA8E85)
 I (..\GUI_APP\inc\menu.h)(0x5AFA8E85)
 I (..\GUI_DRV\interface\gui_menu.h)(0x5AFA8E85)
-I (..\USER\FreescaleCar.h)(0x5B10EF13)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+I (..\USER\FreescaleCar.h)(0x5B1F630A)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\CMSIS\Include\core_cm0plus.h)(0x559CDD8A)
@@ -1350,10 +1350,10 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
 I (..\APP\inc\app.h)(0x5B099B02)
@@ -1364,7 +1364,7 @@ I (..\APP\inc\app_pid.h)(0x5B09B461)
 I (..\GUI_APP\inc\pid_set.h)(0x5AFA8E85)
 I (..\GUI_APP\inc\para_show.h)(0x5AFA8E85)
 F (..\GUI_APP\src\main_ui.c)(0x5AFA8E85)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\main_ui.o --omf_browse .\objects\main_ui.crf --depend .\objects\main_ui.d)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
@@ -1399,10 +1399,10 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
 I (..\GUI_APP\inc\main_ui.h)(0x5AFA8E85)
@@ -1414,7 +1414,7 @@ I (..\GUI_APP\inc\display.h)(0x5AFA8E85)
 I (..\GUI_DRV\interface\gui_basic.h)(0x5AFA8E85)
 I (..\GUI_DRV\interface\lcmdrv.h)(0x5AFA8E85)
 I (..\GUI_DRV\interface\font.h)(0x5AFA8E85)
-I (..\USER\FreescaleCar.h)(0x5B10EF13)
+I (..\USER\FreescaleCar.h)(0x5B1F630A)
 I (..\APP\inc\app.h)(0x5B099B02)
 I (..\APP\inc\app_ano.h)(0x5B09B0DB)
 I (..\APP\inc\app_filter.h)(0x5B09B44B)
@@ -1433,8 +1433,8 @@ I (..\BSP\inc\bsp_timer.h)(0x5B09403F)
 I (..\BSP\inc\bsp_led.h)(0x5B09403F)
 I (..\BSP\inc\bsp_key.h)(0x5B09403F)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x574E3E26)
-I (..\USER\FreescaleCar.h)(0x5B10EF13)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+I (..\USER\FreescaleCar.h)(0x5B1F630A)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\CMSIS\Include\core_cm0plus.h)(0x559CDD8A)
@@ -1463,10 +1463,10 @@ I (..\BSP\inc\bsp_uart.h)(0x5B09AA75)
 I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
 I (..\APP\inc\app.h)(0x5B099B02)
@@ -1479,7 +1479,7 @@ I (..\GUI_APP\inc\menu.h)(0x5AFA8E85)
 I (..\GUI_DRV\interface\gui_menu.h)(0x5AFA8E85)
 I (..\GUI_APP\inc\display.h)(0x5AFA8E85)
 I (..\GUI_DRV\interface\scrollbar.h)(0x5AFA8E85)
-F (..\GUI_APP\src\para_show.c)(0x5B10EF4E)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\para_show.o --omf_browse .\objects\para_show.crf --depend .\objects\para_show.d)
+F (..\GUI_APP\src\para_show.c)(0x5B1F67EA)(--c99 -c --cpu Cortex-M0+ -g -O2 --apcs=interwork --split_sections -I ..\USER -I ..\CORE -I ..\BSP\inc -I ..\DRV\inc -I ..\APP\inc -I ..\GUI_DRV\interface -I ..\GUI_APP\inc -I ..\MPU\inc-IE:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE-ID:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include-IC:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="521" -DSKEAZ128xxx4-o .\objects\para_show.o --omf_browse .\objects\para_show.crf --depend .\objects\para_show.d)
 I (..\GUI_APP\inc\para_show.h)(0x5AFA8E85)
 I (..\GUI_DRV\interface\gui_menu.h)(0x5AFA8E85)
 I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x574E3E26)
@@ -1487,8 +1487,8 @@ I (..\GUI_DRV\interface\gui_config.h)(0x5AFA8E85)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574E3E26)
 I (..\GUI_DRV\interface\lcmdrv.h)(0x5AFA8E85)
 I (..\GUI_DRV\interface\windows.h)(0x5AFA8E85)
-I (..\USER\FreescaleCar.h)(0x5B10EF13)
-I (..\BSP\inc\bsp.h)(0x5B09403F)
+I (..\USER\FreescaleCar.h)(0x5B1F630A)
+I (..\BSP\inc\bsp.h)(0x5B20C59B)
 I (..\USER\derivative.h)(0x5A72A757)
 I (D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include\SKEAZ1284.h)(0x5A950782)
 I (C:\Keil_v5\ARM\CMSIS\Include\core_cm0plus.h)(0x559CDD8A)
@@ -1522,10 +1522,10 @@ I (..\BSP\inc\bsp_i2c.h)(0x5B09B56F)
 I (..\BSP\inc\bsp_oled.h)(0x5B09403F)
 I (..\BSP\inc\bsp_beep.h)(0x5B09B585)
 I (..\BSP\inc\bsp_flash.h)(0x5B09403F)
-I (..\BSP\inc\bsp_motor.h)(0x5B09B4B2)
-I (..\BSP\inc\bsp_encoder.h)(0x5B09B508)
-I (..\BSP\inc\bsp_sensor.h)(0x5B1132E5)
-I (..\BSP\inc\bsp_switch.h)(0x5B09B550)
+I (..\BSP\inc\bsp_motor.h)(0x5B1CDDDD)
+I (..\BSP\inc\bsp_encoder.h)(0x5B1D226C)
+I (..\BSP\inc\bsp_sensor.h)(0x5B1F5715)
+I (..\BSP\inc\bsp_switch.h)(0x5B20C5C6)
 I (..\BSP\inc\bsp_mpu.h)(0x5B09B55D)
 I (..\BSP\inc\bsp_battery.h)(0x5B09B57A)
 I (..\APP\inc\app.h)(0x5B099B02)

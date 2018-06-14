@@ -99,37 +99,38 @@ void Para_Show_UI(void)
 	if(showPage == 0)
 	{
 		/*  前排左边水平电感  */
-		oled_showString(3,15,"HFL:", 6, 12);
-		oled_showNum(27, 15, Car.Sensor[SENSOR_H_L].Average, 3, 6, 12);
+		oled_showString(3,15,"FHL:", 6, 12);
+		oled_showNum(27, 15, Car.Sensor[S_F_H_L].Average, 3, 6, 12);
 		
 		/*  前排右边水平电感  */
-		oled_showString(65,15,"HFR:", 6, 12);
-		oled_showNum(95, 15, Car.Sensor[SENSOR_H_R].Average, 3, 6, 12);
+		oled_showString(65,15,"FHR:", 6, 12);
+		oled_showNum(95, 15, Car.Sensor[S_F_H_R].Average, 3, 6, 12);
 		
-		oled_showString(3,27,"HBL:", 6, 12);
-		oled_showNum(27, 27, Car.Sensor[SENSOR_V_L].Average, 3, 6, 12);
+		oled_showString(3,27,"BHL:", 6, 12);
+		oled_showNum(27, 27, Car.Sensor[S_B_H_L].Average, 3, 6, 12);
 		
-		oled_showString(65,27,"HBR:", 6, 12);
-		oled_showNum(95, 27, Car.Sensor[SENSOR_V_R].Average, 3, 6, 12);
+		oled_showString(65,27,"BHR:", 6, 12);
+		oled_showNum(95, 27, Car.Sensor[S_B_H_R].Average, 3, 6, 12);
 		
-		oled_showString(3,39,"HAE:", 6, 12);
-		if(Car.HorizontalAE < 0)
+		
+		oled_showString(3,39,"FAE:", 6, 12);
+		if(Car.FHAE < 0)
 		{
 			oled_showChar(27, 39, '-', 6, 12, 1);
-			oled_showNum(33, 39, (int16_t)(-Car.HorizontalAE), 3, 6, 12);
+			oled_showNum(33, 39, (int16_t)(-Car.FHAE), 3, 6, 12);
 		}else
-			oled_showNum(27, 39, (int16_t)(Car.HorizontalAE), 4, 6, 12);
+			oled_showNum(27, 39, (int16_t)(Car.FHAE), 4, 6, 12);
 		
-		oled_showString(65,39,"VAE:", 6, 12);
-		if(Car.VecticalAE < 0)
+		oled_showString(65,39,"BAE:", 6, 12);
+		if(Car.BHAE < 0)
 		{
 			oled_showChar(90, 39, '-', 6, 12, 1);
-			oled_showNum(90+6, 39, (int16_t)(-Car.VecticalAE), 3, 6, 12);
+			oled_showNum(90+6, 39, (int16_t)(-Car.BHAE), 3, 6, 12);
 		}else
-		oled_showNum(90, 39, (int16_t)(Car.VecticalAE), 4, 6, 12);
+			oled_showNum(90, 39, (int16_t)(Car.BHAE), 4, 6, 12);
 		
 		oled_showString(3,51,"HM:", 6, 12);
-		oled_showNum(27, 51, (int16_t)(Car.Sensor[SENSOR_M].Average), 3, 6, 12);
+		oled_showNum(27, 51, (int16_t)(Car.Sensor[S_M].Average), 3, 6, 12);
 		
 		oled_showString(65,51,"AE:", 6, 12);
 		if(Car.AE < 0)
@@ -142,8 +143,12 @@ void Para_Show_UI(void)
 			oled_showNum(90+6, 51, (int16_t)(Car.AE), 3, 6, 12);
 		}
 	}
-	/*  第二页显示电机参数  */
 	else if(showPage == 1)
+	{
+		
+	}
+	/*  第二页显示电机参数  */
+	else if(showPage == 2)
 	{
 		/*  电机编码器  */
 		oled_showString(3, 15, "LE:", 6, 12);
@@ -214,7 +219,7 @@ void Para_Show_UI(void)
 		oled_showString(78, 51, "R/S", 6, 12);
 	}
 	/*  第三页显示PID参数  */
-	else if(showPage == 2)
+	else if(showPage == 3)
 	{
 		oled_showString(3, 15, "SKP:", 6, 12);
 		oled_showNum(27, 15, Car.LVelPID.Kp*10, 4, 6, 12);
@@ -235,7 +240,7 @@ void Para_Show_UI(void)
 		oled_showNum(85, 50, (Car.RightTargetSpeed), 3, 6, 12);
 		
 	} 
-	else if(showPage == 3)
+	else if(showPage == 4)
 	{
 		oled_showString(20,20,"AE:",6, 12);
 		if(Car.AE < 0)
@@ -257,20 +262,21 @@ void Para_Show_UI(void)
 		showPage--;
 		isWindowChange = true;
 		if(showPage < 0)
-			showPage = 3;
+			showPage = 4;
 		switch(showPage)
 		{
-			case 1: DebugWindow.title = "Motor Parameters";break;
 			case 0: DebugWindow.title = "Sensor Parameters";break;
+			case 1: DebugWindow.title = "Sensor Parameters";break;
 			case 2: DebugWindow.title = "PID Parameters";break;
 			case 3: DebugWindow.title = "Road Detect";break;
+			case 4: DebugWindow.title = "Motor Parameters";break;
 			default: break;
 		}
 	}else if(key == KEY_UP_PRESS)
 	{
 		showPage++;
 		isWindowChange = true;
-		if(showPage>3)
+		if(showPage>4)
 			showPage = 0;
 		
 		switch(showPage)

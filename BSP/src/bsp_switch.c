@@ -20,9 +20,16 @@
   *                              INCLUDE FILES
   *******************************************************************************************************
 */
-
 # include "bsp.h"
 
+
+# define BIT1_PIN			GPIO_Pin_F0
+# define BIT2_PIN			GPIO_Pin_F1
+# define BIT3_PIN			GPIO_Pin_G4
+# define BIT4_PIN			GPIO_Pin_G7
+
+# define MAG_SWITCH1_PIN	GPIO_Pin_F2
+# define MAG_SWITCH2_PIN	GPIO_Pin_F3
 /*
 *********************************************************************************************************
 *                     bsp_switch_Config                     
@@ -40,6 +47,7 @@ void bsp_switch_Config(void)
 {
 	GPIO_InitTypeDef GPIO_InitStruct;
 	
+	/*  初始化拔码开关引脚  */
 	GPIO_InitStruct.GPIO_HDrv = DISABLE;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStruct.GPIO_Pin = BIT1_PIN;
@@ -62,6 +70,17 @@ void bsp_switch_Config(void)
 	drv_gpio_Init(&GPIO_InitStruct);
 	drv_gpio_PullCmd(BIT4_PIN, ENABLE);
 	drv_gpio_WritePin(BIT4_PIN, GPIO_PIN_SET);
+	
+	/*  干簧管引脚初始化,停车检测  */
+	GPIO_InitStruct.GPIO_Pin = MAG_SWITCH1_PIN;
+	drv_gpio_Init(&GPIO_InitStruct);
+//	drv_gpio_PullCmd(MAG_SWITCH1_PIN, ENABLE);
+	drv_gpio_WritePin(MAG_SWITCH1_PIN, GPIO_PIN_SET);
+	
+	GPIO_InitStruct.GPIO_Pin = MAG_SWITCH2_PIN;
+	drv_gpio_Init(&GPIO_InitStruct);
+//	drv_gpio_PullCmd(MAG_SWITCH2_PIN, ENABLE);
+	drv_gpio_WritePin(MAG_SWITCH2_PIN, GPIO_PIN_SET);
 }
 
 
@@ -82,7 +101,7 @@ uint8_t bsp_switch_GetValue(void)
 {
 	uint8_t value = 0;
 	
-//	value |= (drv_gpio_ReadPin(BIT1_PIN) == 1) ? (1 << 0 ) : (value);
+//	value |= (drv_gpio_ReadPin(BIT1_PIN) == 1) ? (1 << 0) : (value);
 //	value |= (drv_gpio_ReadPin(BIT2_PIN) == 1) ? (1 << 1) : (value);
 //	value |= (drv_gpio_ReadPin(BIT3_PIN) == 1) ? (1 << 2) : (value);
 //	value |= (drv_gpio_ReadPin(BIT4_PIN) == 1) ? (1 << 3) : (value);
@@ -90,6 +109,11 @@ uint8_t bsp_switch_GetValue(void)
 	value |= (uint8_t)((drv_gpio_ReadPin(BIT3_PIN) << 2) | (drv_gpio_ReadPin(BIT4_PIN) << 3));
 	
 	return value;
+}
+
+uint8_t bsp_switch_GetStopState(void)
+{
+	return ((drv_gpio_ReadPin(MAG_SWITCH1_PIN) == 0) && (drv_gpio_ReadPin(MAG_SWITCH2_PIN) == 0));
 }
 
 /********************************************  END OF FILE  *******************************************/

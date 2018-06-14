@@ -27,14 +27,45 @@ Project File Date:  05/27/2018
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 3 (build 300)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'FreescaleCar'
-".\Objects\FreescaleCar.axf" - 0 Error(s), 0 Warning(s).
+compiling FreescaleCar.c...
+FreescaleCar.c(385): warning:  #177-D: variable "LeftSpeedFilter" was declared but never referenced
+  	static float LeftSpeedFilter = 0, RightSpeedFilter = 0;
+FreescaleCar.c(385): warning:  #177-D: variable "RightSpeedFilter" was declared but never referenced
+  	static float LeftSpeedFilter = 0, RightSpeedFilter = 0;
+FreescaleCar.c(386): warning:  #177-D: variable "SpeedError" was declared but never referenced
+  	float SpeedError = 0;
+FreescaleCar.c(387): warning:  #177-D: variable "LeftEnconder" was declared but never referenced
+  	int32_t LeftEnconder = 0, RightEnconder = 0;
+FreescaleCar.c(387): warning:  #177-D: variable "RightEnconder" was declared but never referenced
+  	int32_t LeftEnconder = 0, RightEnconder = 0;
+FreescaleCar.c(468): warning:  #177-D: variable "CheckTime" was declared but never referenced
+  	static uint32_t CheckTime = 0;
+FreescaleCar.c(469): warning:  #177-D: variable "CheckStop" was declared but never referenced
+  	static uint8_t CheckStop = 0;
+FreescaleCar.c(680): warning:  #177-D: variable "LeftDirPWM" was declared but never referenced
+  	int16_t LeftPwm = 0, RightPwm = 0, LeftDirPWM = 0, RightDirPWM = 0;
+FreescaleCar.c(680): warning:  #177-D: variable "RightDirPWM" was declared but never referenced
+  	int16_t LeftPwm = 0, RightPwm = 0, LeftDirPWM = 0, RightDirPWM = 0;
+FreescaleCar.c(114): warning:  #177-D: variable "g_CurveOffset" was declared but never referenced
+  static float g_CurveOffset = 0;
+FreescaleCar.c(115): warning:  #177-D: variable "g_CurveFactor" was declared but never referenced
+  static float g_CurveFactor = 0.6;
+FreescaleCar.c(116): warning:  #177-D: variable "g_SpeedFactor" was declared but never referenced
+  static float g_SpeedFactor = 0.1f;				/*  双?俣然凡???????  */
+FreescaleCar.c(117): warning:  #550-D: variable "g_IslandOffset" was set but never used
+  static float g_IslandOffset = 0.0f;				/*  圆环???甙???偏??  */
+FreescaleCar.c: 13 warnings, 0 errors
+linking...
+Program Size: Code=25072 RO-data=11076 RW-data=1292 ZI-data=4580  
+FromELF: creating hex file...
+".\Objects\FreescaleCar.axf" - 0 Error(s), 13 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
   E:\学习资料\比赛\飞思卡尔智能车大赛\电磁三轮组\程序\Freescale\USER\RTE
   D:\KeilPack\Keil\Kinetis_KEAxx_DFP\1.3.0\Device\Include
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:00
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>

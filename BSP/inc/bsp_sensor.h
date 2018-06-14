@@ -18,22 +18,18 @@
 # define __BSP_SENSOR_H
 
 
-# define S_H_L_CH		ADC_Channel_C1
-# define S_H_R_CH		ADC_Channel_F7
-# define S_V_L_CH		ADC_Channel_C2
-# define S_V_R_CH		ADC_Channel_F6
-# define S_M_CH			ADC_Channel_C3
-
 # define SENSOR_FIFO_SIZE		4
 
 /* 传感器ID枚举变量   */
 typedef enum
 {
-	SENSOR_H_L = 0x0,
-	SENSOR_H_R,
-	SENSOR_V_L,
-	SENSOR_V_R,
-	SENSOR_M,
+	S_F_H_L = 0x0,
+	S_F_H_R,
+	S_B_H_L,
+	S_B_H_R,
+	S_V_L,
+	S_V_R,
+	S_M,
 	SENSOR_COUNT,
 }SENSOR_ID_EnumType;
 

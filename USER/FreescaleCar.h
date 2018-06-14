@@ -101,7 +101,7 @@ typedef struct
 	MPU_TypeDef MPU;											/*  MPU参数  */
 	uint8_t NowRoad;
 	
-	float HorizontalAE, VecticalAE, AE;				/*  传感器水平、垂直和差比  */
+	float FHAE, BHAE, VAE, AE;				/*  传感器水平、垂直和差比  */
 	float CarSpeed, TargetSpeed;	/*  当前车速,整体目标速度  */
 	float LeftTargetSpeed, RightTargetSpeed;
 	int16_t MaxPWM;												/*  最大PWM  */

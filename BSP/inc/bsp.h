@@ -37,7 +37,7 @@
 # include "bsp_switch.h"
 # include "bsp_mpu.h"
 # include "bsp_battery.h"
-
+# include "stdint.h"
 
 
 void bsp_Config(void);

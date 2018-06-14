@@ -23,6 +23,10 @@
 	*		4.Author: Vector
 	*			Date: 2018-3-27
 	*			Mod: 将水平和比差与垂直和比差计算结果放大100倍,便于后续使用
+	*
+	*		5.Author: Vector
+	*			Date: 2018-6-12
+	*			Mod: 增加后面两个水平电感,同时更改传感器数据采集逻辑
   *
   *******************************************************************************************************
   */	
@@ -35,6 +39,14 @@
 # include "bsp.h"
 # include "app.h"
 # include "FreescaleCar.h"
+
+# define S_F_H_L_CH		ADC_Channel_B3
+# define S_F_H_R_CH		ADC_Channel_C3
+# define S_B_H_L_CH		ADC_Channel_C0
+# define S_B_H_R_CH		ADC_Channel_C1
+# define S_V_L_CH			ADC_Channel_F6
+# define S_V_R_CH			ADC_Channel_C2
+# define S_M_CH				ADC_Channel_F7	
 
 /*
 *********************************************************************************************************
@@ -53,7 +65,7 @@ void bsp_sensor_Config(void)
 {
 	ADC_InitTypeDef ADC_InitStruct;
 	
-	ADC_InitStruct.ADC_Channel = ADC_Channel_A1 | ADC_Channel_C0 | ADC_Channel_C1 | ADC_Channel_C2 | ADC_Channel_C3 | ADC_Channel_F6 | ADC_Channel_F7;
+	ADC_InitStruct.ADC_Channel = ADC_Channel_B2 | ADC_Channel_B3 | ADC_Channel_C0 | ADC_Channel_C1 | ADC_Channel_C2 | ADC_Channel_C3 | ADC_Channel_F6 | ADC_Channel_F7;
 	ADC_InitStruct.ADC_Resolution = ADC_Resolution_8b;
 	ADC_InitStruct.ADC_ChannelCount = 1;
 	ADC_InitStruct.ADC_ClockSource = ADC_ClockSource_BusClockDiv2;
@@ -63,6 +75,40 @@ void bsp_sensor_Config(void)
 	ADC_InitStruct.ADC_RefSource = ADC_RefSource_VDD;
 	ADC_InitStruct.ADC_ScanConvMode = DISABLE;
 	drv_adc_Init(&ADC_InitStruct);
+}
+
+
+/*
+*********************************************************************************************************
+*                                   bsp_sensor_GetSensorChannel       
+*
+* Description: 获取传感器的ADC通道
+*             
+* Arguments  : 1>SensorID: 传感器编号
+*
+* Reutrn     : 传感器ADC通道
+*
+* Note(s)    : None.
+*********************************************************************************************************
+*/
+uint32_t bsp_sensor_GetSensorChannel(uint8_t SensorID)
+{
+	uint32_t channel = 0;
+	
+	if(SensorID > SENSOR_COUNT) return 0;
+	
+	switch(SensorID)
+	{
+		case S_F_H_L: channel = S_F_H_L_CH;break;
+		case S_F_H_R: channel = S_F_H_R_CH;break;
+		case S_B_H_L: channel = S_B_H_L_CH;break;
+		case S_B_H_R: channel = S_B_H_R_CH;break;
+		case S_M: channel = S_M_CH;break;
+		case S_V_L: channel = S_V_L_CH;break;
+		case S_V_R: channel = S_V_R_CH;break;
+	}
+	
+	return channel;
 }
 
 /*
@@ -133,22 +179,14 @@ void bsp_sensor_DataProcess(void)
 	/*  循环处理每一个传感器的值  */
 	for(cnt = 0; cnt < SENSOR_COUNT; cnt ++)
 	{
-		switch(cnt)
-		{
-			case SENSOR_H_L: Car.Sensor[SENSOR_H_L].FIFO[Car.Sensor[SENSOR_H_L].Write++] = drv_adc_ConvOnce(S_H_L_CH, ADC_Resolution_8b);break;
-			case SENSOR_H_R: Car.Sensor[SENSOR_H_R].FIFO[Car.Sensor[SENSOR_H_R].Write++] = drv_adc_ConvOnce(S_H_R_CH, ADC_Resolution_8b);break;
-			case SENSOR_V_L: Car.Sensor[SENSOR_V_L].FIFO[Car.Sensor[SENSOR_V_L].Write++] = drv_adc_ConvOnce(S_V_L_CH, ADC_Resolution_8b);break;
-			case SENSOR_V_R: Car.Sensor[SENSOR_V_R].FIFO[Car.Sensor[SENSOR_V_R].Write++] = drv_adc_ConvOnce(S_V_R_CH, ADC_Resolution_8b);break;
-			case SENSOR_M: Car.Sensor[SENSOR_M].FIFO[Car.Sensor[SENSOR_M].Write++] = drv_adc_ConvOnce(S_M_CH, ADC_Resolution_8b);break;
-		}
+		Car.Sensor[cnt].FIFO[Car.Sensor[cnt].Write++] = drv_adc_ConvOnce(bsp_sensor_GetSensorChannel(cnt), ADC_Resolution_8b);
 		if(Car.Sensor[cnt].Write >= SENSOR_FIFO_SIZE) Car.Sensor[cnt].Write = 0;	/*  环形队列  */
 		
 		/*  滑动平均滤波器  */
 		filter_SildingAverage(Car.Sensor[cnt].FIFO, &Car.Sensor[cnt].Average, SENSOR_FIFO_SIZE);
 		
 		/*  限幅，避免出现最值跳变  */
-    if(Car.Sensor[SENSOR_V_L].Average < 5) 		Car.Sensor[SENSOR_V_L].Average = 5;
-		if(Car.Sensor[SENSOR_V_R].Average < 5)    Car.Sensor[SENSOR_V_R].Average = 5;
+    if(Car.Sensor[cnt].Average < 5) 		Car.Sensor[cnt].Average = 5;
 		
 		/*  归一化处理  */
 		Car.Sensor[cnt].NormalizedValue = (float)(Car.Sensor[cnt].Average - Car.Sensor[cnt].CalibrationMin) / 
@@ -156,25 +194,31 @@ void bsp_sensor_DataProcess(void)
 	}
 	
 			/*  计算水平差比和,扩大100倍  */
-	Car.HorizontalAE = 100 * ((Car.Sensor[SENSOR_H_R].NormalizedValue - Car.Sensor[SENSOR_H_L].NormalizedValue) / 
-														(Car.Sensor[SENSOR_H_R].NormalizedValue + Car.Sensor[SENSOR_H_L].NormalizedValue)) + 0;
+	Car.FHAE = 100 * ((Car.Sensor[S_F_H_R].NormalizedValue - Car.Sensor[S_F_H_L].NormalizedValue) / 
+														(Car.Sensor[S_F_H_R].NormalizedValue + Car.Sensor[S_F_H_L].NormalizedValue)) + 0;
 	
+	Car.BHAE = 100 * ((Car.Sensor[S_B_H_R].NormalizedValue - Car.Sensor[S_B_H_L].NormalizedValue) / 
+														(Car.Sensor[S_B_H_R].NormalizedValue + Car.Sensor[S_B_H_L].NormalizedValue)) + 0;
 	/*  计算垂直和比差,扩大100倍  */
-	Car.VecticalAE = 100 * ((Car.Sensor[SENSOR_V_R].NormalizedValue - Car.Sensor[SENSOR_V_L].NormalizedValue) / 
-														(Car.Sensor[SENSOR_V_R].NormalizedValue + Car.Sensor[SENSOR_V_L].NormalizedValue)) + 0;	
+	Car.VAE = 100 * ((Car.Sensor[S_V_R].NormalizedValue - Car.Sensor[S_V_L].NormalizedValue) / 
+														(Car.Sensor[S_V_R].NormalizedValue + Car.Sensor[S_V_L].NormalizedValue)) + 0;	
 	
-	if(Car.VecticalAE < 30 && Car.VecticalAE > -30) Car.VecticalAE = 0;
+	Car.AE = 100 * ((Car.Sensor[S_B_H_R].NormalizedValue - Car.Sensor[S_B_H_L].NormalizedValue) /
+									(Car.Sensor[S_B_H_R].NormalizedValue + Car.Sensor[S_B_H_L].NormalizedValue));
+//	Car.AE = Car.FHAE - Car.BHAE;
 	
-	MValue = Car.Sensor[SENSOR_M].Average;
-	if(MValue < 80) 
-	{
-		Car.VecticalAE = 0;
-		MValue = 0;
-	}
-		
-	Car.AE = (Car.VecticalAE * MValue / 100.0);
+//	if(Car.AE < 35 && Car.AE > -35) Car.AE = 0;
 	
-	if(Car.AE > -20 && Car.AE < 20) Car.AE = 0;
+//	MValue = Car.Sensor[S_M].Average;
+//	if(MValue < 80) 
+//	{
+//		Car.VAE = 0;
+//		MValue = 0;
+//	}
+//		
+//	Car.AE = (Car.VAE * MValue / 100.0);
+//	
+//	if(Car.AE > -20 && Car.AE < 20) Car.AE = 0;
 }
 
 /*
@@ -193,14 +237,14 @@ void bsp_sensor_DataProcess(void)
 void bsp_sensor_Calibration(void)
 {
 	uint16_t i = 0, j, cnt = 0;
-	
+	uint8_t adc = 0;
 	uint32_t CalibrationValueTemp[SENSOR_COUNT * 2] = {0};
 		
 	oled_showString(0, 0, "Calibration...", 6, 12);
 	oled_showChar(100, 0, '%', 6, 12, 1);
 	oled_refreshGram();
 	
-	for(j = 0; i < SENSOR_COUNT * 2; i++)
+	for(j = 0; j < SENSOR_COUNT * 2; j++)
 	{
 		CalibrationValueTemp[j] = 0;
 	}
@@ -212,20 +256,15 @@ void bsp_sensor_Calibration(void)
 	}
 	
 	/*  平行移动车子,找出传感器的最大最小值  */
-	for(; i < 3000; i ++)
+	for(i = 0; i < 3000; i ++)
 	{
 		
 		/*  循环处理每一个传感器  */
 		for(j = 0; j < SENSOR_COUNT; j ++)
 		{
-			switch(j)
-			{
-				case SENSOR_H_L: Car.Sensor[SENSOR_H_L].FIFO[Car.Sensor[SENSOR_H_L].Write++] = drv_adc_ConvOnce(S_H_L_CH, ADC_Resolution_8b);break;
-				case SENSOR_H_R: Car.Sensor[SENSOR_H_R].FIFO[Car.Sensor[SENSOR_H_R].Write++] = drv_adc_ConvOnce(S_H_R_CH, ADC_Resolution_8b);break;
-				case SENSOR_V_L: Car.Sensor[SENSOR_V_L].FIFO[Car.Sensor[SENSOR_V_L].Write++] = drv_adc_ConvOnce(S_V_L_CH, ADC_Resolution_8b);break;
-				case SENSOR_V_R: Car.Sensor[SENSOR_V_R].FIFO[Car.Sensor[SENSOR_V_R].Write++] = drv_adc_ConvOnce(S_V_R_CH, ADC_Resolution_8b);break;
-				case SENSOR_M: Car.Sensor[SENSOR_M].FIFO[Car.Sensor[SENSOR_M].Write++] = drv_adc_ConvOnce(S_M_CH, ADC_Resolution_8b);break;
-			}
+			
+			Car.Sensor[j].FIFO[Car.Sensor[j].Write++] = drv_adc_ConvOnce(bsp_sensor_GetSensorChannel(j), ADC_Resolution_8b);
+			
 			
 			if(Car.Sensor[j].Write >= SENSOR_FIFO_SIZE) Car.Sensor[j].Write = 0;	/*  环形队列  */
 			
@@ -251,11 +290,11 @@ void bsp_sensor_Calibration(void)
 	} /*  end of for  */
 	
 	/*  对于两个垂直电感,进行手动标定  */
-	Car.Sensor[SENSOR_V_L].CalibrationMax = 150;
-	Car.Sensor[SENSOR_V_L].CalibrationMin = 0;
+	Car.Sensor[S_V_L].CalibrationMax = 150;
+	Car.Sensor[S_V_L].CalibrationMin = 0;
 	
-	Car.Sensor[SENSOR_V_R].CalibrationMax = 150;
-	Car.Sensor[SENSOR_V_R].CalibrationMin = 0;
+	Car.Sensor[S_V_R].CalibrationMax = 150;
+	Car.Sensor[S_V_R].CalibrationMin = 0;
 	/*  先将各标定值暂存到缓存区,便于写入Flash  */
 	for(j = 0; j < SENSOR_COUNT; j ++)
 	{

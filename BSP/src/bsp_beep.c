@@ -19,7 +19,7 @@
 */
 # include "bsp.h"
 
-# define BEEP_PIN	GPIO_Pin_B1
+# define BEEP_PIN	GPIO_Pin_D2
 
 # define BEEP_ENABLE()	drv_gpio_WritePin(BEEP_PIN, GPIO_PIN_RESET)
 # define BEEP_DISABLE()	drv_gpio_WritePin(BEEP_PIN, GPIO_PIN_SET)
@@ -48,14 +48,9 @@ void bsp_beep_Config(void)
 {
 	GPIO_InitTypeDef GPIO_InitStruct;
 	
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_B0;
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_D2;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 	GPIO_InitStruct.GPIO_PuPd = DISABLE;
-	drv_gpio_Init(&GPIO_InitStruct);
-	
-	drv_gpio_WritePin(GPIO_Pin_B0, GPIO_PIN_SET);
-	
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_B1;
 	drv_gpio_Init(&GPIO_InitStruct);
 	
 	BEEP_DISABLE();

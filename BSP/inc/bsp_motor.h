@@ -25,8 +25,8 @@
 
 /*  电机驱动使能引脚  */
 # define DRV_EN_PIN			GPIO_Pin_E5
-# define DRV_ENABLE()		drv_gpio_WritePin(DRV_EN_PIN, GPIO_PIN_SET)
-# define DRV_DISABLE()	drv_gpio_WritePin(DRV_EN_PIN, GPIO_PIN_RESET)
+# define DRV_ENABLE()		drv_gpio_WritePin(DRV_EN_PIN, GPIO_PIN_RESET)
+# define DRV_DISABLE()	drv_gpio_WritePin(DRV_EN_PIN, GPIO_PIN_SET)
 
 /*  电机控制结构体定义  */
 typedef struct

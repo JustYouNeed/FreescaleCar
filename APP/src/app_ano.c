@@ -248,31 +248,31 @@ void debug_SensorDataReport(void)
 	uint8_t Buff[32] = {0};
 	uint8_t cnt = 0;
 	
-	Buff[cnt++] = BYTE2(Car.Sensor[SENSOR_H_L].Average);
-	Buff[cnt++] = BYTE1(Car.Sensor[SENSOR_H_L].Average);
+	Buff[cnt++] = BYTE2(Car.Sensor[S_F_H_L].Average);
+	Buff[cnt++] = BYTE1(Car.Sensor[S_F_H_L].Average);
 	
-	Buff[cnt++] = BYTE2(Car.Sensor[SENSOR_V_L].Average);
-	Buff[cnt++] = BYTE1(Car.Sensor[SENSOR_V_L].Average);
+	Buff[cnt++] = BYTE2(Car.Sensor[S_V_L].Average);
+	Buff[cnt++] = BYTE1(Car.Sensor[S_V_L].Average);
 	
-	Buff[cnt++] = BYTE2(Car.Sensor[SENSOR_V_R].Average);
-	Buff[cnt++] = BYTE1(Car.Sensor[SENSOR_V_R].Average);
+	Buff[cnt++] = BYTE2(Car.Sensor[S_V_R].Average);
+	Buff[cnt++] = BYTE1(Car.Sensor[S_V_R].Average);
 	
-	Buff[cnt++] = BYTE2(Car.Sensor[SENSOR_H_R].Average);
-	Buff[cnt++] = BYTE1(Car.Sensor[SENSOR_H_R].Average);
+	Buff[cnt++] = BYTE2(Car.Sensor[S_F_H_R].Average);
+	Buff[cnt++] = BYTE1(Car.Sensor[S_F_H_R].Average);
 		
 	
-	Buff[cnt++] = BYTE2((int16_t)(Car.HorizontalAE ));
-	Buff[cnt++] = BYTE1((int16_t)(Car.HorizontalAE ));
+	Buff[cnt++] = BYTE2((int16_t)(Car.FHAE ));
+	Buff[cnt++] = BYTE1((int16_t)(Car.FHAE ));
 
-	Buff[cnt++] = BYTE2((int16_t)(Car.VecticalAE));
-	Buff[cnt++] = BYTE1((int16_t)(Car.VecticalAE));
+	Buff[cnt++] = BYTE2((int16_t)(Car.VAE));
+	Buff[cnt++] = BYTE1((int16_t)(Car.VAE));
 	
 	
 	Buff[cnt++] = BYTE2((int16_t)(Car.AE));
 	Buff[cnt++] = BYTE1((int16_t)(Car.AE));
 	
-	Buff[cnt++] = BYTE2(Car.Sensor[SENSOR_M].Average);
-	Buff[cnt++] = BYTE1(Car.Sensor[SENSOR_M].Average);
+	Buff[cnt++] = BYTE2(Car.Sensor[S_M].Average);
+	Buff[cnt++] = BYTE1(Car.Sensor[S_M].Average);
 	
 	app_ano_DataUpload(Buff,0xf2,cnt);
 }
@@ -484,7 +484,6 @@ void app_ano_Thread(void)
 		case COMMAND:break;
 		default:break;
 	}
-	
 	ANO_RX.FunCode = 0;
 	g_ucDataRecCnt = 0;
 	g_ucDatacnt = 0;

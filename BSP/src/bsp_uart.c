@@ -307,8 +307,6 @@ void bsp_uart_IRQHandler(Uart_Str *pUart)
 	
 	if(pUart->uart->S1 & UART_S1_RDRF_MASK)  /*  接收数据寄存器满  */
 	{
-//		reg = (uint8_t)pUart->uart->S1;
-//		pUart->uart->S2 |= 1 << 6;
 		RecvData = pUart->uart->D;		/*  读取数据并送入接收缓存区  */
 		app_ano_ReceiveData(RecvData);
 		bsp_uart_Put(pUart, RecvData);

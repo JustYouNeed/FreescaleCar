@@ -2,6 +2,8 @@
 # include "FreescaleCar.h"
 # include "display.h"
 
+/*  延时基准100ms*DELAY_TIME  */
+# define DELAY_TIME	20
 /*
 *********************************************************************************************************
 *                                          
@@ -17,6 +19,8 @@
 */
 int main(void)
 {	
+	uint8_t DelayStart = 0;
+	
 	bsp_Config();
 	
 	Car_ParaInit();
@@ -36,17 +40,23 @@ int main(void)
 	/*  LED状态指示任务,周期500ms  */
 //	bsp_tim_CreateSoftTimer(2, 200, Car_Running, TIMER_MODE_AUTO);
 	
-	bsp_tim_CreateSoftTimer(2, 10, bsp_beep_Thread, TIMER_MODE_AUTO);
+//	bsp_tim_CreateSoftTimer(2, 10, bsp_beep_Thread, TIMER_MODE_AUTO);
 	
+	while(DelayStart++ < DELAY_TIME)
+	{
+		bsp_led_Toggle(LED_ALL);
+		bsp_tim_DelayMs(100);
+	}
 	/*  硬件定时器任务,车子控制任务,周期20ms  */
 	bsp_tim_CreateHardTimer(1, 1, Car_Control);
 	bsp_tim_CreateHardTimer(0,5, bsp_mpu_GetAngle);
 	
-//	bsp_motor_SetPwm(50, 100);
+//	bsp_motor_SetPwm(900,900);
 	DRV_ENABLE();
 	while(1)
 	{
 		displayTask();
 		bsp_tim_DelayMs(100);
+		
 	}
 }

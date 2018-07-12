@@ -353,17 +353,17 @@ void SystemReset(void)
 	if(key == KEY_DOWN_PRESS)		/*  down按键按下时选中取消按钮  */
 	{
 		GUI_MessageBoxButtonStatus(&MessageBox, 0);	
-		GUI_MessageBoxButtonStatus(&MessageBox, 0);
+//		GUI_MessageBoxButtonStatus(&MessageBox, 0);
 		GUI_Refresh();
-		while(drv_gpio_ReadPin(KEY_UP_PIN) == 0);
+//		while(drv_gpio_ReadPin(KEY_UP_PIN) == 0);
 	}
 
 	if(key == KEY_UP_PRESS)		/*  up按键按下时选中确认按钮  */
 	{
 		GUI_MessageBoxButtonStatus(&MessageBox, 1);	
-		GUI_MessageBoxButtonStatus(&MessageBox, 1);	
+//		GUI_MessageBoxButtonStatus(&MessageBox, 1);	
 		GUI_Refresh();
-		while(drv_gpio_ReadPin(KEY_DOWN_PIN) == 0);
+//		while(drv_gpio_ReadPin(KEY_DOWN_PIN) == 0);
 	}
 	
 	if(key == KEY_OK_PRESS)		/*  ok键按下时根据当前按钮选择执行相应操作  */

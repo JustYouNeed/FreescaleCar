@@ -53,8 +53,8 @@
 void bsp_encoder_ReadCounter(void)
 {	
 	/*  读取FTM计数器值  */
-	Car.Motor.RightEncoder = (uint32_t)FTM0->CNT;
-	Car.Motor.LeftEncoder = (uint32_t)FTM1->CNT;
+	Car.Motor.RightEncoder = FTM0->CNT;
+	Car.Motor.LeftEncoder = FTM1->CNT;
 	
 	/*  清空计数器  */
 	FTM0->CNT = 0;
@@ -106,11 +106,7 @@ void bsp_encoder_Config(void)
 	/*  右边编码器方向引脚  */
 	GPIO_InitStruct.GPIO_Pin = RIGHTENCONDER_DIR_PIN;
 	drv_gpio_Init(&GPIO_InitStruct);
-//	
 
-//	ftm_count_init(ftm0);
-//	ftm_count_init(ftm1);
-//	
 	drv_gpio_PullCmd(LEFTENCONDER_DIR_PIN, ENABLE);
 	drv_gpio_PullCmd(RIGHTENCONDER_DIR_PIN, ENABLE);
 }

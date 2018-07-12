@@ -17,8 +17,6 @@
 # ifndef __DRV_RCC_H
 # define __DRV_RCC_H
 
-# include "derivative.h"
-
 # define RCC_PeriphClock_RTC			((uint32_t)0x00000001)
 # define RCC_PeriphClock_PIT			((uint32_t)0x00000002)
 # define RCC_PeriphClock_PWT			((uint32_t)0x00000010)

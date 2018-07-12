@@ -20,7 +20,7 @@
   *                              INCLUDE FILES
   *******************************************************************************************************
 */
-# include "drv_flash.h"
+# include "drv.h"
 
 /*  此处参考逐飞科技KEA128库  */
 volatile uint8_t s_flash_command_run[] = {0x00, 0xB5, 0x80, 0x21, 0x01, 0x70, 0x01, 0x78, 0x09, 0x06, 0xFC, 0xD5,0x00, 0xBD};

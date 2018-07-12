@@ -1,7 +1,22 @@
+/**
+  *******************************************************************************************************
+  * File Name: drv_uart.h
+  * Author: Vector
+  * Version: V1.0.0
+  * Date: 2018-2-1
+  * Brief: KEA128芯片串口底层驱动函数
+  *******************************************************************************************************
+  * History
+  *		1.Data: 2018-2-1
+  *     Author: Vector
+  *     Mod: 建立文件,添加基本函数
+  *
+  *******************************************************************************************************
+  */
+
 # ifndef __DRV_UART_H
 # define __DRV_UART_H
 
-# include "derivative.h"
 
 # define  UART_SR_PF                         ((uint16_t)0x0401)            /*  奇偶检验错误标志  */
 # define  UART_SR_FE                         ((uint16_t)0x0402)            /*  帧传输错误标志  */
@@ -35,12 +50,14 @@
 #define UART_WordLength_8b                  ((uint8_t)0x00)
 #define UART_WordLength_9b                  ((uint8_t)0x10)
 
+/*  串口通道  */
 typedef enum
 {
 	UART_Channel_0 = 0x0,
 	UART_Channel_1,
 }UARTChanel_TypeDef;
 
+/*  串口初始化结构体  */
 typedef struct
 {
 	uint32_t UART_BaudRate;
@@ -65,3 +82,6 @@ uint8_t drv_uart_ReceiveData(UART_Type *UARTx);
 
 
 # endif
+
+/********************************************  END OF FILE  *******************************************/
+

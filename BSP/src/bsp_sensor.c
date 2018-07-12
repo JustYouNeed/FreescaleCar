@@ -65,7 +65,7 @@ void bsp_sensor_Config(void)
 {
 	ADC_InitTypeDef ADC_InitStruct;
 	
-	ADC_InitStruct.ADC_Channel = ADC_Channel_B2 | ADC_Channel_B3 | ADC_Channel_C0 | ADC_Channel_C1 | ADC_Channel_C2 | ADC_Channel_C3 | ADC_Channel_F6 | ADC_Channel_F7;
+	ADC_InitStruct.ADC_Channel = S_F_H_L_CH | S_F_H_R_CH | S_B_H_L_CH | S_B_H_R_CH | S_V_L_CH | S_V_R_CH | S_M_CH;
 	ADC_InitStruct.ADC_Resolution = ADC_Resolution_8b;
 	ADC_InitStruct.ADC_ChannelCount = 1;
 	ADC_InitStruct.ADC_ClockSource = ADC_ClockSource_BusClockDiv2;
@@ -203,22 +203,27 @@ void bsp_sensor_DataProcess(void)
 	Car.VAE = 100 * ((Car.Sensor[S_V_R].NormalizedValue - Car.Sensor[S_V_L].NormalizedValue) / 
 														(Car.Sensor[S_V_R].NormalizedValue + Car.Sensor[S_V_L].NormalizedValue)) + 0;	
 	
-	Car.AE = 100 * ((Car.Sensor[S_B_H_R].NormalizedValue - Car.Sensor[S_B_H_L].NormalizedValue) /
-									(Car.Sensor[S_B_H_R].NormalizedValue + Car.Sensor[S_B_H_L].NormalizedValue));
+//	Car.AE = (Car.Sensor[S_F_H_L].Average - Car.Sensor[S_F_H_R].Average) - (Car.Sensor[S_B_H_L].Average - Car.Sensor[S_B_H_R].Average);
+	
+	Car.Voltage = (float)(((drv_adc_ConvOnce(ADC_Channel_A1, ADC_Resolution_8b) * 5.0) / 255) / 0.425f);
+	
+//	Car.AE = 100 * ((Car.Sensor[S_B_H_R].NormalizedValue - Car.Sensor[S_B_H_L].NormalizedValue) /
+//									(Car.Sensor[S_B_H_R].NormalizedValue + Car.Sensor[S_B_H_L].NormalizedValue));
 //	Car.AE = Car.FHAE - Car.BHAE;
-	
-//	if(Car.AE < 35 && Car.AE > -35) Car.AE = 0;
-	
-//	MValue = Car.Sensor[S_M].Average;
-//	if(MValue < 80) 
-//	{
-//		Car.VAE = 0;
-//		MValue = 0;
-//	}
-//		
-//	Car.AE = (Car.VAE * MValue / 100.0);
 //	
-//	if(Car.AE > -20 && Car.AE < 20) Car.AE = 0;
+//	
+//	
+	/*  取得中间电感值  */
+	MValue = Car.Sensor[S_M].Average;
+	if(MValue < 80) 	/*  高通滤波,只有在圆环处中间电感的值才有效  */
+	{
+		Car.VAE = 0;		/*  垂直差比和也为0  */
+		MValue = 0;
+	}
+		
+	Car.VAE = (float)(Car.VAE * MValue / 100.0);		/*  合成新数据,用于判断圆环  */
+	
+	if(Car.VAE > -20 && Car.VAE < 20) Car.VAE = 0;		/*  高通滤波  */
 }
 
 /*

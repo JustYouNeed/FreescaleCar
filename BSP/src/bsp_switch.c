@@ -113,7 +113,7 @@ uint8_t bsp_switch_GetValue(void)
 
 uint8_t bsp_switch_GetStopState(void)
 {
-	return ((drv_gpio_ReadPin(MAG_SWITCH1_PIN) == 0) && (drv_gpio_ReadPin(MAG_SWITCH2_PIN) == 0));
+	return ((drv_gpio_ReadPin(MAG_SWITCH1_PIN) == 0) & (drv_gpio_ReadPin(MAG_SWITCH2_PIN) == 0));
 }
 
 /********************************************  END OF FILE  *******************************************/

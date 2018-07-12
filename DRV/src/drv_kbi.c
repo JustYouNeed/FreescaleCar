@@ -23,7 +23,7 @@
   *                              INCLUDE FILES
   *******************************************************************************************************
 */
-# include "drv_kbi.h"
+# include "drv.h"
 
 /*  判断中断是否发生  */
 # define IS_KBI0_IRQ(channel)				(KBI0->SP & channel)

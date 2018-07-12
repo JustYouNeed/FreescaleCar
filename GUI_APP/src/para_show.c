@@ -145,7 +145,24 @@ void Para_Show_UI(void)
 	}
 	else if(showPage == 1)
 	{
+		/*  前排左边水平电感  */
+		oled_showString(3,15,"FVL:", 6, 12);
+		oled_showNum(27, 15, Car.Sensor[S_V_L].Average, 3, 6, 12);
 		
+		/*  前排右边水平电感  */
+		oled_showString(65,15,"FVR:", 6, 12);
+		oled_showNum(95, 15, Car.Sensor[S_V_R].Average, 3, 6, 12);
+		
+		oled_showString(65,51,"VAE:", 6, 12);
+		if(Car.VAE < 0)
+		{
+			oled_showChar(90, 51, '-', 6, 12, 1);
+			oled_showNum(90+6, 51, (int16_t)(-Car.VAE), 3, 6, 12);
+		}else
+		{
+			oled_showChar(90, 51, ' ', 6, 12, 1);
+			oled_showNum(90+6, 51, (int16_t)(Car.VAE), 3, 6, 12);
+		}
 	}
 	/*  第二页显示电机参数  */
 	else if(showPage == 2)
@@ -228,10 +245,10 @@ void Para_Show_UI(void)
 		oled_showNum(85, 15, Car.LVelPID.Ki*10, 4, 6, 12);
 		
 		oled_showString(3, 33, "DKP:", 6, 12);
-		oled_showNum(27, 33, Car.DirFuzzy.KPMax, 4, 6, 12);
+		oled_showNum(27, 33, Car.DirFuzzy.KP, 4, 6, 12);
 		
 		oled_showString(55, 33, "DKD:", 6, 12);
-		oled_showNum(85, 33, Car.DirFuzzy.KDMax, 4, 6, 12);
+		oled_showNum(85, 33, Car.DirFuzzy.KD, 4, 6, 12);
 		
 				oled_showString(3,50,"LT:", 6, 12);
 		oled_showNum(27, 50, (Car.LeftTargetSpeed), 3, 6, 12);
@@ -253,7 +270,6 @@ void Para_Show_UI(void)
 			oled_showChar(38, 20, ' ', 6, 12, 1);
 			oled_showNum(44, 20, Car.AE, 2, 6, 12);
 		}
-		oled_showNum(30,30, Car.NowRoad, 1, 12, 24);
 	}
 	
 	/*  进行翻页  */

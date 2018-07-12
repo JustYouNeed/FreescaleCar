@@ -26,7 +26,7 @@ uint8_t isMainUIChange = true;
 void main_ui(void)
 {
 	float vol = 0.0f;
-	static uint8_t batPercent = 0;
+	uint8_t batPercent = 0;
 	
 //	if(isMainUIChange == false) return;
 	
@@ -39,7 +39,7 @@ void main_ui(void)
 	oled_showChar(56+8, 6, ':', 6, 12, 1);
 	oled_showNum(62+8, 6, SysTime.Seconds, 2, 6, 12);
 	
-	batPercent = (Car.Voltage - BAT_LOW_VOL) / (BAT_FULL_VOL - BAT_LOW_VOL) * 100;
+	batPercent = (uint8_t)((Car.Voltage - BAT_LOW_VOL) / (BAT_FULL_VOL - BAT_LOW_VOL) * 100);
 	if(batPercent >= 99) batPercent = 99;
 	if(batPercent <= 0) batPercent = 0;
 	oled_showPicture(100, 4, bmp_battery[batPercent*12/99], 10, 16);

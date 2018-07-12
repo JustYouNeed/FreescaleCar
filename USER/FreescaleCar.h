@@ -67,18 +67,14 @@ typedef enum
 	CLEAR_FLAG,
 }IslandStatus_EnumTypeDef;
 
+# define DEFAULT_SPEED_KP	200
+# define DEFAULT_SPEED_KI	0
+# define DEFAULT_SPEED_KD	0
 
-/*  小车走走道时的目标速度  */
-# define STRAIGHT_SPEED		15
-# define CURVE_SPEED_LOW	20
+# define DEFAULT_DIR_KP	38
+# define DEFAULT_DIR_KD	230
 
-# define DEFAULT_SPEED_KP	245
-# define DEFAULT_SPEED_KD	1
-
-# define DEFAULT_DIRECTION_KP	30
-# define DEFAULT_DIRECTION_KD	300
-
-# define DEFAULT_SPEED  18
+# define DEFAULT_SPEED  17
 
 /*  道路类型枚举变量  */
 typedef enum
@@ -88,7 +84,6 @@ typedef enum
 	RIGHT_CURVE,				/*  右转弯  */
 	LEFT_ISLAND,				/*  环岛  */
 	RIGHT_ISLAND,
-	
 }Road_TypeDef;
 
 /*  车子整体参数结构体定义  */
@@ -99,8 +94,7 @@ typedef struct
 	Sensor_TypeDef Sensor[SENSOR_COUNT];	/*  传感器  */
 	Motor_TypeDef Motor;									/*  电机  */
 	MPU_TypeDef MPU;											/*  MPU参数  */
-	uint8_t NowRoad;
-	
+
 	float FHAE, BHAE, VAE, AE;				/*  传感器水平、垂直和差比  */
 	float CarSpeed, TargetSpeed;	/*  当前车速,整体目标速度  */
 	float LeftTargetSpeed, RightTargetSpeed;

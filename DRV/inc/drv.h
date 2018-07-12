@@ -1,9 +1,24 @@
+/**
+  *******************************************************************************************************
+  * File Name: drv.h
+  * Author: Vector
+  * Version: V1.0.0
+  * Date: 2018-2-24
+  * Brief: 本文件为KEA128驱动库的集中头文件
+  *******************************************************************************************************
+  * History
+  *		1.Author: Vector
+	*			Date: 2018-2-24
+	*			Mod: 建立文件
+  *
+  *******************************************************************************************************
+  */	
 # ifndef __DRV_H
 # define __DRV_H
 
-
-# define DISABLE_INT()		__disable_irq()
-# define ENABLE_INT()			__enable_irq()
+/*  开启/关闭总中断  */
+# define ENABLE_INT()		__enable_irq()
+# define DISABLE_INT()			__disable_irq()
 
 
 typedef enum {RESET = 0, SET = !RESET} FlagStatus, ITStatus;
@@ -11,7 +26,11 @@ typedef enum {DISABLE = 0, ENABLE = !DISABLE} FunctionalState;
 
 
 
-
+/*
+  *******************************************************************************************************
+  *                              INCLUDE FILES
+  *******************************************************************************************************
+*/
 # include "drv_gpio.h"
 # include "drv_pit.h"
 # include "drv_uart.h"
@@ -29,4 +48,5 @@ typedef enum {DISABLE = 0, ENABLE = !DISABLE} FunctionalState;
 # include "drv_kbi.h"
 
 # endif
+/********************************************  END OF FILE  *******************************************/
 

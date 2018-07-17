@@ -51,8 +51,8 @@ int main(void)
 	bsp_tim_CreateHardTimer(1, 1, Car_Control);
 	bsp_tim_CreateHardTimer(0,5, bsp_mpu_GetAngle);
 	
-//	bsp_motor_SetPwm(900,900);
-	DRV_ENABLE();
+//	bsp_motor_SetPwm(-500,-200);
+//	DRV_ENABLE();
 	while(1)
 	{
 		displayTask();

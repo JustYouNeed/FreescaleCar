@@ -155,7 +155,7 @@ void Car_ParaInit(void)
 	Car.VAE = 0.0f;
 		
 	/*  初始化车子的PID参数,从Flash中读取出保存的PID参数  */
-	VelKp = 160;//drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 0, float);
+	VelKp = 200;//drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 0, float);
 	VelKi = 0;//drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 4, float);
 	VelKd = 0;//drv_flash_ReadSector(PID_PARA_FLASH_ADDR, 8, float);
 
@@ -699,8 +699,8 @@ void Car_MotorOutput(void)
 //	else
 //	{
 				/*  将速度环和转向环的PWM叠加起来  */
-		LeftPwm = (int16_t)(g_RightSpeedControlOut + g_DirectionControlOut );
-		RightPwm = (int16_t)(g_RightSpeedControlOut - g_DirectionControlOut);
+		LeftPwm = (int16_t)(400 + g_DirectionControlOut );
+		RightPwm = (int16_t)(400 - g_DirectionControlOut);
 //	}
 	
 	/*  限幅  */

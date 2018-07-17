@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\FreescaleCar.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\FreescaleCar.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060300: Last Updated: Fri Jul 13 00:11:25 2018
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060300: Last Updated: Sat Jul 14 01:14:48 2018
 <BR><P>
 <H3>Maximum Stack Usage =        504 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -689,8 +689,8 @@ Global Symbols
 <P><STRONG><a name="[7a]"></a>Car_ControlStop</STRONG> (Thumb, 18 bytes, Stack size 8 bytes, freescalecar.o(i.Car_ControlStop))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = Car_ControlStop &rArr; bsp_tim_DeleteHardTimer
 </UL>
-<BR>[Calls]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bsp_tim_DeleteHardTimer
-<LI><a href="#[7b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;drv_gpio_WritePin
+<BR>[Calls]<UL><LI><a href="#[7b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;drv_gpio_WritePin
+<LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bsp_tim_DeleteHardTimer
 </UL>
 <BR>[Called By]<UL><LI><a href="#[34]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gotoSetSpeedKp
 <LI><a href="#[35]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gotoSetSpeedKi
@@ -2094,7 +2094,6 @@ Global Symbols
 <LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bsp_beep_ON
 <LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bsp_beep_OFF
 <LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Car_ControlStop
-<LI><a href="#[4f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 <LI><a href="#[3f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MPU_SDA_LOW
 <LI><a href="#[3e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MPU_SDA_HIGH
 <LI><a href="#[3d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MPU_SCL_LOW
@@ -2289,11 +2288,10 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> menu.o(i.ParaSetMenu_Init)
 </UL>
-<P><STRONG><a name="[4f]"></a>main</STRONG> (Thumb, 90 bytes, Stack size 0 bytes, main.o(i.main))
+<P><STRONG><a name="[4f]"></a>main</STRONG> (Thumb, 82 bytes, Stack size 0 bytes, main.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 504<LI>Call Chain = main &rArr; displayTask &rArr; SystemReset &rArr; GUI_MessageBoxDraw &rArr; GUI_DrawButton &rArr; GUI_FloodFill &rArr; GUI_HLine &rArr; GUI_Point &rArr; oled_drawPoint
 </UL>
-<BR>[Calls]<UL><LI><a href="#[7b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;drv_gpio_WritePin
-<LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;drv_gpio_ReadPin
+<BR>[Calls]<UL><LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;drv_gpio_ReadPin
 <LI><a href="#[121]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;displayTask
 <LI><a href="#[a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;displayInit
 <LI><a href="#[10c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bsp_tim_DelayMs
